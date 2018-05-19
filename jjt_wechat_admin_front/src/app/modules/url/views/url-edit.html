@@ -1,0 +1,43 @@
+<div id="url-edit-pg" class="url_pg">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>URL编辑 画面</h3>
+        </div>
+    </div>
+    <div class="x_panel">
+        <div class="x_title">
+            <h4>URL信息 <small>请填写URL的详细情报</small></h4>
+        </div>
+        <div class="x_content">
+            <form name="urlEditForm" class="form-horizontal" novalidate>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12">链接ID：</label>
+                    <div class="col-md-6 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.urlId"></div>
+                </div>                
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="urlValue">URL地址： <span class="required">*</span>
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <input type="text" name="urlValue" class="form-control col-md-7 col-xs-12" placeholder="请输入128位以内的URL地址" maxlength="128" ng-model="vm.model.urlValue" validator="required,url"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="memo">备注/描述： 
+                    </label>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <textarea name="memo" class="form-control col-md-7 col-xs-12" rows="3" placeholder="请输入50字以内的备注" maxlength="50" ng-model="vm.model.memo"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="x_panel permission_list">
+        <div class="ln_solid"></div>
+        <div class="form-group btn_action_group">
+            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                <button type="submit" class="btn btn-primary x_btn" ng-click="vm.save()" validation-submit="urlEditForm">确定</button>
+                <button type="button" class="btn btn-default x_btn" ng-click="vm.back()">取消</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+<!-- top navigation -->
+<div class="top_nav" ng-controller="MainHeaderCtrl as vm">
+    <div class="nav_menu">
+        <nav>
+      
+        <div>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="" uib-dropdown>
+                    <a href id="user-profile-dropdown" class="user-profile dropdown-toggle" uib-dropdown-toggle>
+                        <img id="adminPortrait1" src="{{vm.currentUser.admin.portrait}}" alt="">{{vm.currentUser.admin.name}}
+                        <span class=" fa fa-angle-down"></span>
+                    </a>
+                    
+                    <ul class="dropdown-menu dropdown-usermenu pull-right"
+                            uib-dropdown-menu aria-labelledby="user-profile-dropdown">
+                        <li><a ui-sref="main.myinfo.detail({id: vm.currentUser.admin.adminId})"> 我的资料</a></li>
+                        <li>
+                            <a href ui-sref="main.myinfo.changepassord()">
+                               
+                                <span>变更密码</span>
+                            </a>
+                        </li>
+                        
+                        <li>
+                            <a href ng-click="vm.logout()"><i class="fa fa-sign-out pull-right"></i> 退出</a>
+                        </li>
+                    </ul>
+                </li>
+                <!--<li class="icon-file" uib-dropdown>
+                    <a href id="user-profile-dropdown" class="user-profile dropdown-toggle" uib-dropdown-toggle>
+                        			<span class="glyphicon glyphicon-list-alt">帮助文档</span>
+                     
+                    </a>
+                </li>-->
+                <li role="presentation" class="dropdown" uib-dropdown>
+                    <a href id="user-message-dropdown" class="dropdown-toggle info-number" uib-dropdown-toggle ng-show="vm.hasMoreUserMessages">
+                        <i class="fa fa-envelope-o"></i>
+                        <span class="badge bg-green" ng-bind="vm.userMessages.length"></span>
+                    </a>
+                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu" uib-dropdown-menu aria-labelledby="user-message-dropdown">
+                        <li ng-repeat="item in vm.userMessages">
+                            <a>
+                                <span class="image"><img ng-src="{{item.userPhoto}}" alt="Profile Image" /></span>
+                                <span>
+                                    <span ng-bind="item.userName"></span>
+                                    <span class="time" ng-bind="item.sendTime"></span>
+                                </span>
+                                <span class="message" ng-bind="item.message"></span>
+                            </a>
+                        </li>
+                        <li ng-show="vm.hasMoreUserMessages">
+                            <div class="text-center">
+                                <a>
+                                    <strong>查看所有消息</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>    
+        </nav>
+        
+    </div>
+    <div class="clearfix"></div>
+    
+</div>
+
+<!-- /top navigation -->

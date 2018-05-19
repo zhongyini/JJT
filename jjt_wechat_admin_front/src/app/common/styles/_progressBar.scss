@@ -1,0 +1,10 @@
+// 进度条样式
+progress {
+    height: 20px;
+    width: 100%; 
+    border: 1px solid #FFFFFF;
+}
+
+progress::-moz-progress-bar { background: #FFFFFF; }
+progress::-webkit-progress-bar { background: #FFFFFF; }
+progress::-webkit-progress-value  { background: #00BB00; }

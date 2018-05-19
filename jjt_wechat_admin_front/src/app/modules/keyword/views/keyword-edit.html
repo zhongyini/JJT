@@ -1,0 +1,143 @@
+<div id="admin-edit-pg" class="admin-pg">
+	<div class="page-title">
+		<div class="title_left">
+			<h3>关键字编辑 画面</h3>
+		</div>
+	</div>
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>关键字信息 <small>请填写关键字的详细情报</small></h4>
+		</div>
+		<div class="x_content">
+			<form id="adminEditForm" name="adminEditForm" class="form-horizontal" novalidate>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="keyword">关键字： <span class="required">*</span>
+                   			 </label>
+					</div>
+
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<input type="text" id="keyword" name="keyword" class="form-control col-md-7 col-xs-12" ng-model="vm.model.keyword" validator="required" maxlength="255">
+						<input type="text" name="oldKeyword" ng-model="vm.model.oldKeyword" hidden="hidden" />
+						<input type="text" name="createUser" ng-model="vm.model.createUser" hidden="hidden" />
+						<input type="text" name="createDate" ng-model="vm.model.createDate" hidden="hidden" />
+						<input type="text" name="modifyDate" ng-model="vm.model.modifyDate" hidden="hidden" />
+
+					</div>
+
+				</div>
+
+				<div class="form-group" ng-if="vm.model.type == 1">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="replyType">回复方式： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<select name="replyType" class="form-control" ng-model="vm.model.replyType" ng-options="{{'replyType' | codelistOptions}}">
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group" ng-if="vm.model.replyType==1">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="replyContent">回复内容： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<textarea id="replyContent" name="replyContent" class="form-control col-md-7 col-xs-12" placeholder="请输入回复内容" maxlength="300" ng-model="vm.model.replyContent"></textarea>
+					</div>
+				</div>
+				<div class="form-group" ng-if="vm.model.replyType==2">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="replyContent">回复内容： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<input type="text" id="replyContent" name="replyContent" class="form-control col-md-7 col-xs-12" placeholder="请选择图文" ng-model="vm.model.replyContent" validator="required" maxlength="255" readonly="true">
+					</div>
+					<span class="input-group-btn">
+			            <button type="button" class="btn btn-success x_btn" ng-click="vm.showPopUp()">
+			            	<i class="fa fa-search" aria-hidden="true"></i>选择
+			            </button>
+				   	</span>
+				</div>
+				<div class="form-group" ng-if="vm.model.replyType==2">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="title">图文标题： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<input type="text" id="title" name="title" class="form-control col-md-7 col-xs-12" ng-model="vm.model.title" validator="required" maxlength="255" readonly="true">
+					</div>
+				</div>
+				<div class="form-group" ng-if="vm.model.replyType==2">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="replyContent">图文图片： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12" ng-if="vm.model.updateMaterial">
+						<img class="img-responsive" style="max-width:200px;" ng-src="{{vm.model.image}}" ng-show="vm.model.image">
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12" ng-if="!vm.model.updateMaterial">
+						<img class="img-responsive" style="max-width:200px;" ng-src="{{vm.model.image}}" ng-show="vm.model.image">
+					</div>
+				</div>
+				<div class="form-group" ng-if="vm.model.sonItemList && flag!=2">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">
+                    	</label>
+                   	</div>
+                   	<div class="col-md-6 col-sm-6 col-xs-12">
+					<table>
+						<tr ng-repeat="item in vm.model.sonItemList" style="border-bottom:#E0E0E0 solid 1px;" >
+							<td style="width: 400px;height: 150px;">{{item.firTitle}}</td>
+							<td style="width: 150px;height: 150px;"><img class="img-responsive" style="width: 100px; border-radius:0%; overflow:hidden;" ng-src="{{item.firImage}}"></td>
+						</tr>
+
+					</table>
+					</div>
+				</div>
+				
+				
+				<div class="form-group"  ng-if=" flag==2">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="replyContent">
+                    	</label>
+                   	</div>
+                   	<div class="col-md-6 col-sm-6 col-xs-12">
+					<table>
+						<tr ng-repeat="item in sonItemList" style="border-bottom:#E0E0E0 solid 1px;" >
+							<td style="width: 400px;height: 150px;">{{item.firTitle}}</td>
+							<td style="width: 150px;height: 150px;"><img class="img-responsive" style="width: 100px; border-radius:0%; overflow:hidden;" ng-src="{{item.firImage}}"></td>
+						</tr>
+
+					</table>
+					</div>
+				</div>
+				<div class="form-group" ng-show="vm.model.replyType==4">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="replyContent">回复内容： <span class="required">*</span>
+                    </label>
+					</div>
+
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="upload-btn">
+                    </label>
+					</div>
+					<div class="col-sm-9 col-xs-12">
+						<button id="upload-btn" name="upload-btn" type="button" class="btn btn-info x_btn" ng-click="vm.upload()">选择图片</button><br /><br />
+						<img class="img-thumbnail" ng-src="{{vm.uploader.getFile() }}" style="width: 120px;height: 120px;" ng-show="vm.uploader.getFile()">
+					</div>
+				</div>
+
+				<div class="ln_solid"></div>
+				<div class="form-group btn_action_group">
+					<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+						<button type="submit" class="btn btn-primary x_btn" ng-click="vm.save()" validation-submit="adminEditForm">确定</button>
+						<a ui-sref="main.keyword.list" class="btn btn-default x_btn">取消</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

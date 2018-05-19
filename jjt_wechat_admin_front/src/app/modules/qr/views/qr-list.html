@@ -1,0 +1,93 @@
+<div id="admin-list-pg">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>场景二维码管理</h3>
+        </div>
+    </div>
+    <div class="x_panel">
+        <div class="x_title">
+            <h4>检索条件 <small>请输入检索条件</small></h4>
+        </div>
+        <div class="x_content">
+            <form id="admin-search-form" class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-xs-12" for="name">场景描述
+                            </label>
+                            <div class="col-md-9 col-xs-12">
+                                <input type="text" id="ticket" name="ticket" class="form-control" ng-model="vm.searchCondition.qrName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-xs-12" for="tempFlag">是否临时
+                            </label>
+                            <div class="col-md-9 col-xs-12">
+                                <select name="tempFlag" class="form-control"
+                                        ng-model="vm.searchCondition.tempFlag" 
+                                        ng-options="{{'tempFlag' | codelistOptions}}">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-primary x_btn" ng-click="vm.search()">
+                        <i class="fa fa-search" aria-hidden="true"></i>检索
+                    </button>                    
+
+                    <button type="button" class="btn btn-primary x_btn" ng-click="vm.reset()">
+                         <i class="fa fa-undo" aria-hidden="true"></i>重置
+                    </button>
+                    <button type="button" class="btn btn-primary x_btn"  ui-sref="main.qr.new" data-permissions="wx.scene.create">
+                        <i class="fa fa-plus" aria-hidden="true"></i>新增
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="x_panel">
+        <div class="x_title">
+            <h4>检索结果 
+                <small>检索到的二维码列表
+                    
+                </small>
+            </h4>
+        </div>
+        <div class="x_content">
+        	
+	            <table ng-table="vm.tableParams" class="table table-bordered table-striped">
+	                <tr ng-repeat="row in $data">
+	                    <td title="'序号'" ng-bind="vm.getIndex($index)"></td>
+	                    <td title="'场景ID'" ng-bind="row.qrId"align="center"></td>
+	                    <td title="'场景描述'" ng-bind="row.qrName"align="center"></td>
+	                    <td title="'二维码'" style="text-align: center;">
+	                    	<a target="_blank" ng-href="{{row.ticket | wxQRImgBaseUrl}}" >
+	                    		 <img style="width: 50px;height: 50px;border-radius: 0;" ng-src="{{row.ticket | wxQRImgBaseUrl}}"  ng-show="row.url">
+	                    	</a>
+	                    </td>
+	                    <td title="'是否临时'" ng-bind="row.tempFlag | QrTempFlag"align="center"></td>
+	                    <td title="'有效时间'" ng-bind="row.invalidDate| date:'yyyy-MM-dd'"align="center"></td>
+	                
+	                    <td title="'操作'" class="td-operation-200">
+	                        
+	                        <a class="btn btn-success x_btn" ng-if="row.deleteFlag == '0'" ui-sref="main.qr.edit({id: row.qrId})" data-permissions="wx.scene.update">
+	                            <i class="fa fa-pencil" aria-hidden="true"></i>编辑
+	                        </a>  
+	                        <a class="btn btn-danger x_btn" ng-if="row.deleteFlag == '0'" ui-sref="main.qr.delete({id: row.qrId})" data-permissions="wx.scene.delete">
+	                            <i class="fa fa-remove" aria-hidden="true"></i>删除
+	                        </a>   
+	                                            
+	                    </td>
+	                </tr>
+	                
+	            </table>
+		       	<div ng-if="vm.searchCondition.noData">
+		       		<h4 class="no-data">没有查询到数据</h4>
+		       	</div>
+        </div>
+    </div>
+</div>

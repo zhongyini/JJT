@@ -1,0 +1,104 @@
+<div class="scroll-view" ng-controller="MainSidebarCtrl as vm">
+	<div class="navbar main-left-title">
+		<a href="index.html" class="site-title"><i class="fa fa-paw"></i> <span>微信管理系统</span></a>
+	</div>
+	<div class="clearfix"></div>
+	<!-- menu profile quick info -->
+	<div class="profile">
+		<div class="profile-pic">
+			<img id="adminPortrait2" src="{{vm.currentUser.admin.portrait}}" alt="..." class="img-circle profile-img">
+		</div>
+		<div class="profile-info">
+			<span>
+			<h2>欢迎,{{vm.currentUser.admin.name}}</h2></span>
+		</div>
+	</div>
+	<div class="clearfix"></div>
+	<!-- /menu profile quick info -->
+	<br />
+	<!-- sidebar menu -->
+	<div id="sidebar-menu" class="main-menu-side hidden-print main-menu">
+		<div class="menu-section">
+			<!-- <h3>菜单组1</h3> -->
+
+			<!-- 权限管理 start -->
+			
+			<ul class="nav side-menu" data-permissions="authority">
+				<li ng-class="{'active':vm.isOpen('authority')}">
+					<a ng-click="vm.clickMenu('authority')">
+						<i class="fa fa-users"></i> 权限管理 <span class="fa fa-chevron-down"></span>
+					</a>
+			
+					<ul class="nav child-menu pre-scrollable scroll_content" uib-collapse="!vm.isOpen('authority')" >
+						<li ng-class="{'active':vm.activeMenu === 'main.adminManager.list'}" data-permissions="authority.adminManager.list">
+							<a ui-sref="main.adminManager.list" ng-click="vm.activeMenu = 'main.adminManager.list'">管理员管理</a>
+						</li>
+						<li ng-class="{'active':vm.activeMenu === 'main.role.list'}" data-permissions="authority.role.list">
+							<a ui-sref="main.role.list" ng-click="vm.activeMenu = 'main.role.list'">角色管理</a>
+						</li>
+						<li ng-class="{'active':vm.activeMenu === 'main.apiAuthority.list'}" data-permissions="authority.api.list">
+							<a ui-sref="main.apiAuthority.list" ng-click="vm.activeMenu = 'main.apiAuthority.list'">授权管理</a>
+						</li>
+					</ul>
+				
+				</li>
+			</ul>
+			
+			<!-- 权限管理 end -->
+
+			<!-- 核销 start -->
+			<ul class="nav side-menu" data-permissions="wx" >
+				<li ng-class="{'active':vm.isOpen('wx')}">
+					<a ng-click="vm.clickMenu('wx')">
+						<i class="fa fa-wechat"></i> 核销管理 <span class="fa fa-chevron-down"></span>
+					</a>
+					<ul class="nav child-menu pre-scrollable scroll_content" id="ul1" uib-collapse="!vm.isOpen('wx')" >
+						<li ng-class="{'active':vm.activeMenu === 'main.keyword.list'}" data-permissions="wx.keyword.list">
+							<a ui-sref="main.keyword.list" ng-click="vm.activeMenu = 'main.keyword.list'">核销管理</a>
+						</li>
+					</ul>
+					
+				</li>
+			</ul>
+			<!-- 核销 end -->
+
+			<!-- 会员管理 start -->
+			<ul class="nav side-menu" data-permissions="search" >
+				<li ng-class="{'active':vm.isOpen('search')}">
+					<a ng-click="vm.clickMenu('search')">
+						<i class="fa fa-search"></i> 会员管理 <span class="fa fa-chevron-down"></span> 
+					</a>
+					<ul class="nav child-menu pre-scrollable scroll_content" uib-collapse="!vm.isOpen('search')">
+						<li ng-class="{'active':vm.activeMenu === 'main.user.list'}" data-permissions="search.user.list">
+							<a ui-sref="main.user.list" ng-click="vm.activeMenu = 'main.user.list'">会员一览</a>
+						</li>
+						<li ng-class="{'active':vm.activeMenu === 'main.user.list'}" data-permissions="search.user.list">
+							<a ui-sref="main.user.list" ng-click="vm.activeMenu = 'main.user.list'">红包金额</a>
+						</li>
+					</ul>
+				
+				</li>
+			</ul>
+			<!-- 会员管理 end -->
+
+			<!-- 红包管理 start -->
+			<ul class="nav side-menu" data-permissions="report">
+				<li ng-class="{'active':vm.isOpen('report')}">
+					<a ng-click="vm.clickMenu('report')">
+						<i class="fa fa-bars"></i> 红包管理 <span class="fa fa-chevron-down"></span>
+					</a>
+					<ul class="nav child-menu pre-scrollable scroll_content" uib-collapse="!vm.isOpen('report')">
+						<li ng-class="{'active':vm.activeMenu === 'main.userAppend.list'}" data-permissions="report.userAppend.list">
+							<a ui-sref="main.userAppend.list" ng-click="vm.activeMenu = 'main.userAppend.list'">红包发放记录</a>
+						</li>
+						<li ng-class="{'active':vm.activeMenu === 'main.userAppend.list'}" data-permissions="report.userAppend.list">
+							<a ui-sref="main.userAppend.list" ng-click="vm.activeMenu = 'main.userAppend.list'">红包金额</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<!-- 报表统计 end -->
+		</div>
+	</div>
+	<!-- /sidebar menu -->
+</div>

@@ -1,0 +1,92 @@
+<div id="admin-new-pg" class="admin-pg">
+	<div class="page-title">
+		<div class="title_left">
+			<h3>新增管理员</h3>
+		</div>
+	</div>
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>管理员信息 <small>请填写管理员的详细情报</small></h4>
+		</div>
+		<div class="x_content">
+			<form name="adminNewForm" class="form-horizontal" novalidate>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="id">管理员ID： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<input type="text" id="id" name="id" class="form-control col-md-7 col-xs-12" placeholder="请输入20位以内的ID" maxlength="20" ng-model="vm.model.adminId" validator="required" valid-method="submit">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="name">管理员名： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<input type="text" id="name" name="name" class="form-control col-md-7 col-xs-12" placeholder="请输入20位以内的名字" maxlength="20" ng-model="vm.model.name" validator="required" valid-method="submit">
+					</div>
+				</div>
+				<!--<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="password">密码： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<input type="password" id="password" name="password" class="form-control col-md-7 col-xs-12" placeholder="请输入不小于4位的密码" maxlength="50" ng-model="vm.model.password" validator="required, minlength=4" valid-method="submit">
+					</div>
+				</div>-->
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="mail">邮箱： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<input type="mail" id="mail" name="mail" class="form-control col-md-7 col-xs-12" placeholder="请输入您的邮箱" ng-model="vm.model.mail" maxlength="200" validator="required,mail" valid-method="submit">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="roleName">角色： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<input type="text" id="roleName" name="roleName" class="form-control col-md-7 col-xs-12" placeholder="请选择角色" ng-model="vm.model.roleName" validator="requiredExt" maxlength="256" readonly="true" valid-method="submit">
+						<input type="hidden" id="roleId" name="roleId" ng-model="vm.model.roleId">
+					</div>
+					<span class="input-group-btn">
+			            <button type="button" class="btn btn-success x_btn" ng-click="vm.showPopUp()">
+			            	<i class="fa fa-search" aria-hidden="true"></i>选择
+			            </button>
+				    </span>
+					<div></div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="upload-btn">头像： <span class="required">*</span>
+                    </label>
+					</div>
+					
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="upload-btn">
+                    </label>
+					</div>
+					<div class="col-sm-9 col-xs-12">
+						<button id="upload-btn" name="upload-btn" type="button" class="btn btn-info x_btn" ng-click="vm.upload()">选择图片</button><br /><br />
+						<img class="img-thumbnail"  style="width: 120px;height: 120px;" ng-show="vm.uploader.getFile()">
+					</div>
+				</div>
+				<div class="ln_solid"></div>
+				<div class="form-group btn_action_group">
+					<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+						<button type="submit" class="btn btn-primary x_btn" ng-click="vm.save()" validation-submit="adminNewForm">确定</button>
+						<button type="button" class="btn btn-default x_btn" ng-click="vm.back()">返回</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

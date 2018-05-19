@@ -1,0 +1,59 @@
+<div id="admin-detail-pg">
+	<div class="page-title">
+		<div class="title_left">
+			<h3 ng-bind="vm.isDeleteAction ? '管理员删除确认' : '管理员详情'"></h3>
+		</div>
+	</div>
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>管理员信息 <small>查看管理员的详细情报</small></h4>
+		</div>
+		<div class="x_content">
+			<form id="admin-new-form" class="form-horizontal">
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="id">管理员ID：</label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.adminId">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="name">管理员名：</label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.name">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="mail">邮箱：</label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.mail">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="roleName">角色：</label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.roleName">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="photo">头像：</label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 x_text">
+						<img class="img-responsive" style="width: 120px;height: 120px;" ng-src="{{vm.model.portrait | imgView : 150 }}">
+					</div>
+				</div>
+				<div class="ln_solid"></div>
+				<div class="form-group btn_action_group">
+					<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+						<button type="button" class="btn btn-danger x_btn" ng-click="vm.save()" ng-if="vm.isDeleteAction">确认删除</button>
+						<button type="button" class="btn btn-default x_btn" ng-click="vm.back()">返回</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

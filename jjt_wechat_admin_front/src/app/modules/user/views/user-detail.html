@@ -1,0 +1,124 @@
+<div id="tradeDescription-detail-pg" class="tradeDescription_pg">
+	<div class="page-title">
+		<div class="title_left">
+			<h3>微信用户详情</h3>
+		</div>
+	</div>
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>微信用户信息 <small>查看微信用户的详细情报</small></h4>
+		</div>
+		<div class="x_content">
+			<form id="tradeDescription-new-form" class="form-horizontal">
+				<div class="form-group">
+					<!--<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">微信ID：</label>
+					</div>
+					<div class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.openId">
+					</div>-->
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">九间堂注册会员ID：</label>
+					</div>
+					<div class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.webId">
+					</div>
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">在籍区分：</label>
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.userStatus | userStatus">
+					</p>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">微信昵称：</label>
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.nicknameExt">
+					</p>
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">九间堂会员卡号：</label>
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.ucode">
+					</p>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">微信用户性别：</label>
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.sex | sexFilter">
+					</p>
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">所在城市：</label>
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.city">
+					</p>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">所在国家：</label>
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.country">
+					</p>
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">所在省份：</label>
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.province">
+					</p>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">用户关注状态：</label>
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.deleteFlag | deleteFlagUser">
+					</p>
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">关注时间：</label>
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.createDate  | date:'yyyy-MM-dd' ">
+					</p>
+				</div>
+				<!--	<div class="form-group">
+					
+				<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">COOKIE：</label>
+					</div>
+					<p class="col-md-4 col-sm-4 col-xs-8 x_text" style="max-width: 100px;" ng-bind="vm.model.cookie">
+					</p>
+				</div>-->
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">发货次数：</label>
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.orderTimes">
+					</p>
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">生日月：</label>
+					</div>
+					
+					<p class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.birthdayMouth + ' 月'" ng-show="vm.model.birthdayMouth">
+					</p>
+					
+				</div>
+				
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">最新发货时间：</label>
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.orderDate">
+					</p>
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">是否登录过：</label>
+					</div>
+					<p class="col-md-4 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.registFlag | loginStatusFilter">
+					</p>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="x_panel permission_list">
+		<div class="ln_solid"></div>
+		<div class="form-group btn_action_group">
+			<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+				<button type="button" class="btn btn-default x_btn" ng-click="vm.back()">返回</button>
+			</div>
+		</div>
+	</div>
+</div>

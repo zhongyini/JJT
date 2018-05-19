@@ -1,0 +1,47 @@
+<div id="admin-new-pg" class="admin-pg">
+	<div class="page-title">
+		<div class="title_left">
+			<h3>新增场景二维码</h3>
+		</div>
+	</div>
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>场景二维码信息 <small>请填写场景二维码的详细情报</small></h4>
+		</div>
+		<div class="x_content">
+			<form name="qrNewForm" class="form-horizontal" novalidate>
+				
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="qrName">场景描述： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<input type="text" id="qrName" name="qrName" class="form-control col-md-7 col-xs-12" placeholder="请输入20位以内的场景描述" maxlength="20" ng-model="vm.model.qrName" validator="required" valid-method="submit">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="qrName">是否临时： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<select name="tempFlag" class="form-control"
+                                        ng-model="vm.model.tempFlag" 
+                                        ng-options="{{'tempFlag' | codelistOptions}}">
+          
+                                </select>
+					</div>
+				</div>
+				
+				<div class="ln_solid"></div>
+				<div class="form-group btn_action_group">
+					<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+						<button type="submit" class="btn btn-primary x_btn" ng-click="vm.mySave()" validation-submit="qrNewForm">确定</button>
+						<a ui-sref="main.qr.list" class="btn btn-default x_btn">取消</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

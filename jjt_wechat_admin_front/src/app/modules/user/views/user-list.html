@@ -1,0 +1,162 @@
+<div id="user-list-pg">
+	<div class="page-title">
+		<div class="title_left">
+			<h3>微信用户查询</h3>
+		</div>
+	</div>
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>检索条件 <small>请输入检索条件</small></h4>
+		</div>
+		<div class="x_content">
+			<form id="admin-search-form" class="form-horizontal">
+				<div class="row">
+					<div class="col-md-5">
+						<div class="form-group">
+							<label class="control-label col-md-3 col-xs-12" for="webId">会员webId:
+                            </label>
+							<div class="col-md-9 col-xs-12">
+								<input type="text" id="webId" name="webId" class="form-control" placeholder="请输入会员webId" maxlength="30" ng-model="vm.searchCondition.webId"    >
+							</div>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="form-group">
+							<label class="control-label col-md-3 col-xs-12" for="ucode">会员ucode:</label>
+							<div class="col-md-9 col-xs-12">
+								<input type="text" id="ucode" name="ucode" class="form-control" placeholder="请输入会员ucode" maxlength="30" ng-model="vm.searchCondition.ucode"     >
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-5">
+						<div class="form-group">
+							<label class="control-label col-md-3 col-xs-12" for="nickname">昵称:
+                            </label>
+							<div class="col-md-9 col-xs-12">
+								<input type="text" id="nickname" name="nickname" class="form-control" placeholder="请输入昵称" maxlength="30" ng-model="vm.searchCondition.nickname"   >
+							</div>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="form-group">
+							<label class="control-label col-md-3 col-xs-12" for="sex">性别:</label>
+							<div class="col-md-9 col-xs-12">
+								<select name="sex" class="form-control" ng-model="vm.searchCondition.sex" placeholder="请选择要查询的性别" ng-options="{{'wxUserSex' | codelistOptions}}">
+									<option value=""></option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="form-group">
+							<label class="control-label col-md-3 col-xs-12" for="userStatus">是否在籍:</label>
+							<div class="col-md-9 col-xs-12">
+								<select name="userStatus" class="form-control" ng-model="vm.searchCondition.userStatus" placeholder="请选择要查询的状态" ng-options="{{'userStatus' | codelistOptions}}">
+									<option value=""></option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="form-group">
+							<label class="control-label col-md-3 col-xs-12" for="deleteFlag">是否关注:</label>
+							<div class="col-md-9 col-xs-12">
+								<select name="deleteFlag" class="form-control" ng-model="vm.searchCondition.deleteFlag" placeholder="请选择要查询的状态" ng-options="{{'deleteFlagUser' | codelistOptions}}">
+									<option value=""></option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="form-group">
+							<label class="control-label col-md-3 col-xs-12" for="startTime">开始日期:</label>
+							<div class="col-md-9 col-xs-12">
+								<div class='input-group date'>
+									<input type="text" id='startTime' name="startTime" class="form-control" ng-model="vm.searchCondition.startTime">
+									<span class="input-group-addon">
+				                        <span class="glyphicon glyphicon-calendar"></span>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="form-group">
+							<label class="control-label col-md-3 col-xs-12" for="endTime">结束日期:</label>
+							<div class="col-md-9 col-xs-12">
+								<div class='input-group date'>
+									<input type='text' id='endTime' name="startTime" class="form-control" close-text="Close" ng-model="vm.searchCondition.endTime" />
+									<span class="input-group-addon">
+				                        <span class="glyphicon glyphicon-calendar"></span>
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="form-group">
+							<label class="control-label col-md-3 col-xs-12" for="userStatus">二维码:</label>
+							<div class="col-md-9 col-xs-12">
+								<select name="applyQr" class="form-control" ng-model="vm.searchCondition.applyQR" placeholder="请选择要查询的场景ID" ng-options="item.qrId as item.qrName for item in vm.qrs">
+									<option value=""></option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="pull-right">
+					
+					<button type="button" class="btn btn-primary x_btn" ng-click="vm.search1()">
+                        <i class="fa fa-search" aria-hidden="true"></i>检索
+                    </button>
+					<!--<button type="button" class="btn btn-primary x_btn" ng-csv="vm.getCsvData()" filename="微信用户一览.csv" lazy-load="true" add-bom="true" csv-header="['微信ID','九间堂会员卡号', '微信昵称', '性别','是否在籍','是否关注','关注时间',
+						'九间堂注册会员ID','所在城市','所在国家','所在省份','语言','发货次数','生日月','密码错误次数','锁定标志','关注二维码','作成者','作成时间','更新者','更新时间','月号','商品版本号','最后签到日期','最新发货时间','Fromcode']">
+                        <i class="fa fa-download"></i>下载CSV
+                    </button>-->
+                    <button type="button" class="btn btn-primary x_btn" id ="downloadcsv" ng-click="vm.csvcreate()">
+                        <i class="fa fa-download"></i>生成CSV
+                    </button>
+
+					<button type="button" class="btn btn-primary x_btn" ng-click="vm.reset1()">
+                         <i class="fa fa-undo" aria-hidden="true"></i>重置
+                    </button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>用户一览
+                <!--<small>全部的用户(<span ng-bind="vm.searchCondition.counts"></span>)
+                </small>-->
+                <small>全部的用户({{num}})
+                </small>
+            </h4>
+            <!--<button type="button" class="btn btn-primary x_btn" id ="downloadcsv" ng-click="vm.dataCount()">
+                        <i class="fa fa-download"></i>获取总数量
+                    </button>-->
+		</div>
+		<div class="x_content">
+			<table ng-table="vm.tableParams" class="table table-bordered table-striped">
+				<tr ng-repeat="row in $data">
+					<td title="'序号'" ng-bind="vm.getIndex($index)"></td>
+					<td title="'九间堂会员卡号'" ng-bind="row.ucode"align="center"></td>
+					<td title="'微信昵称'" ng-bind="row.nicknameExt" class="td-long-text"align="center"></td>
+					<td title="'性别'" ng-bind="row.sex | sexFilter"align="center"></td>
+					<td title="'是否在籍'" ng-bind="row.userStatus | userStatus"align="center"></td>
+					<td title="'是否关注'" ng-bind="row.deleteFlag | deleteFlagUser"align="center"></td>
+					<td title="'关注时间'" ng-bind="row.createDate | date:'yyyy-MM-dd HH:mm:ss'"align="center"></td>
+					<td title="'操作'" class="td-operation-200">
+						<a class="btn btn-info x_btn" ui-sref="main.user.detail({id: row.openId})" data-permissions="search.user.detail">
+							<i class="fa  fa-bars" aria-hidden="true"></i> 详情
+						</a>
+					</td>
+				</tr>
+			</table>
+			<div ng-if="vm.searchCondition.noData">
+				<h4 class="no-data">没有查询到数据</h4>
+			</div>
+		</div>
+	</div>
+</div>

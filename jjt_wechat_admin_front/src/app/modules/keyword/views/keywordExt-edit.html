@@ -1,0 +1,50 @@
+<div id="admin-edit-pg" class="admin-pg">
+	<div class="page-title">
+		<div class="title_left">
+			
+			<h3 ng-if="vm.model.type == 1">编辑默认回复 画面</h3>
+			<h3 ng-if="vm.model.type == 2">编辑欢迎语 画面</h3>
+			<h3 ng-if="vm.model.type == 3">编辑常见问题 画面</h3>
+		</div>
+	</div>
+	<div class="x_panel">
+		
+		<div class="x_title" ng-if="vm.type == 1">
+			<h4>默认回复信息 <small>请填写默认回复的详细情报</small></h4>
+		</div>
+		<div class="x_title" ng-if="vm.type == 2">
+			<h4>欢迎语信息 <small>请填写欢迎语的详细情报</small></h4>
+		</div>
+		<div class="x_title" ng-if="vm.type == 3">
+			<h4>常见问题信息 <small>请填写常见问题的详细情报</small></h4>
+		</div>
+		<div class="x_content">
+			<form id="adminEditForm" name="adminEditForm" class="form-horizontal" novalidate>
+			
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="replyContent">回复内容： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="form-group" ng-if="vm.type!=3">
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<div id="summernote"></div>
+						</div>
+					</div>
+					<div class="form-group" ng-if="vm.type==3">
+						<div class="col-md-6 col-sm-6 col-xs-12">
+							<textarea id="replyContent" name="replyContent" class="form-control col-md-7 col-xs-12" rows="8" placeholder="请输入常见问题" style="resize:none" maxlength="600"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="ln_solid"></div>
+				<div class="form-group btn_action_group">
+					<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+						<button type="submit" class="btn btn-primary x_btn" ng-click="vm.mySave()" validation-submit="adminEditForm">确定</button>
+						<a ui-sref="main.keyword.list" class="btn btn-default x_btn">取消</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

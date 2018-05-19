@@ -1,0 +1,77 @@
+<div id="admin-new-pg" class="admin-pg">
+	<div class="page-title">
+		<div class="title_left">
+			<h3>上传会员到期CSV文件</h3>
+		</div>
+	</div>
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>上传文件 <small>请填写会员到期CSV文件</small></h4>
+		</div>
+		<div class="x_content">
+			<form name="adminNewForm" class="form-horizontal" novalidate>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="descriptionUrl">URL地址：<span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<textarea name="descriptionUrl" class="form-control col-md-7 col-xs-12" placeholder="请输入120位以内的URL地址" maxlength="120" rows="3" ng-model="vm.model.url" rows="3" style="resize: none;" validator="required,url"></textarea>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="firstDat">头部说明： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<input type="text" name="firstDat" class="form-control col-md-7 col-xs-12" placeholder="请输入说明" maxlength="200" ng-model="vm.model.firstData" validator="required" valid-method="submit" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="remarkDat">备注说明： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<input type="text" name="remarkDat" class="form-control col-md-7 col-xs-12" placeholder="请输入说明" maxlength="200" ng-model="vm.model.remarkData" validator="required" valid-method="submit" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="upload-btn">会员到期CSV： <span class="required">*</span>
+                    </label>
+					</div>
+			
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<span id="fileName" ></span>
+						<button id="browse_button" data-toggle="tooltip" name="browse_button" class="btn btn-info x_btn">选择文件</button>
+						<input class="text" ng-show="">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" >
+                    </label>
+                   </div>
+                   <div class="col-md-6 col-sm-6 col-xs-12 ">
+						<progress id="pro" class="" value="0" ></progress>
+					</div>
+					<div class="col-md-2 col-sm-3 col-xs-12">
+						<span id ="progressbar">
+                    </span>
+				</div>
+				
+				<div class="form-group">
+				</div>
+				
+				<div class="ln_solid"></div>
+				<div class="form-group btn_action_group">
+					<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+						<button type="submit" class="btn btn-primary x_btn" validation-submit="adminNewForm" ng-click="vm.mySave()">确定</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,71 @@
+<div id="admin-edit-pg" class="admin-pg">
+	<div class="page-title">
+		<div class="title_left">
+			<h3>场景二维码编辑 画面</h3>
+		</div>
+	</div>
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>场景二维码信息 <small>请填写场景二维码的详细情报</small></h4>
+		</div>
+		<div class="x_content">
+			<form id="adminEditForm" name="adminEditForm" class="form-horizontal" novalidate>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="id">场景ID：</label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.qrId">
+						<input type="text" name="createUser" ng-model="vm.model.createUser" hidden="hidden" />
+						<input type="text" name="createDate" ng-model="vm.model.createDate" hidden="hidden" />
+						<input type="text" name="modifyDate" ng-model="vm.model.modifyDate" hidden="hidden" />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="qrName">场景描述： <span class="required">*</span>
+                    </label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<input type="text" id="qrName" name="qrName" class="form-control col-md-7 col-xs-12" placeholder="请输入20位以内的名字" maxlength="20" ng-model="vm.model.qrName" validator="required" valid-method="submit">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="tempFlag">是否临时： <span class="required">*</span></label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<select name="tempFlag" class="form-control" ng-model="vm.model.tempFlag" ng-options="{{'tempFlag' | codelistOptions}}">
+						</select>
+					</div>
+				</div>
+				<div class="form-group" ng-if="vm.model.tempFlag==0">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="tempFlag">失效日期： <span class="required">*</span></label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12">
+						<div class='input-group date'>
+							<input type='text'  id='invalidDate' class="form-control" close-text="Close" ng-model="vm.model.invalidDate"/>
+							<span class="input-group-addon">
+		                        <span class="glyphicon glyphicon-calendar"></span>
+							</span>
+						</div>
+					</div>
+					<script>
+						 $('.date').datetimepicker({
+							format: 'YYYY-MM-DD',
+							locale: moment.locale('zh-cn') 
+						});
+					</script>
+				</div>
+
+				<div class="ln_solid"></div>
+				<div class="form-group btn_action_group">
+					<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+						<button type="submit" class="btn btn-primary x_btn" ng-click="vm.mySave()" validation-submit="adminEditForm">确定</button>
+						<a ui-sref="main.qr.list" class="btn btn-default x_btn">取消</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

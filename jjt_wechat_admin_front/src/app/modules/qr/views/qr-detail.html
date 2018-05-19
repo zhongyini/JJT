@@ -1,0 +1,62 @@
+<div id="admin-detail-pg">
+	<div class="page-title">
+		<div class="title_left">
+			<h3 ng-bind="vm.isDeleteAction ? '场景二维码删除确认' : '场景二维码详情'"></h3>
+		</div>
+	</div>
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>场景二维码信息 <small>查看场景二维码的详细情报</small></h4>
+		</div>
+		<div class="x_content">
+			<form id="admin-new-form" class="form-horizontal">
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="qrId">场景ID：</label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.qrId">
+						<input type="text" name="createUser" ng-model="vm.model.createUser" hidden="hidden"/>
+						<input type="text" name="createDate" ng-model="vm.model.createDate" hidden="hidden"/>
+						<input type="text" name="modifyDate" ng-model="vm.model.modifyDate" hidden="hidden"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="qrName">场景描述：</label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.qrName">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="mail">是否临时：</label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.tempFlag | QrTempFlag">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="mail">失效日期：</label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.invalidDate">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12" for="url">二维码：</label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 x_text">
+						<img style="width: 200px;height: 200px;border-radius: 0;" ng-src="{{ 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + vm.model.ticket}}">
+					</div>
+				</div>
+				<div class="ln_solid"></div>
+				<div class="form-group btn_action_group">
+					<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+						<button type="button" class="btn btn-danger x_btn" ng-click="vm.save()" ng-if="vm.isDeleteAction">确认删除</button>
+						<button type="button" class="btn btn-default x_btn" ng-click="vm.back()">返回</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

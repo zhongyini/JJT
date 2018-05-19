@@ -1,0 +1,32 @@
+<div id="luck-edit-popup-pg">
+	<div class="page-title">
+		<div class="title_left">
+			<h3>&nbsp;&nbsp;角色一览</h3>
+		</div>
+	</div>
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>选择角色 <small>检索到的角色列表</small></h4>
+		</div>
+		<div class="x_content">
+			<table ng-table="vm.tableParams" class="table table-bordered table-striped" >
+				<tr ng-repeat="row in $data" >
+					<td title="'ID'" ng-bind="row.roleId"></td>
+                    <td title="'角色名称'" ng-bind="row.roleName"></td>
+                    <td title="'选择'" class="td-operation-200">
+                    	<a class="btn btn-success x_btn" ng-click="vm.selected.roleId = row.roleId;vm.selected.roleName=row.roleName;choose(vm.selected)">
+                            <i class="fa fa-pencil" aria-hidden="true"></i>
+                            	选择
+                        </a>  
+                    </td>
+				</tr>
+			</table>
+		</div>
+		<div class="text-left col-md-12 col-xs-12">
+			<button type="button" class="btn btn-default x_btn" ng-click="$dismiss()">
+				<i class="fa" aria-hidden="true">返回</i>
+			</button>
+		</div>
+	</div>
+
+</div>

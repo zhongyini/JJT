@@ -1,0 +1,350 @@
+<div id="role-detail-pg" class="role_pg">
+	<div class="page-title">
+		<div class="title_left">
+			<h3 ng-bind="vm.isDeleteAction ? '角色删除确认' : '角色详情'"></h3>
+		</div>
+	</div>
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>角色信息 <small>查看角色的详细情报</small></h4>
+		</div>
+		<div class="x_content">
+			<form id="role-new-form" class="form-horizontal">
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">角色ID：</label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.roleId"></div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-2 col-sm-3 col-xs-12 x_text">
+						<label class="col-md-12 col-sm-12 col-xs-12">角色名：</label>
+					</div>
+					<div class="col-md-6 col-sm-6 col-xs-12 x_text" ng-bind="vm.model.roleName">
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+	<div class="x_panel permission_list">
+		<div class="x_title">
+			<h4>角色权限 <small>该角色被赋予的权限</small></h4>
+		</div>
+		<div class="x_content">
+			<div class="col-md-12 col-sm-12 col-xs-12">
+				<!--<label class="checkbox-inline col-md-3" ng-repeat="item in vm.model.permissions">
+                	<input type="checkbox" checked disabled />{{item.text}}
+         		</label>-->
+				<div data-permissions="authority.admin.list">
+					<h4> <small>管理员管理</small></h4></div>
+				<div data-permissions="authority.admin.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'admin')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="authority.role.list">
+					<h4> <small>角色管理</small></h4></div>
+				<div data-permissions="authority.role.list" class="col-md-12 col-sm-12 col-xs-12">
+
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'role')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="authority.api.list">
+					<h4> <small>授权管理</small></h4></div>
+				<div data-permissions="authority.api.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'api')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				
+				<div data-permissions="authority.preview.create">
+					<h4> <small>预览管理</small></h4></div>
+				<div data-permissions="authority.preview.create" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+                		<div ng-if="vm.show(item.name,'preview')&&item.selected">
+                			<input type="checkbox"  checked disabled/>{{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.offactivity.list">
+					<h4> <small>线下活动管理</small></h4></div>
+				<div data-permissions="wx.offactivity.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'offactivity')&&item.selected" style="float: left;">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.keyword.list">
+					<h4> <small>关键字管理</small></h4></div>
+				<div data-permissions="wx.keyword.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'keyword')&&item.selected" style="float: left;">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.faq.list">
+					<h4> <small>常见问题管理</small></h4></div>
+				<div data-permissions="wx.faq.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'faq')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.actionKeyword.list">
+					<h4> <small>活动关键字管理</small></h4></div>
+				<div data-permissions="wx.actionKeyword.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'actionKeyword')&&item.selected" style="float: left;">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.news.list">
+					<h4> <small>新闻管理</small></h4></div>
+				<div data-permissions="wx.news.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'news')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.push.list">
+					<h4> <small>群推管理</small></h4></div>
+				<div data-permissions="wx.push.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'push')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				
+				<div data-permissions="wx.deliverTime.list">
+					<h4> <small>累积发货次数群推管理</small></h4></div>
+				<div data-permissions="wx.deliverTime.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'deliverTime')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.groupsetting.list">
+					<h4> <small>AB组群推管理</small></h4></div>
+				<div data-permissions="wx.groupsetting.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+                		<div ng-if="vm.show(item.name,'groupsetting')&&item.selected">
+                			<input type="checkbox" name="selectCheckBox" checked disabled/>{{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.normalMonthAge.list">
+					<h4> <small>一般月龄群推管理</small></h4></div>
+				<div data-permissions="wx.normalMonthAge.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+                		<div ng-if="vm.show(item.name,'normalMonthAge')&&item.selected">
+                			<input type="checkbox" name="selectCheckBox" checked disabled/>{{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.noMonthAge.list">
+					<h4> <small>非月龄群推管理</small></h4></div>
+				<div data-permissions="wx.noMonthAge.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+                		<div ng-if="vm.show(item.name,'noMonthAge')&&item.selected">
+                			<input type="checkbox" name="selectCheckBox" checked disabled/>{{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.sectionMonthAge.list">
+					<h4> <small>区间月龄群推管理</small></h4></div>
+				<div data-permissions="wx.sectionMonthAge.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+                		<div ng-if="vm.show(item.name,'sectionMonthAge')&&item.selected">
+                			<input type="checkbox" name="selectCheckBox" checked disabled/>{{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.scene.list">
+					<h4> <small>场景管理</small></h4></div>
+				<div data-permissions="wx.scene.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'scene')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.url.list">
+					<h4> <small>url管理</small></h4></div>
+				<div data-permissions="wx.url.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'url')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.trade.list">
+					<h4> <small>商品管理</small></h4></div>
+				<div data-permissions="wx.trade.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'trade')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.banner.list">
+					<h4> <small>Banner管理</small></h4></div>
+				<div data-permissions="wx.banner.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'banner')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.trade.list">
+					<h4> <small>主题商品自动化推送管理</small></h4></div>
+				<div data-permissions="wx.subjectgoods.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'subjectgoods')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.industrymodel.list">
+					<h4> <small>行业模板管理</small></h4></div>
+				<div data-permissions="wx.industrymodel.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'industrymodel')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.messageTemplate.create">
+					<h4> <small>活动通知管理</small></h4></div>
+				<div data-permissions="wx.messageTemplate.create" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'messageTemplate')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="wx.csv.upload">
+					<h4> <small>CSV上传</small></h4></div>
+				<div data-permissions="wx.csv.upload" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'csv')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="search.user.list">
+					<h4> <small>微信用户一览</small></h4></div>
+				<div data-permissions="search.user.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'user')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="search.pushret.list">
+					<h4> <small>推送结果一览</small></h4></div>
+				<div data-permissions="search.pushret.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'pushret')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="search.batch.list">
+					<h4> <small>批处理一览</small></h4></div>
+				<div data-permissions="search.batch.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'batch')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="report.accessTimes.list">
+					<h4> <small>接入次数统计</small></h4></div>
+				<div data-permissions="report.accessTimes.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'accessTimes')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="report.useTimes.list">
+					<h4> <small>客服使用统计</small></h4></div>
+				<div data-permissions="report.useTimes.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'useTimes')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="report.userAppend.list">
+					<h4> <small>用户数据统计</small></h4></div>
+				<div data-permissions="report.userAppend.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'userAppend')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="report.statisticalData.list">
+					<h4> <small>图文分析数据统计</small></h4></div>
+				<div data-permissions="report.statisticalData.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+						<div ng-if="vm.show(item.name,'statisticalData')&&item.selected">
+							<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="search.user.list">
+					<h4> <small>特定微信用户一览</small></h4></div>
+				<div data-permissions="search.user.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+                		<div ng-if="vm.show(item.name,'speciallist')&&item.selected">
+                			<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="search.userSign.list">
+					<h4> <small>微信用户签到一览</small></h4></div>
+				<div data-permissions="search.userSign.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+                		<div ng-if="vm.show(item.name,'userSign')&&item.selected">
+                			<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+				<div data-permissions="search.userActionRecord.list">
+					<h4> <small>微信用户操作记录一览</small></h4></div>
+				<div data-permissions="search.userActionRecord.list" class="col-md-12 col-sm-12 col-xs-12">
+					<div class="checkbox-inline" ng-repeat="item in vm.permissionList">
+                		<div ng-if="vm.show(item.name,'userActionRecord')&&item.selected">
+                			<input type="checkbox" checked disabled /> {{item.text}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+		</div>
+		<div class="ln_solid"></div>
+		<div class="form-group btn_action_group">
+			<div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-5">
+				<button type="button" class="btn btn-danger x_btn" ng-click="vm.save()" ng-if="vm.isDeleteAction">确认删除</button>
+				<button type="button" class="btn btn-default x_btn" ng-click="vm.back()">返回</button>
+			</div>
+		</div>
+	</div>
+</div>

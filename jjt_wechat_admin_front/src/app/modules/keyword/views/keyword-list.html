@@ -1,0 +1,108 @@
+<div id="admin-list-pg">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>关键字管理</h3>
+        </div>
+    </div>
+    <div class="x_panel">
+        <div class="x_title">
+            <h4>检索条件 <small>请输入检索条件</small></h4>
+        </div>
+        <div class="x_content">
+            <form id="admin-search-form" class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-xs-12" for="keyword">关键字
+                            </label>
+                            <div class="col-md-9 col-xs-12">
+                                <input type="text" id="keyword" name="keyword" class="form-control" ng-model="vm.searchCondition.keyword">
+                            </div>
+                        </div>
+                    </div>
+                  
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-xs-12" for="deleteFlag">回复方式
+                            </label>
+                            <div class="col-md-9 col-xs-12">
+                                <select name="replyType" class="form-control"
+                                        ng-model="vm.searchCondition.replyType" 
+                                        ng-options="{{'replyType' | codelistOptions}}">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-primary x_btn" ng-click="vm.search()">
+                        <i class="fa fa-search" aria-hidden="true"></i>检索
+                    </button>                    
+                    <button type="button" class="btn btn-primary x_btn" ng-click="vm.reset()">
+                         <i class="fa fa-undo" aria-hidden="true"></i>重置
+                    </button>
+                    <button type="button" class="btn btn-primary x_btn"  ui-sref="main.keyword.new" data-permissions="wx.keyword.create">
+                        <i class="fa fa-plus" aria-hidden="true"></i>新增
+                    </button>
+                    <button type="button" class="btn btn-primary x_btn" data-permissions="wx.keyword.update" 
+                    	ui-sref="main.keyword.update({type: '1'})">
+                         <i class="fa fa-undo" aria-hidden="true"></i>默认回复编辑
+                    </button>
+                    <button type="button" class="btn btn-primary x_btn" data-permissions="wx.keyword.update"
+                    	 ui-sref="main.keyword.update({type: '2'})">
+                         <i class="fa fa-undo" aria-hidden="true"></i>欢迎词编辑
+                    </button>
+                    <button type="button" class="btn btn-primary x_btn" data-permissions="wx.keyword.update"
+                    	 ui-sref="main.keyword.update({type: '3'})">
+                         <i class="fa fa-undo" aria-hidden="true"></i>常见问题
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="x_panel">
+        <div class="x_title">
+            <h4>检索结果 
+                <small>检索到的关键字列表
+                    
+                </small>
+            </h4>
+        </div>
+        <div class="x_content">
+        	
+	            <table ng-table="vm.tableParams" class="table table-bordered table-striped">
+	                <tr ng-repeat="row in $data">
+	                    <td title="'序号'" ng-bind="vm.getIndex($index)"></td>
+	                    <td title="'关键字'" ng-bind="row.keyword" align="center"></td>
+	                    <td title="'回复方式'"  ng-bind="row.replyType | replyTypeText"class="td-long-text" align="center"></td>
+	                    <td title="'回复内容'" ng-bind="row.replyContent" class="td-long-text" align="center"></td>
+	                    
+	                    <td title="'图文标题'" ng-bind="row.title" align="center"></td>
+	                    
+	                    <td title="'图文照片'" width="10%" align="center">
+	                        <img class="img-responsive" style="width: 60px;" ng-src="{{row.image}}" ng-show="row.image" ng-if="row.replyType==2">
+	                    	<img class="img-responsive" style="width: 60px;" ng-src="{{row.image}}" ng-show="row.image" ng-if="row.replyType==4">
+	                    </td>
+	                    
+	                  	
+	                    <td title="'操作'" class="td-operation-200">
+	
+	                        <a class="btn btn-success x_btn" ui-sref="main.keyword.edit({id: row.keyword})" data-permissions="wx.keyword.update">
+	                            <i class="fa fa-pencil" aria-hidden="true"></i>编辑
+	                        </a>  
+	                        
+	                        <a class="btn btn-danger x_btn" ui-sref="main.keyword.delete({id: row.keyword})" data-permissions="wx.keyword.delete">
+	                            <i class="fa fa-remove" aria-hidden="true"></i>删除
+	                        </a>   
+	                                            
+	                    </td>
+	                </tr>
+	                
+	            </table>
+		       	<div ng-if="vm.searchCondition.noData">
+		       		<h4 class="no-data">没有查询到数据</h4>
+		       	</div>
+        </div>
+    </div>
+</div>

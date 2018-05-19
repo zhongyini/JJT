@@ -1,0 +1,30 @@
+<div id="url-list-pg">
+	<div class="page-title">
+		<div class="title_left">
+			<h3>URL一览</h3>
+		</div>
+	</div>
+	<div class="x_panel">
+		<div class="x_title">
+			<h4>URL一览 </h4>
+		</div>
+		<div class="x_content">
+			<table ng-table="vm.tableParams" class="table table-bordered table-striped">
+				<tr ng-repeat="row in $data">
+					<td title="'序号'" ng-bind="vm.getIndex($index)"></td>
+					<td title="'链接ID'" ng-bind="row.urlId"align="center"></td>
+					<td title="'URL地址'" ng-bind="row.urlValue"align="left"></td>
+					<td title="'备注/描述'" ng-bind="row.memo"align="center"></td>
+					<td title="'操作'"class="td-operation-200">
+						<a class="btn btn-success x_btn" ui-sref="main.url.edit({id: row.urlId})" data-permissions="wx.url.update">
+							<i class="fa fa-pencil" aria-hidden="true"></i> 编辑
+						</a>
+					</td>
+				</tr>
+			</table>
+			<div ng-if="vm.searchCondition.noData">
+		       		<h4 class="no-data">没有查询到数据</h4>
+		       	</div>
+		</div>
+	</div>
+</div>

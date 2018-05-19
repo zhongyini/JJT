@@ -1,0 +1,106 @@
+<div id="admin-list-pg">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>管理员管理</h3>
+        </div>
+    </div>
+    <div class="x_panel">
+        <div class="x_title">
+            <h4>检索条件 <small>请输入检索条件</small></h4>
+        </div>
+        <div class="x_content">
+            <form id="admin-search-form" class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-xs-12" for="name">管理员名
+                            </label>
+                            <div class="col-md-9 col-xs-12">
+                                <input type="text" id="name" name="name" class="form-control" ng-model="vm.searchCondition.name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="mail" class="control-label col-md-3 col-xs-12">邮箱</label>
+                            <div class="col-md-9 col-xs-12">
+                                <input type="mail" id="mail" name="mail" class="form-control" ng-model="vm.searchCondition.mail">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="control-label col-md-3 col-xs-12" for="deleteFlag">有效区分
+                            </label>
+                            <div class="col-md-9 col-xs-12">
+                                <select name="deleteFlag" class="form-control"
+                                        ng-model="vm.searchCondition.deleteFlag" 
+                                        ng-options="{{'deleteFlag' | codelistOptions}}">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-primary x_btn" ng-click="vm.search()">
+                        <i class="fa fa-search" aria-hidden="true"></i>检索
+                    </button>                    
+                    <button type="button" class="btn btn-primary x_btn" ng-csv="vm.getCsvData()" filename="管理员一览.csv" lazy-load="true" add-bom="true" csv-header="['id', '名称', '角色']">
+                        <i class="fa fa-download"></i>下载CSV
+                    </button>
+                    
+                    <button type="button" class="btn btn-primary x_btn" ng-click="vm.reset()">
+                         <i class="fa fa-undo" aria-hidden="true"></i>重置
+                    </button>
+                    <button type="button" class="btn btn-primary x_btn"  ui-sref="main.adminManager.new" data-permissions="authority.adminManager.create">
+                        <i class="fa fa-plus" aria-hidden="true"></i>新增
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="x_panel">
+        <div class="x_title">
+            <h4>检索结果 
+                <small>检索到的管理员列表
+                    
+                </small>
+            </h4>
+        </div>
+        <div class="x_content">
+        	
+	            <table ng-table="vm.tableParams" class="table table-bordered table-striped">
+	                <tr ng-repeat="row in $data">
+	                    <td title="'序号'" class="td-min-width-20" ng-bind="vm.getIndex($index)"></td>
+	                    <td title="'管理员名'" class="td-min-width-40" ng-bind="row.name"align="center"></td>
+	                    <td title="'邮箱'" class="td-min-width-60" ng-bind="row.mail"align="center"></td>
+	                    <td title="'角色'" class="td-min-width-40" ng-bind="row.roleName"align="center" ></td>
+	                    <td title="'头像'" class="td-min-width-80"align="center">
+	                        <img class="img-responsive" style="width: 60px;" ng-src="{{row.portrait}}" ng-show="row.portrait">
+	                    </td>
+	                    <td title="'有效区分'" ng-bind="row.deleteFlag | deleteFlagNew"align="center"></td>
+	                    <td title="'操作'" class="td-operation-320">
+	
+	                        <a class="btn btn-success x_btn" ng-if="row.deleteFlag == '0' && (vm.currentUserRoleId =='0' || vm.currentUserId ==row.adminId) " ui-sref="main.adminManager.edit({id: row.adminId})" data-permissions="authority.adminManager.update">
+	                            <i class="fa fa-pencil" aria-hidden="true"></i>编辑
+	                        </a>  
+	                         <a class="btn btn-success x_btn" ng-if="row.deleteFlag == '0' && vm.currentUserRoleId =='0' " ng-click="vm.resetPwd(row.adminId)" >
+	                            <i class="fa fa-pencil" aria-hidden="true"></i>重置密码
+	                        </a>  
+	                        <a class="btn btn-danger x_btn" ng-if="row.deleteFlag == '0' && vm.currentUserRoleId =='0' " ui-sref="main.adminManager.delete({id: row.adminId})" data-permissions="authority.adminManager.delete">
+	                            <i class="fa fa-remove" aria-hidden="true"></i>删除
+	                        </a>   
+	                                            
+	                    </td>
+	                </tr>
+	                
+	            </table>
+		       	<div ng-if="vm.searchCondition.noData">
+		       		<h4 class="no-data">没有查询到数据</h4>
+		       	</div>
+        </div>
+    </div>
+</div>
