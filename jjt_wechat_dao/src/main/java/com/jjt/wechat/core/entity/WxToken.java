@@ -7,7 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name="t_wx_token")
+@Table(name="jjt_wx_token")
 public class WxToken implements Serializable {
 	/**
 	 * 
