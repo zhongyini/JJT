@@ -1,0 +1,66 @@
+package com.qiaohu.wechat.admin.service.impl;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.Criteria;
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.qiaohu.wechat.admin.service.IBatchService;
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.core.dao.BatchStatusDao;
+import com.qiaohu.wechat.core.entity.BatchStatus;
+import com.qiaohu.wechat.core.entity.extend.BatchExt;
+import com.qiaohu.wechat.core.exception.AppException;
+import com.qiaohu.wechat.helper.MessageHelper;
+
+@Service
+public class BatchServiceImpl implements IBatchService {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(BatchServiceImpl.class);
+	@Autowired
+	BatchStatusDao batchDao;
+	@Autowired
+	MessageHelper messageHelper;
+
+	@Override
+	public Page<BatchStatus> search(BatchExt batchExt) throws AppException {
+		// 查询条件做成
+		Example example = new Example(BatchStatus.class);
+		Criteria criteria = example.createCriteria();
+		// 根据bathName查询
+		if (!CheckUtils.isNullOrEmpty(batchExt.getBathName())) {
+			criteria.andLike("bathName", "%" + batchExt.getBathName() + "%");
+		}
+		// 根据runStatus查询
+		if (!CheckUtils.isNullOrEmpty(batchExt.getRunStatus())) {
+			criteria.andEqualTo("runStatus", batchExt.getRunStatus());
+		}
+		// 根据开始、结束时间查询
+		if (!CheckUtils.isNullOrEmptyTime(batchExt.getStartTime())) {
+			criteria.andGreaterThanOrEqualTo("startTime",
+					batchExt.getStartTime());
+		}
+		if (!CheckUtils.isNullOrEmptyTime(batchExt.getEndTime())) {
+			criteria.andLessThanOrEqualTo("endTime", batchExt.getEndTime());
+		}
+		example.setOrderByClause("RUN_STATUS ASC, START_TIME DESC, END_TIME DESC");
+		// 根据条件查询角色
+		try {
+			// 分页查询
+			PageHelper.startPage(batchExt.getPage(), batchExt.getCount());
+			// 查询方法
+			return (Page<BatchStatus>) batchDao.selectByExample(example);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			// 异常信息
+			throw new AppException(messageHelper.mesg_info_0007, e);
+		}
+	}
+
+}

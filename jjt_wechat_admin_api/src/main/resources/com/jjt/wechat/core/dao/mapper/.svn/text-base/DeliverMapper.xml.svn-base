@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qiaohu.wechat.core.dao.CsvDeliverDao">
+
+<select id="selectUnSendSingleMessage"  resultType="com.qiaohu.wechat.core.entity.extend.CsvDeliverExt">
+	select tcd.web_id as webId,tcd.ucode,tcd.id,tcd.prodname,tcd.mailid,tcd.prodgrname,tcd.prodid,
+		tcd.mailtool,uw.open_id as openId,uw.delete_flag as deleteFlag, 1 as count,
+		td.remark_dat as remarkDat,td.first_dat as fisrtDat,td.description_url as descriptionUrl
+	from t_csv_deliver tcd
+	inner join (
+		select t_tmp_del_one.web_id,t_tmp_del_one.ucode,t_tmp_del_one.mailid,t_tmp_del_one.couone from (
+			select web_id,ucode,mailid,count(1) as couone from t_csv_deliver 
+			where process_flag = 1
+			group by mailid,web_id,ucode
+		) t_tmp_del_one where t_tmp_del_one.couone = 1 limit 5000
+	)tcd2 on tcd.web_id=tcd2.web_id and tcd.ucode = tcd2.ucode and tcd.mailid=tcd2.mailid
+	left join t_user_weixin uw 
+	on (tcd.ucode = uw.ucode and uw.ucode is not null and uw.ucode != "")
+	left join t_trade_description td 
+	ON tcd.prodid=td.prodid and (tcd.prodgrname = td.prodgrname or tcd.prodname = td.prodgrname)
+	where tcd.process_flag = 1
+</select>
+
+<select id="selectUnsendMailid" resultType="com.qiaohu.wechat.core.entity.extend.CsvDeliverExt">
+	select t_tmp_del_one.web_id as webId,t_tmp_del_one.ucode,t_tmp_del_one.mailid,t_tmp_del_one.couone as count from (
+		select web_id,ucode,mailid,count(1) as couone from t_csv_deliver 
+		where process_flag = 1
+		group by mailid,web_id,ucode
+	) t_tmp_del_one where t_tmp_del_one.couone > 1 limit 5000
+</select>
+
+<select id="selectUnsendDoubleMessage" resultType="com.qiaohu.wechat.core.entity.extend.CsvDeliverExt">
+	select tcd.web_id as webId,tcd.ucode,tcd.id,tcd.prodname,tcd.mailid,tcd.prodgrname as prodgrname,tcd.prodid,
+	tcd.mailtool,uw.open_id as openId,uw.delete_flag as deleteFlag,
+	td.remark_dat as remarkDat,td.first_dat as fisrtDat,td.description_url as descriptionUrl
+	from t_csv_deliver tcd
+	inner join (
+		select t_tmp_del_one.web_id,t_tmp_del_one.ucode,t_tmp_del_one.mailid,t_tmp_del_one.couone from (
+			select web_id,ucode,mailid,count(1) as couone from t_csv_deliver 
+			where process_flag = 1
+			group by mailid,web_id,ucode
+		) t_tmp_del_one where t_tmp_del_one.couone > 1
+	)tcd2 on tcd.web_id=tcd2.web_id and tcd.ucode = tcd2.ucode and tcd.mailid=tcd2.mailid
+	left join t_user_weixin uw on (tcd.ucode = uw.ucode and uw.ucode is not null and uw.ucode != "")
+	left join t_trade_description td 
+	ON tcd.prodid=td.prodid and (tcd.prodgrname = td.prodgrname or tcd.prodname = td.prodgrname)
+	where tcd.process_flag = 1
+</select>
+
+<update id="updateByMailIdWebId" parameterType="com.qiaohu.wechat.core.entity.CsvDeliver">
+	UPDATE t_csv_deliver 
+	SET process_flag = #{processFlag},updatetime=#{updatetime},open_id=#{openId}
+	WHERE mailid = #{mailid}
+	<if test="ucode != null and ucode != ''">
+		and ucode = #{ucode}
+	</if>
+	<if test="webId != null and webId != ''">
+		and web_id = #{webId}
+	</if>
+</update>
+
+<select id="selectTodayDeliver" parameterType="java.lang.String" resultType="com.qiaohu.wechat.core.entity.CsvDeliver">
+	select 
+	   	tcd.ID as id,
+		tcd.WEB_ID as webId,
+		tcd.OPEN_ID as openId,
+		tcd.PRODGRNAME as prodgrname,
+		tcd.PRODID as prodid,
+		tcd.UCODE as ucode,
+		tcd.ORDER_DATE as orderDate,
+		tcd.PROD_FLAG as prodFlag,
+		tcd.PROCESS_FLAG as processFlag,
+		tcd.FILENAME as filename,
+		tcd.UPDATETIME as updatetime
+	from t_csv_deliver tcd
+	where
+		 tcd.PROCESS_FLAG=9 and tcd.UPDATETIME like #{updatetime}
+	
+</select>
+</mapper>

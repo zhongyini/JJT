@@ -1,0 +1,120 @@
+package com.qiaohu.wechat.admin.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.Page;
+import com.qiaohu.wechat.admin.BaseController;
+import com.qiaohu.wechat.admin.RestResult;
+import com.qiaohu.wechat.admin.auth.AuthRequired;
+import com.qiaohu.wechat.admin.dto.BasePage;
+import com.qiaohu.wechat.admin.util.DateUtil;
+import com.qiaohu.wechat.common.api.DataCubeAPI;
+import com.qiaohu.wechat.common.api.MaterialAPI;
+import com.qiaohu.wechat.common.api.response.GetArticleSummaryResponse;
+import com.qiaohu.wechat.common.api.response.GetArticleTotalResponse;
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.common.utils.DateUtils;
+import com.qiaohu.wechat.core.config.ApiConfig;
+import com.qiaohu.wechat.core.entity.MassSendDtl;
+import com.qiaohu.wechat.core.entity.MassSendResume;
+import com.qiaohu.wechat.core.entity.extend.MassSendResumeExt;
+import com.qiaohu.wechat.core.exception.AppException;
+import com.qiaohu.wechat.core.service.IMassSendResumeService;
+
+@RestController
+@RequestMapping("/pushret")
+public class MassSendRetController extends BaseController {
+	
+	@Autowired
+	private IMassSendResumeService massService;
+
+	/*
+	 * 一览画面数据取得 返回一个RestResult对象
+	 */
+	@AuthRequired(permission = "search.pushret.list")
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	public RestResult list(@RequestBody MassSendResumeExt massExt) {
+		if (!CheckUtils.isNull(massExt.getEndDate())
+				&& !CheckUtils.isNull(massExt.getStartDate())) {
+			massExt.setStartDate(DateUtil.getStartDate(massExt.getStartDate()));
+			massExt.setEndDate(DateUtil.getEndDate(massExt.getEndDate()));
+			if (!DateUtils.comparable(massExt.getStartDate(),
+					massExt.getEndDate())) {
+				// 开始日期不是大于结束日期
+				return new RestResult(messageHelper.mesg_info_0019);
+			}
+
+		}
+		Page<MassSendResume> list = null;
+		try {
+			
+				list = massService.search(massExt);
+				if (CheckUtils.isNullOrEmpty(list.getResult())
+						&& massExt.getPage() > 0) {
+					massExt.setPage(0);
+					list = massService.search(massExt);
+				}
+				// 返回参数
+				if(list.getTotal()>1000){
+					return new RestResult(new BasePage(1000,
+							list.getResult()));
+				}
+			
+			return new RestResult(new BasePage(list.getTotal(),
+					list.getResult()));
+		} catch (AppException e) {
+			logger.error(e.getMessage(), e);
+			// 返回异常信息
+			return new RestResult(e.getMessage());
+		}
+
+	}
+
+	/*
+	 * 详情数据 入力值为openId
+	 */
+	@RequestMapping(value = "/detail", method = RequestMethod.GET)
+	public RestResult detail(String id) {
+		try {
+			Page<MassSendDtl> list = massService.detail(id);
+			if (CheckUtils.isNull(list)) {
+				return new RestResult(messageHelper.mesg_info_0007);
+			}
+			// 根据Id查询对象返回
+			return new RestResult(list);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			// 返回异常信息
+			return new RestResult(e.getMessage());
+		}
+
+	}
+	
+	/*@RequestMapping(value = "/download", method = RequestMethod.POST)
+	public RestResult download(@RequestBody MassSendResumeExt massExt) {
+		//获取api接口
+		DataCubeAPI dataCubeAPI =getDataCubeAPI();
+		GetArticleTotalResponse gsr=dataCubeAPI.getArticleTotal(massExt.getStartDate()); 
+		return null;
+	}
+	
+	//获取数据
+	private DataCubeAPI getDataCubeAPI() {
+		//获取次图文
+		String accessToken = null;
+		DataCubeAPI dataCubeAPI = null;
+		accessToken = ApiConfig.getInstance().getAccessToken();
+		if (CheckUtils.isNullOrEmpty(accessToken)) {
+			logger.error("accessToken is null or empty.");
+			//return new RestResult(messageHelper.mesg_error_0001);
+		}
+		// 初始化获取图文消息接口
+		dataCubeAPI = new DataCubeAPI(accessToken);
+		
+		return dataCubeAPI;		
+	}*/
+}

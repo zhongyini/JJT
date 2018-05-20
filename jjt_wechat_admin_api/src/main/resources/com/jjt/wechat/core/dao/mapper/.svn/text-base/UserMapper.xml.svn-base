@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qiaohu.wechat.core.dao.UserDao">
+
+	<sql id="Base_Column_List">
+		ADMIN_ID as adminId,
+		name as name,
+		ROLE_ID as roleId,
+		mail as
+		mail,
+		PORTRAIT as portrait
+	</sql>
+
+	<select id="selectByUser" parameterType="com.qiaohu.wechat.core.entity.UserAdmin"
+		resultType="com.qiaohu.wechat.core.entity.UserAdmin">
+		SELECT tua.ADMIN_ID as adminId,tua.name as name,tr.ROLE_NAME as
+		roleName,tr.ROLE_ID as roleId,mail as mail,DELETE_FLAG as
+		deleteFlag,PORTRAIT as portrait
+		FROM t_user_admin tua inner join t_role
+		tr on tr.ROLE_ID = tua.ROLE_ID
+		<where>
+			tr.ROLE_ID !='0'
+			<!-- <if test="name != null and name != ''"> t.create_date &gt;= ${startDate} 
+				</if> <if test="endDate != null and endDate != 0"> <![CDATA[ and t.create_date 
+				> ${endDate} ]]> </if> -->
+			<if test="name != null and name != ''">
+				and tua.name like CONCAT('%',#{name},'%' )
+			</if>
+			<if test="mail != null and mail != ''">
+				and tua.mail like CONCAT('%',#{mail},'%' )
+			</if>
+			<if test="deleteFlag != null and deleteFlag != ''">
+				and tua.DELETE_FLAG=#{deleteFlag}
+			</if>
+			<if test="roleId != null and roleId != ''">
+				and tr.ROLE_ID =#{roleId}
+			</if>
+		</where>
+		ORDER BY tua.modify_user DESC ,tua.ADMIN_ID
+	</select>
+	<select id="selectDownByUser" parameterType="com.qiaohu.wechat.core.entity.UserAdmin"
+		resultType="com.qiaohu.wechat.core.entity.extend.UserAdminCsv">
+		SELECT tua.ADMIN_ID as adminId,tua.name as name,tr.ROLE_NAME as
+		roleName
+		FROM t_user_admin tua inner join t_role
+		tr on tr.ROLE_ID =
+		tua.ROLE_ID
+		<where>
+			tr.ROLE_ID !='0'
+			<!-- <if test="name != null and name != ''"> t.create_date &gt;= ${startDate} 
+				</if> <if test="endDate != null and endDate != 0"> <![CDATA[ and t.create_date 
+				> ${endDate} ]]> </if> -->
+			<if test="name != null and name != ''">
+				and tua.name like CONCAT('%',#{name},'%' )
+			</if>
+			<if test="mail != null and mail != ''">
+				and tua.mail like CONCAT('%',#{mail},'%' )
+			</if>
+			<if test="deleteFlag != null and deleteFlag != ''">
+				and tua.DELETE_FLAG=#{deleteFlag}
+			</if>
+			<if test="roleId != null and roleId != ''">
+				and tr.ROLE_ID =#{roleId}
+			</if>
+		</where>
+		ORDER BY tua.modify_user DESC ,tua.ADMIN_ID
+	</select>
+	<!-- modify select sql start at  2017/08/08 -->
+	<select id="selectDownByUserWeiXin" parameterType="com.qiaohu.wechat.core.entity.extend.UserWeiXinExt"
+		resultType="com.qiaohu.wechat.core.entity.extend.UserWxCsv">
+		SELECT tua.OPEN_ID as openId,
+			tua.WEB_ID as webId,
+			tua.ucode as ucode,
+			tua.nickname as nickname,
+			tua.sex as sex,
+			tua.city as city,
+			tua.country as country,
+			tua.province as province,
+			tua.language as language,
+			tua.SUBSCRIBE_TIME as subscribeTime,
+			tua.USER_STATUS as userStatus,
+			tua.cookie as cookie,
+			tua.ORDER_TIMES as orderTimes,
+			tua.ORDER_DATE as orderDate,
+			tua.prodid as prodid,
+			tua.PRODGRNAME as prodGrName,
+			tua.BIRTHDAY_MONTH as birthdayMonth,
+			tua.ERROR_TIME as errorTime,
+			tua.LOCK_FLAG as lockFlag,
+			tua.APPLY_QR as applyQr,
+			tua.DELETE_FLAG as deleteFlag,
+			tua.CREATE_USER as createUser,
+			tua.CREATE_DATE as createDate,
+			tua.MODIFY_USER as modifyUser,
+			tua.MODIFY_DATE as modifyDate,
+			tua.SIGN_DATE as signDate,
+			tua.FROMCODE as  fromcode
+			FROM t_user_weixin tua	
+			<where>
+			<if test="webId != null and webId != ''">
+				and tua.WEB_ID like CONCAT('%',#{webId},'%' )
+			</if>
+			<if test="ucode != null and ucode != ''">
+				and tua.ucode like CONCAT('%',#{ucode},'%' )
+			</if>
+			<if test="nickname != null and nickname != ''">
+				and tua.nickname like CONCAT('%',#{nickname},'%' )
+			</if>
+			<if test="sex != null and sex != ''">
+				and tua.sex like CONCAT('%',#{sex},'%' )
+			</if>
+			<if test="userStatus != null and userStatus != ''">
+				and tua.USER_STATUS like CONCAT('%',#{userStatus},'%' )
+			</if>
+			<if test="deleteFlag != null and deleteFlag != ''">
+				and tua.DELETE_FLAG like CONCAT('%',#{deleteFlag},'%' )
+			</if>
+			<if test="startDate != null and startDate != '' and endDate != null and endDate != ''" > 
+				<![CDATA[and tua.CREATE_DATE <= #{endDate} and tua.CREATE_DATE >= #{startDate}]]>
+			</if>
+			 <if test="applyQR != null and applyQR != ''">
+				and tua.APPLY_QR like CONCAT('%',#{applyQR},'%' )
+			</if>
+		</where>
+		ORDER BY  tua.WEB_ID DESC
+	</select>
+	<!-- modify select sql end at  2017/08/08 -->
+	
+	<select id="selectById" parameterType="String"
+		resultType="com.qiaohu.wechat.core.entity.UserAdmin">
+		SELECT tua.ADMIN_ID as adminId,tua.name as
+		name,tr.ROLE_NAME as roleName,tr.ROLE_ID as roleId,mail as
+		mail,DELETE_FLAG as deleteFlag,PORTRAIT as portrait,
+		tua.CREATE_USER as
+		createUser,tua.CREATE_DATE as createDate,
+		tua.MODIFY_USER as
+		modifyUser,tua.MODIFY_DATE as modifyDate
+		FROM t_user_admin tua inner
+		join t_role tr on tr.ROLE_ID = tua.ROLE_ID
+		where
+		tua.ADMIN_ID=#{adminId}
+
+	</select>
+		
+	<select id="selectByWebIdAndUcode" parameterType="com.qiaohu.wechat.core.entity.extend.UserWeiXinExt"
+		resultType="com.qiaohu.wechat.core.entity.UserWeiXin">
+		SELECT tua.OPEN_ID as openId,
+			tua.WEB_ID as webId,
+			tua.ucode as ucode,
+			tua.nickname as nickname,
+			tua.sex as sex,
+			tua.city as city,
+			tua.country as country,
+			tua.province as province,
+			tua.language as language,
+			tua.SUBSCRIBE_TIME as subscribeTime,
+			tua.USER_STATUS as userStatus,
+			tua.cookie as cookie,
+			tua.ORDER_TIMES as orderTimes,
+			tua.ORDER_DATE as orderDate,
+			tua.prodid as prodid,
+			tua.PRODGRNAME as prodGrName,
+			tua.BIRTHDAY_MONTH as birthdayMouth,
+			tua.ERROR_TIME as errorTime,
+			tua.LOCK_FLAG as lockFlag,
+			tua.APPLY_QR as applyQr,
+			tua.DELETE_FLAG as deleteFlag,
+			tua.CREATE_USER as createUser,
+			tua.CREATE_DATE as createDate,
+			tua.MODIFY_USER as modifyUser,
+			tua.MODIFY_DATE as modifyDate,
+			tua.SIGN_DATE as signDate,
+			tua.FROMCODE as  fromcode
+			FROM t_user_weixin tua
+			<where>
+			<if test="(webId != null and webId != '') and (ucode == null or ucode == '')">
+				and tua.WEB_ID = #{webId}
+			</if>
+			<if test="(ucode != null and ucode != '') and (webId == null or webId == '')">
+				or tua.ucode =#{ucode}
+			</if>
+			<if test="(webId != null and webId != '') and (ucode != null and ucode != '')">
+				<![CDATA[ or tua.WEB_ID = #{webId} and tua.ucode =#{ucode} ]]>
+			</if>
+		</where>	
+				
+	</select>
+	<select id="selectProdid" resultType="java.lang.String">
+		SELECT prodid FROM t_user_weixin WHERE user_status = '0' AND delete_flag = '0' AND prodid != '' AND prodid IS NOT NULL GROUP BY prodid
+	</select>
+	<select id="selectProdgrnam" resultType="java.lang.String">
+		SELECT PRODGRNAME FROM t_user_weixin WHERE user_status = '0' AND delete_flag = '0' AND PRODGRNAME != '' AND PRODGRNAME IS NOT NULL GROUP BY PRODGRNAME
+	</select>
+	<select id="selectProdCount" parameterType="com.qiaohu.wechat.core.entity.extend.UserWeiXinExt" resultType="java.lang.Integer">
+		SELECT COUNT(0) FROM t_user_weixin WHERE user_status = '0' AND delete_flag = '0' AND PRODGRNAME = #{prodGrName} AND prodid = #{prodid}
+	</select>
+	<select id="selectPdCount" resultType="com.qiaohu.wechat.core.entity.extend.PdCsvDataExt">
+		SELECT prodid, prodgrname, COUNT(0) AS num from t_user_weixin
+		WHERE ((prodid!='' AND prodid IS NOT NULL) 
+		OR (prodgrname!='' AND prodgrname IS NOT NULL))
+		AND user_status = '0' AND delete_flag = '0'
+		GROUP BY prodid, prodgrname
+	</select>
+	<select id="selectWebIdAndUcode" resultType="com.qiaohu.wechat.core.entity.extend.UdCsvDataExt">
+		SELECT ucode AS ucode,WEB_ID AS webId FROM t_user_weixin WHERE delete_flag = '0' AND WEB_ID IS NOT NULL AND WEB_ID != ''
+	</select>
+	<select id="selectQrCsvData" parameterType="com.qiaohu.wechat.core.entity.extend.UserWeiXinExt"
+		resultType="com.qiaohu.wechat.core.entity.extend.QrCsvDataExt">
+		SELECT tuw.apply_qr AS zero,
+		SUM(IF((tuwl.regist_flag = '0' AND (tuw.ucode IS NULL OR tuw.ucode = '') AND (tuw.web_id IS NULL OR tuw.web_id = '')),1,0)) AS one,
+		SUM(IF((tuw.user_status != '0' AND tuw.ucode != '' AND tuw.ucode IS NOT NULL),1,0)) AS two,
+		SUM(IF((tuw.user_status != '0' AND (tuw.ucode = '' OR tuw.ucode IS NULL) AND tuw.web_id IS NOT NULL),1,0)) AS three,
+		SUM(IF((tuwl.regist_flag = '1' AND tuw.user_status = '0' AND tuw.ucode != '' AND tuw.ucode IS NOT NULL AND tuw.web_id IS NOT NULL),1,0)) AS four
+		FROM t_user_weixin tuw INNER JOIN t_user_weixin_label tuwl 
+		ON tuw.open_id = tuwl.open_id 
+		<where>
+			tuw.delete_flag = '0' AND tuw.apply_qr IS NOT NULL
+			<if test="startDate != null and startDate != ''" > 
+				<![CDATA[AND tuw.CREATE_DATE >= #{startDate}]]>
+			</if>
+			<if test="endDate != null and endDate != ''" > 
+				<![CDATA[AND tuw.CREATE_DATE <= #{endDate}]]>
+			</if>
+		</where>
+		 GROUP BY tuw.apply_qr
+	</select>
+	
+	<select id="selectUserStatusExcelData" parameterType="com.qiaohu.wechat.core.entity.extend.UserWeiXinExt"
+		resultType="com.qiaohu.wechat.core.entity.extend.UserStatusExcelDataExt">
+		SELECT SUM(IF((tuw.user_status = '0' AND tuw.ucode != '' AND tuw.ucode IS NOT NULL),1,0)) AS c2,
+		SUM(IF((tuw.user_status != '0' AND tuw.ucode != '' AND tuw.ucode IS NOT NULL),1,0)) AS c3,
+		SUM(IF((tuw.user_status != '0' AND (tuw.ucode = '' OR tuw.ucode IS NULL) AND tuw.web_id IS NOT NULL),1,0)) AS d3,
+		SUM(IF((tuw.ucode IS NULL OR tuw.ucode = '') AND (tuw.web_id IS NULL OR tuw.web_id = ''),1,0)) AS d4
+		FROM t_user_weixin  tuw INNER JOIN t_user_weixin_label tuwl 
+		ON tuw.open_id = tuwl.open_id
+		<where>
+			<if test="true">
+				AND tuw.delete_flag = '0'
+			</if>
+			<if test='startDate != null and startDate != ""' > 
+				<![CDATA[AND tuw.CREATE_DATE >= #{startDate}]]>
+			</if>
+			<if test='endDate != null and endDate != ""' > 
+				<![CDATA[AND tuw.CREATE_DATE <= #{endDate}]]>
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,139 @@
+package com.qiaohu.wechat.admin.service.impl;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.Criteria;
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.qiaohu.wechat.admin.service.IPreviewGroupService;
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.constants.Constants;
+import com.qiaohu.wechat.core.dao.PreviewGroupDao;
+import com.qiaohu.wechat.core.dao.PreviewUserDao;
+import com.qiaohu.wechat.core.entity.PreviewGroup;
+import com.qiaohu.wechat.core.entity.PreviewUser;
+import com.qiaohu.wechat.core.entity.extend.PreviewGroupExt;
+import com.qiaohu.wechat.core.exception.AppException;
+import com.qiaohu.wechat.helper.MessageHelper;
+
+@Service(value = "previewGroupService")
+public class PreviewGroupServiceImpl implements IPreviewGroupService {
+	private static final Logger logger = LoggerFactory
+			.getLogger(PreviewGroupServiceImpl.class);
+	@Autowired
+	private PreviewGroupDao previewGroupDao;
+	@Autowired
+	private PreviewUserDao previewUserDao;
+	@Autowired
+	MessageHelper messageHelper;
+
+	@Override
+	public Page<PreviewGroup> search(PreviewGroupExt para) throws AppException {
+		// 查询条件做成
+		Example example = new Example(PreviewGroup.class);
+		Criteria criteria = example.createCriteria();
+		if (!CheckUtils.isNullOrEmpty(para.getName())) {
+			criteria.andLike("name", "%" + para.getName() + "%");
+		}
+		if (!CheckUtils.isNullOrEmpty(para.getType())) {
+			criteria.andEqualTo("type", para.getType());
+		}
+		// 分页查询
+		try {
+			PageHelper.startPage(para.getPage(), para.getCount());
+			return (Page<PreviewGroup>) previewGroupDao
+					.selectByExample(example);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			// 异常信息
+			throw new AppException(messageHelper.mesg_error_0001, e);
+		}
+
+	}
+
+	@Override
+	public PreviewGroupExt detail(String id) throws AppException {
+		PreviewGroupExt ret = null;
+		PreviewGroup previewGroup = null;
+		List<PreviewUser> list = null;
+		try {
+			previewGroup = previewGroupDao.selectByPrimaryKey(id);
+			if (CheckUtils.isNull(previewGroup)) {
+				return ret;
+			}
+			Example example = new Example(PreviewUser.class);
+			Criteria criteria = example.createCriteria();
+
+			criteria.andEqualTo("groupId", previewGroup.getId());
+			list = previewUserDao.selectByExample(example);
+			ret = new PreviewGroupExt();
+			if (!CheckUtils.isNullOrEmpty(list)) {
+				ret.setList(list);
+			}
+			ret.setId(previewGroup.getId());
+			ret.setName(previewGroup.getName());
+			ret.setType(previewGroup.getType());
+			return ret;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			// 异常信息
+			throw new AppException(messageHelper.mesg_error_0001, e);
+		}
+
+	}
+
+	@Override
+	public int insert(PreviewGroup previewGroup) throws AppException {
+		Example example = new Example(PreviewGroup.class);
+		Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("name", previewGroup.getName());
+		int count = 0;
+		try {
+			count = previewGroupDao.selectCountByExample(example);
+			if (count > Constants.SUCCESS) {
+				throw new AppException(messageHelper.mesg_info_0016);
+			}
+			return previewGroupDao.insert(previewGroup);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			// 异常信息
+			throw new AppException(messageHelper.mesg_error_0001, e);
+		}
+	}
+
+	@Override
+	public int update(PreviewGroup previewGroup) throws AppException {
+		try {
+			return previewGroupDao.updateByPrimaryKeySelective(previewGroup);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			// 异常信息
+			throw new AppException(messageHelper.mesg_error_0001, e);
+		}
+	}
+
+	@Override
+	@Transactional
+	public int delete(PreviewGroup previewGroup) throws AppException {
+		Example example = new Example(PreviewUser.class);
+		Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("groupId", previewGroup.getId());
+		try {
+			previewUserDao.deleteByExample(example);
+			return previewGroupDao.deleteByPrimaryKey(previewGroup.getId());
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			// 异常信息
+			throw new AppException(messageHelper.mesg_error_0001, e);
+		}
+	}
+
+}

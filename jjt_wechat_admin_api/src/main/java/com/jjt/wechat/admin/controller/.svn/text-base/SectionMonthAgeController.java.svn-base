@@ -1,0 +1,316 @@
+package com.qiaohu.wechat.admin.controller;
+
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.Page;
+import com.qiaohu.wechat.admin.BaseController;
+import com.qiaohu.wechat.admin.RestResult;
+import com.qiaohu.wechat.admin.auth.AuthRequired;
+import com.qiaohu.wechat.admin.dto.BasePage;
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.common.utils.DateUtils;
+import com.qiaohu.wechat.constants.Constants;
+import com.qiaohu.wechat.core.entity.MassSendNomem;
+import com.qiaohu.wechat.core.entity.extend.MassSendNomemExt;
+import com.qiaohu.wechat.core.exception.AppException;
+import com.qiaohu.wechat.core.service.IMassSendNomemService;
+
+@RestController
+@RequestMapping("/sectionMonthAge")
+public class SectionMonthAgeController extends BaseController {
+
+	@Autowired
+	private IMassSendNomemService massSendNomemService;
+
+	/**
+	 * 
+	 * @param massExt
+	 * @return
+	 */
+	@AuthRequired(permission = "wx.sectionMonthAge.list")
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	public RestResult list(@RequestBody MassSendNomemExt massExt) {
+		//定义分页集合
+		Page<MassSendNomem> list = null;
+		if(!CheckUtils.isNullOrEmpty(massExt.getPushStatus())){
+			massExt.setStatus(massExt.getPushStatus());
+		}
+		
+		//设置推送类型为2：区间月龄群推 ，1：普通月龄群推，3：非月龄群推
+		massExt.setCreateFlag(2);
+		try {
+			// 模糊查询推送状态：已发送
+			if (!CheckUtils.isNullOrEmpty(massExt.getStatus())) {
+				massExt.setStatus(massExt.getStatus());
+			}
+			list = queryMassSendNomemList(massExt);
+			// 返回参数
+			return new RestResult(new BasePage(9,
+					list.getResult()));
+		} catch (AppException e) {
+			logger.error(e.getMessage(), e);
+			// 返回异常信息
+			return new RestResult(messageHelper.mesg_info_0007);
+		}
+
+	}
+    
+	@AuthRequired(permission = "wx.sectionMonthAge.create")
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public RestResult create(@RequestBody MassSendNomemExt massSend) {
+		
+		boolean checkResult = false;
+		
+		try {
+			String createUser = getAdminId();
+			massSend.setCreateUser(createUser);
+			massSend.setCreateTime(DateUtils.getCreateDate(DateUtils
+					.getNowTimestamp()));
+			massSend.setStatus(Constants.NORMAL_STATUS);
+			//判断月区段，并设置月区段的值
+			String type = getSectionMonth(massSend.getProdgrname());
+			massSend.setType(type);
+			//类型区段月龄推送
+			massSend.setCreateFlag(2);
+			
+			//判断该月龄区段是否有新增过，如果有新增过，提示已经新增过，不可再新增
+			//checkResult  = massSendNomemService.selectByTypeAndProdgrname(massSend);                                                                                     
+			//信息添加失败
+			if(checkResult) {
+				return new RestResult(messageHelper.mesg_error_0005);
+			}
+			return createMassSendNomem(massSend) > Constants.SUCCESS ?
+			new RestResult(Constants.SUCCESS,messageHelper.mesg_info_0001) :
+			new RestResult(messageHelper.mesg_error_0001);
+		} catch (AppException e) {
+			logger.error(messageHelper.mesg_error_0001, e);
+			return new RestResult(messageHelper.mesg_error_0001);
+		}
+
+	}
+
+	private String getSectionMonth(String prodgrname) {
+		
+		String type ="";
+		switch (prodgrname) {
+			case "月龄版13月龄":
+				type ="A1";
+				break;
+			case "月龄版14月龄":
+				type ="A2";
+				break;
+			case "月龄版15月龄":
+				type = "A3";
+				break;
+			case "月龄版16月龄":
+				type = "B1";
+				break;
+			case "月龄版17月龄":
+				type = "B2";
+				break;
+			case "月龄版18月龄":
+				type = "B3";
+				break;
+			case "月龄版19月龄":
+				type = "C1";
+				break;
+			case "月龄版20月龄":
+				type = "C2";
+				break;
+			case "月龄版21月龄":
+				type = "C3";
+				break;
+			case "月龄版22月龄":
+				type = "D1";
+				break;
+			case "月龄版23月龄":
+				type = "D2";
+				break;
+			case "月龄版24月龄":
+				type = "D3";
+				break;
+		}
+		return type;
+	}
+	
+	
+	@AuthRequired(permission = "wx.sectionMonthAge.update")
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public RestResult update(@RequestBody MassSendNomemExt massSend) {
+		
+		//判断这次修改的推送时间是不是比下次的推送时间晚，修改的时间是不是之前该次已经推送过
+		//后面的推送日期不能小于等于前面推送的日期
+		//MassSendNomemExt ms1 = new MassSendNomemExt();
+		
+		//1.这4个初始的随便设置
+		/*if(getCheckResult(massSend.getType(),massSend.getSendIndex())) {	
+				ms1.setType(Constants.SYMBOL+massSend.getType().substring(0,1)+Constants.SYMBOL);
+				List<MassSendNomem> list = (List<MassSendNomem>) massSendNomemService.selectByTypeAndProdgrname(ms1);
+				for (int i = 1; i < list.size(); i++) {
+					if(massSend.getType().equals(list.get(i).getType())&&massSend.getSendIndex().equals(list.get(i).getSendIndex())) {
+						if(CheckUtils.isNullOrEmpty(list.get(i-1).getSendDate())) {
+							return new RestResult(messageHelper.mesg_error_0008);
+						}
+						//获取这个图文的下标及对应的发送日期和前一个的发送日期比较 
+						if(getStringDate(massSend.getSendDate())<=getStringDate(list.get(i-1).getSendDate())) {
+							return new RestResult(messageHelper.mesg_error_0007);
+						}	
+					}
+					
+				}
+		}*/
+		//2.设置的推送时间必须大于当前时间
+		String nowDate = DateUtils.format(new Date(), "yyyy-MM-dd");
+		if(getStringDate(massSend.getSendDate().toString())<=getStringDate(nowDate)) {
+			return new RestResult(messageHelper.mesg_error_0009);
+		}
+		massSend.setModifyTime(DateUtils.getCreateDate(DateUtils
+				.getNowTimestamp()));
+		massSend.setCreateUser(getAdminId());
+		massSend.setStatus("0");
+		return updateMassSendNomem(massSend) > Constants.SUCCESS ?
+		new RestResult(Constants.SUCCESS,messageHelper.mesg_info_0003) :
+		new RestResult(messageHelper.mesg_info_0005);
+	}
+
+	@AuthRequired(permission = "wx.sectionMonthAge.delete")
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public RestResult delete(@RequestBody MassSendNomemExt massSend) {
+		massSend.setSendDate(null);
+		massSend.setMediaId(Constants.BLANK_STR);
+		massSend.setTitle(Constants.BLANK_STR);
+		massSend.setImage(Constants.BLANK_STR);
+		massSend.setStatus(Constants.STR_ZERO);
+		massSend.setCreateUser(getAdminId());
+		return updateMassSendNomem(massSend) > Constants.SUCCESS ?
+		new RestResult(Constants.SUCCESS,messageHelper.mesg_info_0002) :
+		new RestResult(messageHelper.mesg_info_0006);
+	}
+
+	/*
+	 * 详情数据 入力值为openId
+	 */
+	@RequestMapping(value = "/detail", method = RequestMethod.GET)
+	public RestResult detail(int id) {
+		MassSendNomem massSend = queryMassSendNomem(id);
+		// 根据Id查询对象返回
+		return CheckUtils.isNull(massSend) ?
+		new RestResult(messageHelper.mesg_info_0007) :
+		new RestResult(massSend);
+	}
+
+	/**
+	 * 发布数据给预览组：改变deleteFlag的状态值为2
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/publish", method = RequestMethod.GET)
+	public RestResult publish(int id) {
+
+		MassSendNomem massSend = null;
+		try {
+
+			massSend = massSendNomemService.massSendDetail(id);
+			// 发布改变deleteFlag的值为2
+			massSend.setStatus(Constants.DF_TWO);
+			int ret = massSendNomemService.update(massSend);
+			if (ret > Constants.SUCCESS) {
+				RestResult rett = new RestResult();
+				rett.setMessage(messageHelper.mesg_info_0805);
+				return rett;
+			} else {
+				return new RestResult(messageHelper.mesg_info_0806);
+			}
+
+		} catch (AppException e) {
+			return new RestResult(e.getMessage());
+		}
+
+	}
+	
+	private int createMassSendNomem(MassSendNomemExt massSend) {
+		try {
+			return massSendNomemService.insert(massSend);
+		} catch (Exception e) {
+			logger.error("添加年龄推送失败");
+			logger.error(e.getMessage());
+			return 0;
+		}
+	}
+	
+	private int updateMassSendNomem(MassSendNomemExt massSend) {
+		try {
+			return massSendNomemService.update(massSend);
+		} catch (Exception e) {
+			logger.error("更新年龄推送失败");
+			logger.error(e.getMessage());
+			return 0;
+		}
+	}
+	
+	private MassSendNomem queryMassSendNomem(int id) {
+		try {
+			return massSendNomemService.massSendDetail(id);
+		} catch (Exception e) {
+			logger.error("查询年龄推送失败");
+			logger.error(e.getMessage());
+			return null;
+		}
+	}
+	
+	private Page<MassSendNomem> queryMassSendNomemList(MassSendNomemExt massSend) {
+		try {
+			return massSendNomemService.searchSectionMonthAge(massSend);
+		} catch (Exception e) {
+			logger.error("查询年龄推送失败");
+			logger.error(e.getMessage());
+			return new Page<MassSendNomem>();
+		}
+	}
+	
+	/**
+	 * 将日期2018-01-12这样的字符串转换为20180112
+	 * @param str
+	 * @return
+	 */
+	public static Integer getStringDate(String str) {
+		String finalStr = Constants.BLANK_STR; 
+		if(!CheckUtils.isNullOrEmpty(str)) {
+			//2018-01-12
+			String s1 =str.substring(0, 4);
+			String s2 =str.substring(5, 7);
+			String s3 = str.substring(8, 10);
+			finalStr =s1+s2+s3;
+		}
+		int result = Integer.parseInt(finalStr);
+		return result;
+	}
+	
+	/**
+	 * 用于确认图文的坐标是否对应
+	 * @param type
+	 * @param sendIndex
+	 * @return
+	 */
+	public static boolean getCheckResult(String type, String sendIndex) {
+		String one =Constants.STR_ONE;
+		if((Constants.STR_A1.equals(type)&&one.equals(sendIndex))) {
+			return false;
+		}else if((Constants.STR_B1.equals(type)&&one.equals(sendIndex))) {
+			return false;
+		}else if((Constants.STR_C1.equals(type)&&one.equals(sendIndex))) {
+			return false;
+		}else if((Constants.STR_D1.equals(type)&&one.equals(sendIndex))) {
+			return false;
+		}		
+		return true;
+	}
+
+}

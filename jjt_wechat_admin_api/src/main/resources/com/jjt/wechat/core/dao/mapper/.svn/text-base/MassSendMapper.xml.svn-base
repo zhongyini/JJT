@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qiaohu.wechat.core.dao.MassSendDao">
+	<select id="selectMassSendByCreateDate" parameterType="com.qiaohu.wechat.core.entity.extend.MassSendExt"
+		resultType="com.qiaohu.wechat.core.entity.MassSend">
+		SELECT tua.ID as id,tua.MEDIA_ID as mediaId,tua.TITLE as
+		title,tua.IMAGE as image,tua.CONDITION_BIRTHDAY as conditionBirthday,
+		tua.CONDITION_VERSION as conditionVersion,tua.CONDITION_STATUS as conditionStatus,
+		tua.STATUS as status,tua.MEMO as memo,tua.CREATE_USER as createUser,
+		tua.CREATE_DATE as createDate,tua.MONTH_NUMBER as monthNumber,
+		tua.DELIVER_TIMES_LOW as deliverTimesLow,
+		tua.DELIVER_TIMES_HIGH as deliverTimesHigh 
+		FROM t_mass_send tua
+		where 
+			tua.CREATE_USER=#{createUser} and tua.CREATE_DATE =#{createDate}
+	</select>
+ 	
+ 	<select id="selectByMassId" parameterType="String"
+		resultType="String">
+		SELECT tua.CONDITION_LEVEL as conditionLevel
+		FROM t_mass_level tua
+		where 
+			tua.MASS_ID=#{massId}
+	</select>
+	
+	<select id="selectAddressByMassId" parameterType="String"
+		resultType="com.qiaohu.wechat.core.entity.MassAddress">
+		SELECT tua.ID as id,tua.COUNTRY as country,tua.PROVINCE as province,tua.MASS_ID as massId,
+		tua.TYPE as type,
+		tua.CITY as city,
+		tua.CREATE_DATE as createDate
+		FROM t_mass_address tua
+		where 
+			tua.MASS_ID=#{massId}
+	</select>
+	
+	<select id="selectMassLevelByMassId" parameterType="String"
+		resultType="com.qiaohu.wechat.core.entity.MassLevel">
+		SELECT tua.ID as id,
+		tua.CONDITION_LEVEL as conditionLevel,
+		tua.TYPE as type,
+		tua.MASS_ID as massId,
+		tua.CREATE_DATE as createDate
+		FROM t_mass_level tua
+		where 
+			tua.MASS_ID=#{massId}
+	</select>
+	
+	<select id="selectMassAddress" parameterType="com.qiaohu.wechat.core.entity.MassAddress"
+		resultType="com.qiaohu.wechat.core.entity.MassAddress">
+		SELECT tua.ID as id,tua.COUNTRY as country,tua.PROVINCE as
+		province,tua.CITY as city,tua.MASS_ID as massId,tua.CREATE_DATE as createDate,tua.TYPE as type
+		FROM t_mass_address tua 
+		<where>
+			<if test="country != null and country != ''">
+				and tua.COUNTRY =#{country}
+			</if>
+			<if test="province != null and province != ''">
+				and tua.PROVINCE =#{province}
+			</if>
+			<if test="city != null and city != ''">
+				and tua.CITY=#{city}
+			</if>
+		</where>
+	</select>
+	<!-- 特定用户查询 -->
+	<select id="selectSpecialMass" parameterType="com.qiaohu.wechat.core.entity.extend.MassSendExt"
+		resultType="com.qiaohu.wechat.core.entity.MassSend">
+		SELECT tua.ID as id,tua.MEDIA_ID as mediaId,tua.TITLE as
+		title,tua.IMAGE as image,
+		tua.STATUS as status,
+		tua.CREATE_USER as createUser,
+		tua.media_flag as sendFlag,
+		tua.updatetime as createDate 
+		FROM t_mass_common tua 
+		<where>
+			<if test="id != null and id != ''">
+				and tua.ID =#{id}
+			</if>
+			<if test="sendType != null and sendType != ''">
+				and tua.media_flag =#{sendType}
+			</if>
+			<if test="startDate != null and startDate != ''">
+				and tua.updatetime &gt;=#{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				and tua.updatetime &lt;= #{endDate}
+			</if>
+		</where>
+	</select>
+	<!-- 特定用户详情查询 -->
+	<select id="massSpecialSendDetail" parameterType="java.lang.String"
+		resultType="com.qiaohu.wechat.core.entity.MassSend">
+		SELECT tua.ID as id,tua.MEDIA_ID as mediaId,tua.TITLE as
+		title,tua.IMAGE as image,
+		tua.STATUS as status,
+		tua.CREATE_USER as createUser,
+		tua.media_flag as sendFlag,
+		tua.updatetime as createDate 
+		FROM t_mass_common tua 
+		where
+			tua.ID =#{id}
+	</select>
+	<!-- 特定用户推送删除 -->
+	<delete id="deleteSpecial" parameterType="com.qiaohu.wechat.core.entity.extend.MassSendExt">
+		DELETE FROM t_mass_common  where ID=#{id}
+	</delete>
+	
+	
+</mapper>

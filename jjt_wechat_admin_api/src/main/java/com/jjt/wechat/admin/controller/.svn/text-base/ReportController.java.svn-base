@@ -1,0 +1,834 @@
+package com.qiaohu.wechat.admin.controller;
+
+import java.io.File;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.Page;
+import com.qiaohu.wechat.admin.BaseController;
+import com.qiaohu.wechat.admin.RestResult;
+import com.qiaohu.wechat.admin.auth.AuthRequired;
+import com.qiaohu.wechat.admin.dto.BasePage;
+import com.qiaohu.wechat.admin.service.IReportService;
+import com.qiaohu.wechat.admin.service.IUserService;
+import com.qiaohu.wechat.admin.util.DateUtil;
+import com.qiaohu.wechat.admin.util.ThreadPool;
+import com.qiaohu.wechat.common.api.DataCubeAPI;
+import com.qiaohu.wechat.common.api.entity.ArticleTotal;
+import com.qiaohu.wechat.common.api.entity.ArticleTotalDetail;
+import com.qiaohu.wechat.common.api.response.GetArticleTotalResponse;
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.common.utils.DateUtils;
+import com.qiaohu.wechat.constants.Constants;
+import com.qiaohu.wechat.core.config.ApiConfig;
+import com.qiaohu.wechat.core.constants.ConfigConstants;
+import com.qiaohu.wechat.core.dao.CsvDeliverDao;
+import com.qiaohu.wechat.core.dao.StatisticalDataDao;
+import com.qiaohu.wechat.core.dao.UserMassTradeDao;
+import com.qiaohu.wechat.core.entity.CsvDeliver;
+import com.qiaohu.wechat.core.entity.QrTicket;
+import com.qiaohu.wechat.core.entity.StatisticalData;
+import com.qiaohu.wechat.core.entity.UserMassTrade;
+import com.qiaohu.wechat.core.entity.extend.PdCsvDataExt;
+import com.qiaohu.wechat.core.entity.extend.QrCsvDataExt;
+import com.qiaohu.wechat.core.entity.extend.QrTicketExt;
+import com.qiaohu.wechat.core.entity.extend.ReportExt;
+import com.qiaohu.wechat.core.entity.extend.StatisticalCsvDataExt;
+import com.qiaohu.wechat.core.entity.extend.UdCsvDataExt;
+import com.qiaohu.wechat.core.entity.extend.UserStatusExcelDataExt;
+import com.qiaohu.wechat.core.exception.AppException;
+import com.qiaohu.wechat.core.service.IQRService;
+import com.qiaohu.wechat.core.service.IStatisticalDataService;
+import com.qiaohu.wechat.core.util.CSVUtils;
+import com.qiaohu.wechat.core.util.ExcelUtils;
+import com.qiaohu.wechat.core.util.SysPropUtil;
+
+@RestController
+@RequestMapping("report")
+public class ReportController extends BaseController {
+
+	@Autowired
+	private IReportService reportService;
+
+	@Autowired
+	private IUserService userService;
+
+	@Autowired
+	private IQRService qRService;
+	
+	@Autowired
+	private IStatisticalDataService statisticalDataService;
+	
+	@Autowired
+	protected CsvDeliverDao csvDeliverDao;
+	
+	@Autowired
+	protected UserMassTradeDao userMassTradeDao;
+	
+	@Autowired
+	private StatisticalDataDao sdDao;
+	
+	/*
+	 * 客户使用时间统计 统计指定时间内的每天每个客服接待时间（单位分钟） 以及最大值，最小值和平均值
+	 */
+	@AuthRequired(permission = "report.accessTimes.list")
+	@RequestMapping(value = "/receptionTimelist", method = RequestMethod.POST)
+	public RestResult receptionTimelist(@RequestBody ReportExt reportExt) {
+		if (!CheckUtils.isNull(reportExt.getStartDate()) && !CheckUtils.isNull(reportExt.getEndDate())) {
+			if (reportExt.getEndDate().getTime() < reportExt.getStartDate().getTime()) {
+				return new RestResult(messageHelper.mesg_info_0019);
+			}
+		}
+		if (CheckUtils.isNull(reportExt.getStartDate()) && CheckUtils.isNull(reportExt.getEndDate())) {
+
+			reportExt.setStartDate(DateUtils.parse(DateUtils.getDateBeforeNum(new Date(), "yyyy-MM-dd 00:00:00", 30),
+					DateUtils.YMDHHMMSS));
+
+			reportExt.setEndDate(
+					DateUtils.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 23:59:59"), DateUtils.YMDHHMMSS));
+		} else {
+			if (!CheckUtils.isNull(reportExt.getEndDate())) {
+				reportExt.setEndDate(DateUtils.parse(
+						DateFormatUtils.format(reportExt.getEndDate(), "yyyy-MM-dd 23:59:59"), DateUtils.YMDHHMMSS));
+				if (CheckUtils.isNull(reportExt.getStartDate())) {
+
+					reportExt.setStartDate(DateUtils.parse(
+							DateUtils.getDateBeforeNum(reportExt.getEndDate(), "yyyy-MM-dd 00:00:00", 30),
+							DateUtils.YMDHHMMSS));
+				}
+
+			}
+			if (!CheckUtils.isNull(reportExt.getStartDate())) {
+				reportExt.setStartDate(DateUtils.parse(
+						DateFormatUtils.format(reportExt.getStartDate(), "yyyy-MM-dd 00:00:00"), DateUtils.YMDHHMMSS));
+
+				if (CheckUtils.isNull(reportExt.getEndDate())) {
+
+					reportExt
+							.setEndDate(
+									DateUtils.parse(
+											DateUtils.getDateAfterDays(DateFormatUtils.format(reportExt.getStartDate(),
+													"yyyy-MM-dd 00:00:00"), "yyyy-MM-dd 00:00:00", 30),
+											DateUtils.YMDHHMMSS));
+				}
+			}
+
+		}
+
+		ReportExt report = null;
+		try {
+			report = reportService.receptionTimelist(reportExt);
+			if (CheckUtils.isNull(report)) {
+				return new RestResult(new ReportExt());
+			}
+			return new RestResult(report);
+		} catch (Exception e) {
+			// 返回异常信息
+			return new RestResult(e.getMessage());
+		}
+	}
+
+	/*
+	 * 客户使用次数统计 统计指定时间内的每天每个客服接待量（单位次）以及最大值，最小值和平均值
+	 */
+	@AuthRequired(permission = "report.useTimes.list")
+	@RequestMapping(value = "/usedTimesList", method = RequestMethod.POST)
+	public RestResult usedTimesList(@RequestBody ReportExt reportExt) {
+
+		if (!CheckUtils.isNull(reportExt.getStartDate()) && !CheckUtils.isNull(reportExt.getEndDate())) {
+			if (reportExt.getEndDate().getTime() < reportExt.getStartDate().getTime()) {
+				return new RestResult(messageHelper.mesg_info_0019);
+			}
+		}
+		if (CheckUtils.isNull(reportExt.getStartDate()) && CheckUtils.isNull(reportExt.getEndDate())) {
+
+			reportExt.setStartDate(DateUtils.parse(DateUtils.getDateBeforeNum(new Date(), "yyyy-MM-dd 00:00:00", 30),
+					DateUtils.YMDHHMMSS));
+
+			reportExt.setEndDate(
+					DateUtils.parse(DateFormatUtils.format(new Date(), "yyyy-MM-dd 23:59:59"), DateUtils.YMDHHMMSS));
+		} else {
+			if (!CheckUtils.isNull(reportExt.getEndDate())) {
+				reportExt.setEndDate(DateUtils.parse(
+						DateFormatUtils.format(reportExt.getEndDate(), "yyyy-MM-dd 23:59:59"), DateUtils.YMDHHMMSS));
+				if (CheckUtils.isNull(reportExt.getStartDate())) {
+
+					reportExt.setStartDate(DateUtils.parse(
+							DateUtils.getDateBeforeNum(reportExt.getEndDate(), "yyyy-MM-dd 00:00:00", 30),
+							DateUtils.YMDHHMMSS));
+				}
+
+			}
+			if (!CheckUtils.isNull(reportExt.getStartDate())) {
+				reportExt.setStartDate(DateUtils.parse(
+						DateFormatUtils.format(reportExt.getStartDate(), "yyyy-MM-dd 00:00:00"), DateUtils.YMDHHMMSS));
+				if (CheckUtils.isNull(reportExt.getEndDate())) {
+
+					reportExt
+							.setEndDate(
+									DateUtils.parse(
+											DateUtils.getDateAfterDays(DateFormatUtils.format(reportExt.getStartDate(),
+													"yyyy-MM-dd 00:00:00"), "yyyy-MM-dd 00:00:00", 30),
+											DateUtils.YMDHHMMSS));
+				}
+			}
+		}
+
+		ReportExt report = null;
+		try {
+			report = reportService.usedTimesList(reportExt);
+			if (CheckUtils.isNull(report)) {
+				return new RestResult(new ReportExt());
+			}
+			return new RestResult(report);
+		} catch (Exception e) {
+			// 返回异常信息
+			return new RestResult(e.getMessage());
+		}
+
+	}
+
+	/*
+	 * 用户在籍状态统计
+	 */
+	@AuthRequired(permission = "report.userAppend.list")
+	@RequestMapping(value = "/excelCreate")
+	public RestResult excelCreate(@RequestBody ReportExt reportExt) {
+		// 开始时间和结束时间比较
+		if (!CheckUtils.isNull(reportExt.getStartDate()) && !CheckUtils.isNull(reportExt.getEndDate())) {
+			if (reportExt.getEndDate().getTime() < reportExt.getStartDate().getTime()) {
+				return new RestResult(messageHelper.mesg_info_0019);
+			}
+		}
+		try {
+			// 获取当前日期yyyy年MM月dd日
+			String strDate = DateUtils.getDateAfterDays(DateUtils.YMDZH_CN, 0);
+			/*
+			 * values：内容。格式："A1":"A1的值"
+			 * cellRangeList：合并单元格的范围。格式：{开始行,结束行,开始列,结束列}
+			 * row：excel行数
+			 * cell：excel列数
+			 * width：单元格宽度
+			 * height:单元格高度
+			 */
+			Map<String, String> values = new HashMap<String, String>();
+			List<Integer[]> cellRangeList = new ArrayList<Integer[]>();
+			// 行
+			int row = 5;
+			// 列
+			int cell = 4;
+			// 宽
+			int width = 5000;
+			// 高
+			int height = 400;
+			// 内容
+			UserStatusExcelDataExt usede =  userService.selectUserStatusExcelData(reportExt);
+			if(CheckUtils.isNull(usede)) {
+				usede = new UserStatusExcelDataExt();
+			}
+			if (!CheckUtils.isNull(reportExt.getStartDate()) && !CheckUtils.isNull(reportExt.getEndDate())) {
+				strDate = DateUtils.getStringDate(reportExt.getStartDate())+"至"+DateUtils.getStringDate(reportExt.getEndDate());
+				reportExt.setStartDate(DateUtils.parse(
+						DateFormatUtils.format(reportExt.getStartDate(), "yyyy-MM-dd 00:00:00"), DateUtils.YMDHHMMSS));
+				reportExt.setEndDate(DateUtils.parse(
+						DateFormatUtils.format(reportExt.getEndDate(), "yyyy-MM-dd 23:59:59"), DateUtils.YMDHHMMSS));
+			} else if (!CheckUtils.isNull(reportExt.getStartDate())) {
+				strDate = DateUtils.getStringDate(reportExt.getStartDate())+"至"+strDate;
+				reportExt.setStartDate(DateUtils.parse(
+						DateFormatUtils.format(reportExt.getStartDate(), "yyyy-MM-dd 00:00:00"), DateUtils.YMDHHMMSS));
+			} else if (!CheckUtils.isNull(reportExt.getEndDate())) {
+				strDate = "截止" + DateUtils.getStringDate(reportExt.getEndDate());
+				reportExt.setEndDate(DateUtils.parse(
+						DateFormatUtils.format(reportExt.getEndDate(), "yyyy-MM-dd 23:59:59"), DateUtils.YMDHHMMSS));
+			} else {
+				strDate = "截止" + strDate;
+			}
+			values.put("A1", strDate);
+			values.put("C1", "有客编");
+			values.put("D1", "无客编");
+			values.put("A2", "已注册");
+			values.put("B2", "在籍");
+			values.put("B3", "非在籍");
+			values.put("A4", "未注册");
+			values.put("A5", "合计");
+			values.put("D2", "/");
+			values.put("C4", "/");
+			values.put("C2", Constants.BLANK_STR+String.valueOf(usede.getC2()));
+			values.put("C3", Constants.BLANK_STR+String.valueOf(usede.getC3()));
+			values.put("C5", Constants.BLANK_STR+String.valueOf(usede.getC5()));
+			values.put("D3", Constants.BLANK_STR+String.valueOf(usede.getD3()));
+			values.put("D4", Constants.BLANK_STR+String.valueOf(usede.getD4()));
+			// 合并单元格
+			Integer[] cellRange1 = { 1, 2, 0, 0 };
+			Integer[] cellRange2 = { 0, 0, 0, 1 };
+			Integer[] cellRange3 = { 3, 3, 0, 1 };
+			Integer[] cellRange4 = { 4, 4, 0, 1 };
+			Integer[] cellRange5 = { 4, 4, 2, 3 };
+			cellRangeList.add(cellRange1);
+			cellRangeList.add(cellRange2);
+			cellRangeList.add(cellRange3);
+			cellRangeList.add(cellRange4);
+			cellRangeList.add(cellRange5);
+		
+			// 获取文件保存路径
+			String savePath = SysPropUtil.getString(ConfigConstants.WECHAT_USER_EXCEL_URL);
+			if (CheckUtils.isNullOrEmpty(savePath)) {
+				savePath = "/var/qiaohu/data/download/excel";
+			}
+			
+			String name = "用户在籍状态统计";
+			String nowtime = DateUtils.getDateAfterDays(DateUtils.YYYY_MM_DD, 0);
+			String xlsx = ".xlsx";
+			String fileName = name + nowtime + xlsx;
+			ExcelUtils excelUtils = new ExcelUtils(row, cell, values, cellRangeList);
+			excelUtils.setWidthAndHeight(width, height);
+			excelUtils.createExcel(savePath, fileName);
+			return new RestResult("文件正在下载，请等待...", fileName);
+		} catch (AppException e) {
+			// 返回异常信息
+			return new RestResult("下载失败");
+		}
+
+	}
+
+	/*
+	 * 版本号月号统计
+	 */
+	@AuthRequired(permission = "report.userAppend.list")
+	@RequestMapping(value = "/getProdCsvData")
+	public RestResult getProdCsvData() {
+		try {
+			List<String> prodidList = userService.selectProdid();
+			List<String> prodgrnamList = userService.selectProdgrnam();
+			List<PdCsvDataExt> pdList = userService.selectPdCount();
+			if (CheckUtils.isNull(pdList)){
+				return new RestResult("下载失败,没有查询到数据");
+			}
+			int prodids = prodidList.size();
+			int pds = pdList.size();
+			int prodgrnams = prodgrnamList.size();
+			Map<Integer, Object> prodidMap = new HashMap<Integer, Object>();
+			Map<Integer, Object> prodgrnamMap = null;
+			List<Map<Integer, Object>> result = new ArrayList<Map<Integer, Object>>();
+			//UserWeiXin userWeiXin = null;
+			prodidMap.put(0, "行标签");
+			prodidMap.put(prodids + 1, "总计");
+			for (int i = 0; i < prodids; i++) {
+				prodidMap.put(i + 1, prodidList.get(i));
+			}
+			result.add(prodidMap);
+			int total = 0;
+			for (int i = 0; i < prodgrnams; i++) {
+				prodgrnamMap = new HashMap<Integer, Object>();
+				prodgrnamMap.put(0, prodgrnamList.get(i));
+				for (int j = 0; j < prodids; j++) {
+					for (int k = 0; k < pds; k++) {
+//						System.out.println(pdList.get(k).getProdid());
+//						System.out.println(prodidList.get(j));
+						if ((pdList.get(k).getProdid().toString().equals(prodidList.get(j).toString())) &&
+								(pdList.get(k).getProdgrname().equals(prodgrnamList.get(i)))){
+							int countList = pdList.get(k).getNum();
+							total += countList;
+							prodgrnamMap.put(j + 1, pdList.get(k).getNum());
+						}
+					}
+					if (CheckUtils.isNull(prodgrnamMap.get(j+1))) {
+						prodgrnamMap.put(j+1, Constants.BLANK_STR);
+					}
+//					userWeiXin = new UserWeiXin();
+//					userWeiXin.setProdGrName(prodgrnamList.get(i));
+//					userWeiXin.setProdid(prodidList.get(j));
+//					int countList = userService.selectProdCount(userWeiXin);
+//					total += countList;
+//					prodgrnamMap.put(j + 1, countList);
+				}
+				prodgrnamMap.put(prodids + 1, total);
+				result.add(prodgrnamMap);
+				total = 0;
+			}
+			return new RestResult("文件正在下载，请等待...", result);
+		} catch (AppException e) {
+			// 返回异常信息
+			return new RestResult("下载失败");
+		}
+
+	}
+
+	/*
+	 * ucode和webid统计
+	 */
+	@AuthRequired(permission = "report.userAppend.list")
+	@RequestMapping(value = "/getUdCsvData")
+	public RestResult getUdCsvData() {
+		try {
+			// 获取当前时间
+			String nowtime = DateUtils.getStringTimeTwo(DateUtils.getNowTimestamp());
+			String filename = nowtime.substring(0, 8) + "_" + nowtime.substring(8, 14);
+			String finalFileName = "ucode和webid一览_" + filename;
+			// 生成文件前判断如果文件存在删除已存在文件
+			File serviceFile = new File(finalFileName + ".csv");
+			if (serviceFile.isFile() && serviceFile.exists()) {
+				serviceFile.delete();
+			}
+			// 获取文件保存路径
+			String savePath = SysPropUtil.getString(ConfigConstants.WECHAT_USER_CSV_URL);
+			// 获取线程池对象
+			ThreadPool t = ThreadPool.getThreadPool(1);
+			t.execute(new Runnable[] { new DownloadTask(savePath, finalFileName) });
+			logger.info("生成csv文件线程:" + t);
+			return new RestResult(Constants.SUCCESS, finalFileName + ".csv文件正在下载，文件较大请等待几分钟！");
+		} catch (AppException e) {
+			// 返回异常信息
+			return new RestResult("下载失败");
+		}
+
+	}
+
+	/*
+	 * 二维码用户统计
+	 */
+	@AuthRequired(permission = "report.userAppend.list")
+	@RequestMapping(value = "/getQrCsvData")
+	public RestResult getQrCsvData(@RequestBody ReportExt reportExt) {
+		// 开始时间和结束时间比较
+		if (!CheckUtils.isNull(reportExt.getStartDate()) && !CheckUtils.isNull(reportExt.getEndDate())) {
+			if (reportExt.getEndDate().getTime() < reportExt.getStartDate().getTime()) {
+				return new RestResult(messageHelper.mesg_info_0019);
+			}
+		}
+		if (!CheckUtils.isNull(reportExt.getStartDate())) {
+			reportExt.setStartDate(DateUtils.parse(
+					DateFormatUtils.format(reportExt.getStartDate(), "yyyy-MM-dd 00:00:00"), DateUtils.YMDHHMMSS));
+		}
+		if (!CheckUtils.isNull(reportExt.getEndDate())) {
+			reportExt.setEndDate(DateUtils.parse(
+					DateFormatUtils.format(reportExt.getEndDate(), "yyyy-MM-dd 23:59:59"), DateUtils.YMDHHMMSS));
+		}
+		try {
+			// 获取当前时间yyyy年MM月dd日
+			String strDate = DateUtils.getDateAfterDays(DateUtils.YMDZH_CN, 0);
+			if (!CheckUtils.isNull(reportExt.getStartDate()) && !CheckUtils.isNull(reportExt.getEndDate())) {
+				strDate = DateUtils.getStringDate(reportExt.getStartDate())+"至"+DateUtils.getStringDate(reportExt.getEndDate());
+				reportExt.setStartDate(DateUtils.parse(
+						DateFormatUtils.format(reportExt.getStartDate(), "yyyy-MM-dd 00:00:00"), DateUtils.YMDHHMMSS));
+				reportExt.setEndDate(DateUtils.parse(
+						DateFormatUtils.format(reportExt.getEndDate(), "yyyy-MM-dd 23:59:59"), DateUtils.YMDHHMMSS));
+			} else if (!CheckUtils.isNull(reportExt.getStartDate())) {
+				strDate = DateUtils.getStringDate(reportExt.getStartDate())+"至"+strDate;
+				reportExt.setStartDate(DateUtils.parse(
+						DateFormatUtils.format(reportExt.getStartDate(), "yyyy-MM-dd 00:00:00"), DateUtils.YMDHHMMSS));
+			} else if (!CheckUtils.isNull(reportExt.getEndDate())) {
+				strDate = "截止" + DateUtils.getStringDate(reportExt.getEndDate());
+				reportExt.setEndDate(DateUtils.parse(
+						DateFormatUtils.format(reportExt.getEndDate(), "yyyy-MM-dd 23:59:59"), DateUtils.YMDHHMMSS));
+			} else {
+				strDate = "截止" + strDate;
+			}
+			List<QrCsvDataExt> result = new ArrayList<QrCsvDataExt>();
+			QrCsvDataExt qrCsvDataExt = null;
+			QrCsvDataExt header = new QrCsvDataExt();
+			header.setZero(strDate);
+			header.setOne("未注册");
+			header.setTwo("已注册非在籍且有客编");
+			header.setThree("已注册非在籍且无客编");
+			header.setFour("已注册在籍");
+			header.setFive("合计");
+			result.add(header);
+			QrTicketExt qrTicketExt = new QrTicketExt();
+			List<QrTicket> qrList = qRService.searchAll(qrTicketExt);
+			if (CheckUtils.isNull(qrList)) {
+				return new RestResult("没有查询到二维码数据");
+			}
+			List<QrCsvDataExt> qrCsvDataExtList = userService.selectQrCsvData(reportExt);
+			if (CheckUtils.isNull(qrList) || CheckUtils.isNull(qrCsvDataExtList)) {
+				return new RestResult("没有查询到二维码数据");
+			}
+			int qrs = qrList.size();
+			int qrCsvDataExtListLength = qrCsvDataExtList.size();
+			for (int i = 0; i < qrs; i++) {
+				qrCsvDataExt = new QrCsvDataExt();
+				qrCsvDataExt.setZero(qrList.get(i).getQrName());
+				for (int j = 0; j < qrCsvDataExtListLength; j++) {
+					if (!CheckUtils.isNullOrEmpty(qrCsvDataExtList.get(j).getZero())) {
+						if (qrList.get(i).getQrId() == Integer.valueOf(qrCsvDataExtList.get(j).getZero())) {
+							qrCsvDataExt.setOne(qrCsvDataExtList.get(j).getOne());
+							qrCsvDataExt.setTwo(qrCsvDataExtList.get(j).getTwo());
+							qrCsvDataExt.setThree(qrCsvDataExtList.get(j).getThree());
+							qrCsvDataExt.setFour(qrCsvDataExtList.get(j).getFour());
+							qrCsvDataExt.setFive(String.valueOf(Integer.valueOf(qrCsvDataExtList.get(j).getOne())
+									+ Integer.valueOf(qrCsvDataExtList.get(j).getTwo())
+									+ Integer.valueOf(qrCsvDataExtList.get(j).getThree())
+									+ Integer.valueOf(qrCsvDataExtList.get(j).getFour())));
+						}
+					}
+					
+				}
+				result.add(qrCsvDataExt);
+			}
+			return new RestResult("文件正在下载，请等待...", result);
+		} catch (AppException e) {
+			// 返回异常信息
+			return new RestResult("下载失败");
+		}
+	}
+
+	/**
+	 * 线程的任务类
+	 * 
+	 * @author Administrator
+	 *
+	 */
+	class DownloadTask extends Thread {
+
+		String savePath;
+		String finalFileName;
+		File file;
+
+		public File getFile() {
+			return file;
+		}
+
+		public void setFile(File file) {
+			this.file = file;
+		}
+
+		public DownloadTask() {
+		}
+
+		public DownloadTask(String savePath, String finalFileName) {
+			super();
+			this.savePath = savePath;
+			this.finalFileName = finalFileName;
+		}
+
+		@Override
+		public void run() {
+			super.run();
+
+			List<UdCsvDataExt> list = null;
+			// 返回查询结果
+			list = userService.selectWebIdAndUcode();
+			if (CheckUtils.isNull(list)) {
+				list = new ArrayList<UdCsvDataExt>();
+			}
+			file = CSVUtils.createUdCSV(list, savePath, finalFileName);
+			if (file.isFile() && file.exists()) {
+				String fileName = savePath + File.separator + finalFileName + ".csv";
+				File finalFile = new File(fileName);
+				file.renameTo(finalFile);
+				logger.info("CSV文件生成成功！" + "文件名称：" + finalFileName);
+			} else {
+				logger.error("CSV文件生成失败！");
+			}
+		}
+	}
+	
+	@AuthRequired(permission = "report.statisticalData.list")
+	@RequestMapping(value = "/statisticalData", method = RequestMethod.POST)
+	public RestResult statisticalDataList(@RequestBody ReportExt reportExt) {
+		
+		// 开始时间和结束时间比较
+		if (!CheckUtils.isNull(reportExt.getStartDate())
+				&& !CheckUtils.isNull(reportExt.getEndDate())) {
+
+			reportExt.setStartDate(DateUtil.getStartDate(reportExt.getStartDate()));
+
+			reportExt.setEndDate(DateUtil.getEndDate(reportExt.getEndDate()));
+			if (!DateUtils.comparable(reportExt.getStartDate(), reportExt.getEndDate())) {
+				// 开始日期不是大于结束日期
+				return new RestResult(messageHelper.mesg_info_0019);
+			}
+
+		}		
+		try {
+			Page<StatisticalData> list = reportService.search(reportExt);
+			
+			if(list.getTotal()>5000){
+				return new RestResult(new BasePage(5000,
+						list.getResult()));
+			}
+			return new RestResult(new BasePage(list.getTotal(),
+					list.getResult()));
+		} catch (AppException e) {
+			logger.error(e.getMessage(), e);
+			// 返回异常信息
+			return new RestResult(e.getMessage());
+		}
+	}
+	@AuthRequired(permission = "report.statisticalData.list")
+	@RequestMapping(value = "/getStatisticalData", method = RequestMethod.POST)
+	public RestResult downloadData(@RequestBody ReportExt reportExt) {	
+		// 开始时间和结束时间比较
+		if (!CheckUtils.isNull(reportExt.getStartDate())
+				&& !CheckUtils.isNull(reportExt.getEndDate())) {
+
+			reportExt.setStartDate(DateUtil.getStartDate(reportExt.getStartDate()));
+
+			reportExt.setEndDate(DateUtil.getEndDate(reportExt.getEndDate()));
+			if (!DateUtils.comparable(reportExt.getStartDate(), reportExt.getEndDate())) {
+				// 开始日期不是大于结束日期
+				return new RestResult(messageHelper.mesg_info_0019);
+			}
+
+		}			
+		
+		try {
+			// 获取当前时间
+			//String nowtime = DateUtils.getStringTimeTwo(DateUtils.getNowTimestamp());
+			//String filename =nowtime.substring(8, 14);
+			
+			//将开始时间以及结束时间作为生成文件名称一部分
+			SimpleDateFormat sdf = new SimpleDateFormat(DateUtils.yyyyMMdd);
+			String stdate=sdf.format(reportExt.getStartDate());
+			String endate=sdf.format(reportExt.getEndDate());
+			
+			//String finalFileName = "图文分析数据统计" +stdate+"至"+endate+"_"+filename;
+			String finalFileName = "图文分析数据统计" +stdate+"至"+endate;
+			// 获取文件保存路径
+			String savePath = SysPropUtil.getString(ConfigConstants.WECHAT_USER_EXCEL_URL);
+			//ReportExt list = reportService.selectStatisticalDataAll(reportExt);
+			
+			List<StatisticalData> listr=null;
+			listr =statisticalDataService.getStatisticalData(reportExt);
+			/*try {
+				File file=CSVUtils.getExcelData(listr, savePath, finalFileName);
+				if (file.isFile() && file.exists()) {
+					String fileName = savePath + File.separator + finalFileName + ".xlsx";
+					File finalFile = new File(fileName);
+					file.renameTo(finalFile);
+					logger.info("Excel文件生成成功！" + "文件名称：" + finalFileName);
+				} else {
+					logger.error("Excel文件生成失败！");
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+			List<StatisticalCsvDataExt> result = new ArrayList<StatisticalCsvDataExt>();
+			for (StatisticalData statisticalData : listr) {
+				StatisticalCsvDataExt scde = new StatisticalCsvDataExt();
+				scde.setZero(statisticalData.getTitle());
+				//scde.setOne(DateUtils.getStringTime(statisticalData.getSendTime()));
+				scde.setTwo(statisticalData.getTargetUser()+"");
+				scde.setThree(statisticalData.getIntPageReadUser()+"");
+				scde.setFour(statisticalData.getOriPageReadUser()+"");
+				scde.setFive(statisticalData.getShareUser()+"");
+				scde.setSix(statisticalData.getAddToFavUser()+"");
+				result.add(scde);
+			}
+			/*// 获取线程池对象
+			ThreadPool t = ThreadPool.getThreadPool(1);
+			t.execute(new Runnable[] { new DownloadStatisticalData(listr,savePath, finalFileName,reportExt) });
+			logger.info("生成csv文件线程:" + t);*/
+			//return new RestResult(Constants.SUCCESS, finalFileName + ".xlsx文件正在下载，请等待几分钟！");
+			return new RestResult("文件正在下载，请等待...", result);
+		} catch (AppException e) {
+			// 返回异常信息
+			return new RestResult("下载失败");
+		}
+
+	}
+	
+	/**
+	 * 线程的任务类
+	 * 
+	 * @author Administrator
+	 *
+	 */
+	/*class DownloadStatisticalData extends Thread {
+
+		String savePath;
+		String finalFileName;
+		ReportExt reportExt;
+		List<StatisticalData> list;
+		File file;
+
+		public File getFile() {
+			return file;
+		}
+
+		public void setFile(File file) {
+			this.file = file;
+		}
+
+		public DownloadStatisticalData() {
+		}
+
+		public DownloadStatisticalData(List<StatisticalData> list,String savePath, String finalFileName,ReportExt reportExt) {
+			super();
+			this.list=list;
+			this.savePath = savePath;
+			this.finalFileName = finalFileName;
+			this.reportExt =reportExt;
+			
+		}
+
+		@Override
+		public void run() {
+			super.run();
+			try {
+				file = CSVUtils.getExcelData(list, savePath, finalFileName);
+				if (file.isFile() && file.exists()) {
+					String fileName = savePath + File.separator + finalFileName + ".xlsx";
+					File finalFile = new File(fileName);
+					file.renameTo(finalFile);
+					logger.info("Excel文件生成成功！" + "文件名称：" + finalFileName);
+				} else {
+					logger.error("Excel文件生成失败！");
+					 this.interrupt();
+				}
+			}catch(Exception e) {
+				 this.interrupt();
+			}	
+			
+		}
+	}*/
+	@RequestMapping(value = "/addData", method = RequestMethod.POST)
+	public RestResult addData(@RequestBody ReportExt reportExt) {
+		DataCubeAPI dataCubeAPI=getDataCubeAPI();
+		//2.设置要调接口的参数:日期=当前日期-1
+		List<Date> startList=getStartDateList(30, "yyyy-MM-dd 23:59:59");
+		List<Date> endList=getStartDateList(30, "yyyy-MM-dd 00:00:00");
+		
+		for (int i = 0; i < endList.size(); i++) {
+			//获取了7天的
+			GetArticleTotalResponse gsr=dataCubeAPI.getArticleTotal(startList.get(i),endList.get(i));
+			
+			if(i==0) {
+				insertTodayData(gsr.getList());
+			}else {
+				updateBoforeData(gsr.getList());
+			}
+		}
+		
+		return new RestResult("更新数据完成......");
+	}
+	
+	protected int insertUserMassTrade(CsvDeliver csvDeliver) {
+
+		int result = 0;
+		try {
+			UserMassTrade umt = new UserMassTrade();
+			umt.setWebId(csvDeliver.getWebId());
+			umt.setCreateDate(new Timestamp(new Date().getTime()));
+			umt.setFileName(csvDeliver.getFilename());
+			umt.setOpenId(csvDeliver.getOpenId());
+			umt.setOrderDate(csvDeliver.getOrderDate());
+			umt.setProdGrName(csvDeliver.getProdgrname());
+			umt.setProdId(csvDeliver.getProdid());
+			umt.setSendStatus(com.qiaohu.wechat.core.constants.Constants.STATUS_ZERO);
+			umt.setSendCount(com.qiaohu.wechat.core.constants.Constants.SENDTIME_ONE);
+			umt.setModifyDate(new Timestamp(new Date().getTime()));
+			result = userMassTradeDao.insert(umt);
+		} catch (Exception e) {
+			logger.error("Insert into t_user_masstrade failed:" + e.getMessage());
+		}
+		return result;
+	}
+	
+	/**
+	 * 获取微信端接口api对象
+	 * @return
+	 */
+	private DataCubeAPI getDataCubeAPI() {
+
+		String accessToken = null;
+		DataCubeAPI dataCubeAPI = null;
+		accessToken = ApiConfig.getInstance().getAccessToken();
+		if (CheckUtils.isNullOrEmpty(accessToken)) {
+			logger.error("accessToken is null or empty.");
+		}
+		// 初始化获取图文消息接口
+		dataCubeAPI = new DataCubeAPI(accessToken);
+		
+		return dataCubeAPI;		
+	}	
+	
+	private StatisticalData getCopy(ArticleTotal at,StatisticalData sd) {
+		
+		sd.setMsgId(at.getMsgid());
+		sd.setTitle(at.getTitle());
+		if(!CheckUtils.isNullOrEmpty(at.getDetails())) {
+			List<ArticleTotalDetail> atdList = at.getDetails();
+			for (ArticleTotalDetail atd : atdList) {
+				sd.setAddToFavCount(atd.getAddToFavCount());
+				sd.setAddToFavUser(atd.getAddToFavUser());
+				sd.setIntPageReadCount(atd.getIntPageReadCount());
+				sd.setIntPageReadUser(atd.getIntPageReadUser());
+				sd.setOriPageReadCount(atd.getOriPageReadCount());
+				sd.setOriPageReadUser(atd.getOriPageReadUser());
+				sd.setShareCount(atd.getShareCount());
+				sd.setShareUser(atd.getShareUser());
+				sd.setTargetUser(atd.getTargetUser());
+				sd.setSendTime(new Timestamp(at.getRefDate().getTime()));
+			}
+		}
+		return sd;
+	}
+	
+	public List<Date> getStartDateList(int num,String format){
+		SimpleDateFormat sdf = new SimpleDateFormat(DateUtils.YMDHHMMSS);
+		
+		List<Date> list = new ArrayList<Date>();
+		for (int i = 0; i < num; i++) {
+			Date dateStart1= new Date();
+			String yesterday1 = DateUtils.getDateBeforeNum("yyyy-MM-dd 23:59:59", i+1);
+			try {
+				dateStart1 = sdf.parse(yesterday1);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			list.add(dateStart1);
+		}
+		return list;
+	}
+	
+	public void insertTodayData(List<ArticleTotal> list) {
+		if(!CheckUtils.isNullOrEmpty(list)) {
+			
+			//循环处理数据
+			for (int i = 0; i < list.size(); i++) {
+				//首先我拿到了这个数据将其插入至数据库表中
+				StatisticalData sd = new StatisticalData();
+				logger.info("获取图文群发总数据 开始插入!");
+				//5.插入至统计表格中
+				sdDao.insert(getCopy(list.get(i), sd));
+			}
+		}
+	}
+	
+	public void updateBoforeData(List<ArticleTotal> list) {
+		if(!CheckUtils.isNullOrEmpty(list)) {
+			//循环处理数据
+			for (int i = 0; i < list.size(); i++) {
+				//首先我拿到了这个数据将其插入至数据库表中
+				StatisticalData sd = new StatisticalData();
+				logger.info("获取图文群发总数据 开始更新!");
+				//5.插入至统计表格中
+				sdDao.updateBeforeDate(getCopy(list.get(i), sd));
+			}
+		}
+	}
+	/*public static void main(String[] args) {
+		List<Date> list =new ReportController().getStartDateList(7,"yyyy-MM-dd 23:59:59");
+		
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println(list.get(i));
+		}
+		System.out.println(list.get(7));
+	}*/
+}

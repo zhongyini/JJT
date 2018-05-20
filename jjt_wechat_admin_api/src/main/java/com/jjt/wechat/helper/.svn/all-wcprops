@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 136
+/svn/qiaohu/!svn/ver/2686/trunk/04_%E6%9C%8D%E5%8A%A1%E5%8F%B7/040_Source/qiaohu_wechat_admin_api/src/main/java/com/qiaohu/wechat/helper
+END
+AppHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 151
+/svn/qiaohu/!svn/ver/1806/trunk/04_%E6%9C%8D%E5%8A%A1%E5%8F%B7/040_Source/qiaohu_wechat_admin_api/src/main/java/com/qiaohu/wechat/helper/AppHelper.java
+END
+ImageHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 153
+/svn/qiaohu/!svn/ver/4096/trunk/04_%E6%9C%8D%E5%8A%A1%E5%8F%B7/040_Source/qiaohu_wechat_admin_api/src/main/java/com/qiaohu/wechat/helper/ImageHelper.java
+END
+TokenHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 153
+/svn/qiaohu/!svn/ver/1332/trunk/04_%E6%9C%8D%E5%8A%A1%E5%8F%B7/040_Source/qiaohu_wechat_admin_api/src/main/java/com/qiaohu/wechat/helper/TokenHelper.java
+END
+MessageHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 155
+/svn/qiaohu/!svn/ver/3936/trunk/04_%E6%9C%8D%E5%8A%A1%E5%8F%B7/040_Source/qiaohu_wechat_admin_api/src/main/java/com/qiaohu/wechat/helper/MessageHelper.java
+END
+AuthorityHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 156
+/svn/qiaohu/!svn/ver/950/trunk/04_%E6%9C%8D%E5%8A%A1%E5%8F%B7/040_Source/qiaohu_wechat_admin_api/src/main/java/com/qiaohu/wechat/helper/AuthorityHelper.java
+END

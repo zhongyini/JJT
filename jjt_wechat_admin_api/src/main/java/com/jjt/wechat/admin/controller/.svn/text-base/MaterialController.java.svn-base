@@ -1,0 +1,285 @@
+package com.qiaohu.wechat.admin.controller;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.Page;
+import com.qiaohu.wechat.admin.BaseController;
+import com.qiaohu.wechat.admin.RestResult;
+import com.qiaohu.wechat.admin.dto.BasePage;
+import com.qiaohu.wechat.admin.dto.PushDto;
+import com.qiaohu.wechat.admin.service.IPreviewGroupService;
+import com.qiaohu.wechat.admin.service.IPreviewUserService;
+import com.qiaohu.wechat.common.api.CustomAPI;
+import com.qiaohu.wechat.common.api.MaterialAPI;
+import com.qiaohu.wechat.common.api.enums.MaterialType;
+import com.qiaohu.wechat.common.api.enums.ResultType;
+import com.qiaohu.wechat.common.api.response.GetMaterialListResponse;
+import com.qiaohu.wechat.common.api.response.GetMaterialTotalCountResponse;
+import com.qiaohu.wechat.common.entity.message.resp.MpNewsMsg;
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.constants.Constants;
+import com.qiaohu.wechat.core.config.ApiConfig;
+import com.qiaohu.wechat.core.entity.MaterialDto;
+import com.qiaohu.wechat.core.entity.MaterialItem;
+import com.qiaohu.wechat.core.entity.PreviewGroup;
+import com.qiaohu.wechat.core.entity.PreviewUser;
+import com.qiaohu.wechat.core.entity.extend.PreviewGroupExt;
+import com.qiaohu.wechat.core.entity.extend.PreviewUserExt;
+import com.qiaohu.wechat.core.exception.AppException;
+import com.qiaohu.wechat.helper.ImageHelper;
+
+@RestController
+@RequestMapping("/material")
+public class MaterialController extends BaseController {
+
+
+	@Autowired
+	private IPreviewGroupService previewGroupService;
+
+	@Autowired
+	private IPreviewUserService previewUserService;
+	
+	@Autowired
+	private ImageHelper imageHelper;
+	
+	/*@Autowired
+	protected AppConfig appConfig;*/
+	
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	public RestResult list(@RequestBody MaterialDto dto) {
+
+		String accessToken = null;
+		MaterialAPI materialAPI = null;
+		try {
+			accessToken = ApiConfig.getInstance().getAccessToken();
+			if (CheckUtils.isNullOrEmpty(accessToken)) {
+				logger.error("accessToken is null or empty.");
+				return new RestResult(messageHelper.mesg_error_0001);
+			}
+			// 初始化获取图文消息接口
+			materialAPI = new MaterialAPI(accessToken);
+			int offset = (dto.getPage() - 1) * dto.getCount();
+			
+			//GetMaterialTotalCountResponse gt = materialAPI.countMaterial();//获取图文素材的总数量
+			GetMaterialListResponse res = materialAPI.batchGetMaterial(
+					MaterialType.NEWS, offset, dto.getCount());
+			List<MaterialItem> materialItems = imageHelper.getMaterialImage(res);
+			//-------------------------------------------------2017-12-22 独立封装这段代码至ImageHelper start by liubo-----------------------------------------------------------------//
+			/*List<MaterialItem> materialItems = new ArrayList<MaterialItem>();
+			String media_id = null;
+			String title = null;
+			String firImage = null;
+			String saveImage =null;
+			int lastUpdateTime=0;
+			List<Map<String, Object>> items = res.getItems();
+
+			if (!CheckUtils.isNullOrEmpty(items)) {
+				MaterialItem item = null;
+				MaterialItem sonItem = null;
+				for (Map<String, Object> map : items) {
+					media_id = (String) map.get("media_id");
+					MaterialContent content = ((JSONObject) map.get("content"))
+							.toJavaObject(MaterialContent.class);
+					if (content != null
+							&& !CheckUtils
+									.isNullOrEmpty(content.getNews_item())) {
+						title = content.getNews_item().get(0).getTitle();
+						firImage = content.getNews_item().get(0).getThumb_url();
+						saveImage = imageHelper.saveImage(firImage, media_id, Constants.MASSSEND);
+						item = new MaterialItem(media_id, title);
+						lastUpdateTime= (int) map.get("update_time");//将时间戳转换为时间格式
+						//将count中的子图文放入集合进行存储
+						if(content.getNews_item().size()>1){
+							List<MaterialItem> sonItemList= new ArrayList<MaterialItem>();
+							//下标为0的是头图文
+							for (int i = 1; i < content.getNews_item().size(); i++) {
+								sonItem = new MaterialItem();
+								sonItem.setFirTitle(content.getNews_item().get(i).getTitle());
+								String sonSaveImage = imageHelper.saveImage(content.getNews_item().get(i).getThumb_url(), content.getNews_item().get(i).getThumb_media_id(), Constants.MASSSEND);
+								sonItem.setFirImage(appConfig.teletextImageUrl+sonSaveImage);
+								sonItemList.add(sonItem);
+								item.setSonItemList(sonItemList);
+							}
+						}
+					} else {
+						title = "";
+						firImage = "";
+					}
+					//测试机
+					//"http://testadminfwh.qiaohu.com/data/material/news/masssend/qCO2N0KbdJn_4JA3QkxiEc69ycHSoHYpp-nK8OIlMbM.png"
+					//正式机
+					//"https://adminfwh.qiaohu.com/data/material/news/masssend/qCO2N0KbdJn_4JA3QkxiEc69ycHSoHYpp-nK8OIlMbM.png"
+					//头图文
+					item.setFirImage(appConfig.teletextImageUrl+saveImage);
+					item.setLastUpdateTime(lastUpdateTime);
+					materialItems.add(item);
+				}
+			}*/
+			//-------------------------------------------------2017-12-22 独立封装这段代码至ImageHelper end by liubo-----------------------------------------------------------------//
+			//-------------------------------------------------2017-12-22 图文检索功能 start by liubo-----------------------------------------------------------------//
+			//按时间排序
+			if(!CheckUtils.isNullOrEmpty(materialItems)&&materialItems.size()>1){
+				getOrderByLastUpdateTime(materialItems);
+			}
+			
+			//模糊查询
+			if(!CheckUtils.isNullOrEmpty(dto.getFirTitle())){
+				List<MaterialItem> newMaterialItemList = new ArrayList<MaterialItem>();
+				GetMaterialTotalCountResponse gt = materialAPI.countMaterial();//获取图文素材的总数量
+				GetMaterialListResponse resAll = materialAPI.batchGetMaterialAll(
+						MaterialType.NEWS, 0, gt.getNews());
+				List<MaterialItem> materialItemAll = imageHelper.getMaterialImage(resAll);
+				if(!CheckUtils.isNullOrEmpty(materialItemAll)){
+					
+					for (MaterialItem materialItem : materialItemAll) {
+						if((materialItem.getFirTitle()).contains(dto.getFirTitle())){
+							newMaterialItemList.add(materialItem);
+						}
+					}
+				}
+				return new RestResult(new BasePage(newMaterialItemList.size(),
+						newMaterialItemList));
+			}
+			//-------------------------------------------------2017-12-22 图文检索功能 end by liubo-----------------------------------------------------------------//
+			// 返回查询结果
+			return new RestResult(new BasePage(res.getTotalCount(),
+					materialItems));
+		} catch (AppException e) {
+			logger.error(e.getMessage(), e);
+			// 返回异常信息
+			return new RestResult(messageHelper.mesg_error_0001);
+		}
+
+	}
+
+	@RequestMapping(value = "/push", method = RequestMethod.POST)
+	public RestResult push(@RequestBody PushDto dto) {
+
+		// if (CheckUtils.isNullOrEmpty(dto.getGroupId())) {
+		// return new RestResult(messageHelper.mesg_error_0001);
+		// }
+		if (CheckUtils.isNullOrEmpty(dto.getMaterialId())) {
+			return new RestResult(messageHelper.mesg_error_0001);
+		}
+
+		String accessToken = null;
+		CustomAPI customAPI = null;
+		Page<PreviewGroup> list = null;
+		List<PreviewUser> users = null;
+		try {
+
+			// 查询预览用户 TODO
+			PreviewGroupExt para = new PreviewGroupExt();
+			para.setType(dto.getType());
+			list = previewGroupService.search(para);
+			if (CheckUtils.isNull(list)
+					|| CheckUtils.isNullOrEmpty(list.getResult())) {
+				logger.error("no preview ");
+				return new RestResult("没有预览组");
+			}
+			PreviewUserExt userExt = new PreviewUserExt();
+			try{
+				//**********************添加集合遍历：原始只取了list下标为0的预览组不完整 start by liubo 2017-12-27********************
+				//由于没有限制预览组添加的个数，假如出现同类型的预览组数不至一个，那么需要集合循环变例后进行推送。
+				for (int i = 0; i < list.size(); i++) {
+					userExt.setGroupId(list.getResult().get(i).getId());
+					users = previewUserService.search(userExt);
+					if (CheckUtils.isNullOrEmpty(users)) {
+						logger.error("no users  ");
+						return new RestResult("没有预览用户");
+					}
+					accessToken = ApiConfig.getInstance().getAccessToken();
+					if (CheckUtils.isNullOrEmpty(accessToken)) {
+						logger.error("accessToken is null or empty.");
+						return new RestResult(messageHelper.mesg_error_0001);
+					}
+					// 初始化获取图文消息接口
+					customAPI = new CustomAPI(accessToken);
+					MpNewsMsg msg = new MpNewsMsg();
+					msg.setMediaId(dto.getMaterialId());
+					ResultType resultType = null;
+					
+					for (PreviewUser previewUser : users) {
+						resultType = customAPI.sendCustomMessage(
+								previewUser.getOpenId(), msg);
+						logger.info(resultType.toString());
+					}
+				}
+			}catch (AppException e) {
+					logger.error(e.getMessage(), e);
+			}
+			//**********************添加集合遍历：原始只取了list下标为0的预览组不完整 end by liubo 2017-12-27********************
+			//PreviewUserExt userExt = new PreviewUserExt();
+			/*userExt.setGroupId(list.getResult().get(0).getId());
+			users = previewUserService.search(userExt);
+			if (CheckUtils.isNullOrEmpty(users)) {
+				logger.error("no users  ");
+				return new RestResult("没有预览用户");
+			}
+			accessToken = ApiConfig.getInstance().getAccessToken();
+			if (CheckUtils.isNullOrEmpty(accessToken)) {
+				logger.error("accessToken is null or empty.");
+				return new RestResult(messageHelper.mesg_error_0001);
+			}
+			// 初始化获取图文消息接口
+			customAPI = new CustomAPI(accessToken);
+			MpNewsMsg msg = new MpNewsMsg();
+			msg.setMediaId(dto.getMaterialId());
+			ResultType resultType = null;
+			try{
+				
+				for (PreviewUser previewUser : users) {
+					resultType = customAPI.sendCustomMessage(
+							previewUser.getOpenId(), msg);
+					logger.info(resultType.toString());
+				}
+				
+			}catch (AppException e) {
+				logger.error(e.getMessage(), e);
+			}*/
+			
+			// 返回查询结果
+			return new RestResult(Constants.SUCCESS, "发送结束");
+		} catch (AppException e) {
+			logger.error(e.getMessage(), e);
+			// 返回异常信息
+			return new RestResult(messageHelper.mesg_error_0001);
+		}
+
+	}
+	//-------------------------------------------------2017-12-22 图文按时间排序 start by liubo-----------------------------------------------------------------//
+	/**
+	 * 图文按时间排序
+	 * @param list
+	 */
+	private  void getOrderByLastUpdateTime(List<MaterialItem> list){
+		Collections.sort(list, new Comparator<MaterialItem>() {
+			@Override
+           	public int compare(MaterialItem o1, MaterialItem o2) {
+                try {
+            		if (o1.getLastUpdateTime() < o2.getLastUpdateTime()) {
+            			return 1;
+            		} else if(o1.getLastUpdateTime() > o2.getLastUpdateTime()){
+            			return -1;
+            		}else{
+            			return 0;
+            		}
+                    
+               } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });	             					
+		
+	}
+}
