@@ -1,14 +1,5 @@
 package com.jjt.wechat.helper;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
-
 import java.util.Date;
 
 import javax.crypto.SecretKey;
@@ -19,18 +10,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
+
+
+
 @Component
 public class TokenHelper {
-
+	
 	private static final Logger logger = LoggerFactory
 			.getLogger(TokenHelper.class);
-
+	
 	private static final String JWT_SECRET = "7786df7fc3a34e26a61c034d5ec8245d";
 
-	private static final String ISSUER = "qiaohu";
-
+	private static final String ISSUER = "jjt";
+	
 	private static final int ACTIVETIME = 1000 * 60 * 90;
-
+	
 	public String createJWT(String openId) {
 		if (openId == null) {
 			return null;
@@ -51,12 +53,13 @@ public class TokenHelper {
 
 		return builder.compact();
 	}
-
-	public String parseJWT(String jwt) {
+	
+public String parseJWT(String jwt) {
 		
 		if (jwt == null) {
 			return null;
 		}
+		//System.out.println("jwt"+jwt);
 		Claims claims = null;
 		try {
 			claims = Jwts.parser().setSigningKey(generalKey())
@@ -74,20 +77,21 @@ public class TokenHelper {
 			logger.error("参数异常", e);
 			return null;
 		}
+		
 		return (String) claims.getSubject();
 
 	}
 
-	/**
-	 * 由字符串生成加密key
-	 * 
-	 * @return
-	 */
-	private SecretKey generalKey() {
-		byte[] encodedKey = Base64.decodeBase64(ISSUER + JWT_SECRET);
-		SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length,
-				"AES");
-		return key;
-	}
+/**
+ * 由字符串生成加密key
+ * 
+ * @return
+ */
+private SecretKey generalKey() {
+	byte[] encodedKey = Base64.decodeBase64(ISSUER + JWT_SECRET);
+	SecretKey key = new SecretKeySpec(encodedKey, 0, encodedKey.length,
+			"AES");
+	return key;
+}
 
 }

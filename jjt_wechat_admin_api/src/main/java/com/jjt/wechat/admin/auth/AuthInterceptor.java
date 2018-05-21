@@ -75,12 +75,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 					response.sendError(Constants.STATUS_TOO_LONG_LOGIN);
 					return false;
 				}
-				// 客户端token中的登录时间和服务器上的不一致，重新登录
-//				if (appAdmin.getLoginTime().longValue() != admin.getLoginTime()
-//						.longValue()) {
-//					response.sendError(Constants.STATUS_RE_LOGIN);
-//					return false;
-//				}
 
 				// 更新token
 				response.addHeader("x-access-token",
@@ -107,18 +101,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 	public void postHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		// if (modelAndView == null) {
-		// return;
-		// }
-		// 更新token
-		// String token = request.getHeader("x-access-token");
-		//
-		// if (!CheckUtils.isNullOrEmpty(token)) {
-		// response.addHeader("x-access-token",
-		// tokenHelper.createJWT(token));
-		//
-		// }
-
 	}
 
 	/**
