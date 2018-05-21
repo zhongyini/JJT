@@ -7,15 +7,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.jjt.wechat.core.config.WechatConfig;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class WechatConfigTest {
 	
 	
-	@Test
+	//@Test
 	public void WechatTokenServiceTestFindLastTimeToken(){
 //		System.out.println(WechatConfig.getInstance().getAccessTokenOnline());
-		System.out.println(WechatConfig.getInstance().getAccessToken());;
+//		System.out.println(WechatConfig.getInstance().getAccessToken());;
 	}
 
 }

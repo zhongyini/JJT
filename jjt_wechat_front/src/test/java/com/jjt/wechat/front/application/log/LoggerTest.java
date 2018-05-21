@@ -7,13 +7,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class LoggerTest {
 	
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Test
+//	@Test
 	public void loggerTest(){
 		logger.info("debug...");
 	}

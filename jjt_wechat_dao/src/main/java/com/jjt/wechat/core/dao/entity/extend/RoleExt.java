@@ -2,9 +2,9 @@ package com.jjt.wechat.core.dao.entity.extend;
 
 import java.util.List;
 
-import com.jjt.wechat.core.dao.entity.Role;
+import com.jjt.wechat.core.dao.entity.AdminRole;
 
-public class RoleExt extends Role {
+public class RoleExt extends AdminRole {
 
 	private static final long serialVersionUID = -1653575444768307783L;
 

@@ -13,9 +13,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.jjt.wechat.common.constant.Constant;
 import com.jjt.wechat.common.utils.CheckUtils;
+import com.jjt.wechat.common.utils.DateUtils;
+import com.jjt.wechat.common.utils.JsonUtils;
 import com.jjt.wechat.common.wechat.api.OauthApi;
-import com.jjt.wechat.core.config.SystemConfig;
+import com.jjt.wechat.core.dao.entity.SnsToken;
+import com.jjt.wechat.core.dao.entity.WechatToken;
+import com.jjt.wechat.core.service.SnsTokenService;
 import com.jjt.wechat.core.service.WechatTokenService;
+import com.jjt.wechat.helper.ConfigHelper;
 
 
 /**
@@ -31,6 +36,12 @@ public class OAuthController extends BaseController {
 	
 	@Autowired
 	private WechatTokenService wechatTokenService;
+	
+	@Autowired
+	private SnsTokenService snsTokenService;
+	
+	@Autowired
+	private ConfigHelper configHelper;
 	
 	/**
 	 * 根据code获取用户openId后跳转到需要带用户信息的最终页面
@@ -61,34 +72,46 @@ public class OAuthController extends BaseController {
 			return "common/error";
 		}
 
-		String appId =SystemConfig.getInstance().getProperty(Constant.Configuration.APPID);
-		String appSecret = SystemConfig.getInstance().getProperty(Constant.Configuration.APPSECRET);
+		String appId = configHelper.appId;
+		String appSecret = configHelper.appSecret;
 		if (CheckUtils.isNullOrEmpty(appId)
 				|| CheckUtils.isNullOrEmpty(appSecret)) {
 			logger.error("appid：[" + appId + "]或者appSecret：[" + appSecret
-					+ "]为null或空，请检测数据库配置是否正确");
+					+ "]为null或空，请检测配置是否正确");
 			return "/common/error";
 		}
 		OauthApi api = null;
+		SnsToken snsToken = new SnsToken();
+		String wechatTokenStr = Constant.EMPTY;
 		try {
-			api = new OauthApi(wechatTokenService.findFirstByOrderByCreateDateDesc().getAccessToken()
+			api = new OauthApi(snsTokenService.findFirstByOrderByCreateDateDesc().getAccessToken()
 					, appId, appSecret);
-			openId =  api.getOpenId(code);
+			wechatTokenStr =  api.getOpenId(code);
 			if (CheckUtils.isNullOrEmpty(openId)) {
 				logger.error("获取openId：[" + openId + "]失败");
 				redirectAttributes.addFlashAttribute("url", redirectUrl);
 				return "/common/error";
 			}
+			snsToken.setAccessToken(JsonUtils.getStringFromJSONObject(wechatTokenStr, "access_token").toString());
+			snsToken.setExpiresIn(Integer.valueOf(JsonUtils.getStringFromJSONObject(wechatTokenStr, "expires_in").toString()));
+			snsToken.setOpenid(JsonUtils.getStringFromJSONObject(wechatTokenStr, "openid").toString());
+			snsToken.setRefreshToken(JsonUtils.getStringFromJSONObject(wechatTokenStr, "refresh_token").toString());
+			snsToken.setScope(JsonUtils.getStringFromJSONObject(wechatTokenStr, "scope").toString());
+			snsToken.setUnionid(JsonUtils.getStringFromJSONObject(wechatTokenStr, "unionid").toString());
 		} catch (Exception e) {
+			snsToken.setErrcode(JsonUtils.getStringFromJSONObject(wechatTokenStr, "errcode").toString());
+			snsToken.setErrmsg(JsonUtils.getStringFromJSONObject(wechatTokenStr, "errmsg").toString());
 			logger.error("获取openId：[" + openId + "]失败，失败详细信息：" + e.getMessage());
 			redirectAttributes.addFlashAttribute("url", redirectUrl);
 			return "/common/error";
 		}
-		logger.info("获取openId：[" + openId + "]成功。");
-		model.addAttribute("openId", openId);
+		snsToken.setCreateDate(DateUtils.getNowTimestamp());
+		snsTokenService.save(snsToken);
+		logger.info("获取openId：[" + snsToken.getOpenid() + "]成功。");
+		model.addAttribute("openId", snsToken.getOpenid());
 		model.addAttribute("url", redirectUrl);
 		setResponseCookie(configHelper.cookieKey,
-				tokenHelper.createJWT(openId));
+				tokenHelper.createJWT(snsToken.getOpenid()));
 		logger.info(redirectUrl);
 		return "common/jump";
 	}

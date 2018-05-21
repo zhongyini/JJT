@@ -16,13 +16,13 @@ import com.jjt.wechat.common.wechat.api.entity.Menu;
 import com.jjt.wechat.common.wechat.api.entity.MenuButton;
 import com.jjt.wechat.common.wechat.api.enums.MenuType;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class MenuTest {
 	
-	@Test
+//	@Test
 	public void menuTest() throws ClientProtocolException, IOException, HttpResponseNullException{
-		Menu menu = new Menu();
+		/*Menu menu = new Menu();
 		// 准备一级主菜单
 		MenuButton menuB1 = new MenuButton();
 		menuB1.setName("千人影家");
@@ -50,8 +50,8 @@ public class MenuTest {
 		menu.setButton(list);
 
 		
-		MenuApi menuApi = new MenuApi("8_1UYPYv2rOwRv0WuER6kqevs9dPE6XIw8MuC3mejGh2bzJk_6T-EPRGqRgZFvIc7D5MAKLKDNoZIHxBdcjsTpiXkPa5fAi1SOyxq3gzQnqIAffgZEHbv2B_qT3tLU5EHzE_n7kBoXsfecpaTHZTZiAJAHBH");
-		menuApi.createMenu(menu);
+		MenuApi menuApi = new MenuApi("");
+		menuApi.createMenu(menu);*/
 		
 	}
 }

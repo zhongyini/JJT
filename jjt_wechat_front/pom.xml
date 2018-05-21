@@ -59,6 +59,22 @@
 	</dependencies>
 	<build>
 		<finalName>jjt_wechat_front</finalName>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<!-- 资源根目录排除各环境的配置，使用单独的资源目录来指定 -->
+				<excludes>
+					<exclude>dev/*</exclude>
+					<exclude>staging/*</exclude>
+					<exclude>product/*</exclude>
+				</excludes>
+				<!-- 是否替换资源中的属性 -->
+				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources/${package.environment}</directory>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -69,4 +85,25 @@
 			</plugin>
 		</plugins>
 	</build>
+	<!-- 定义打包环境变量，生产环境；测试环境；开发环境 -->
+	<profiles>
+		<profile>
+			<id>staging</id>
+			<properties>
+				<package.environment>staging</package.environment>
+			</properties>
+		</profile>
+		<profile>
+			<id>product</id>
+			<properties>
+				<package.environment>product</package.environment>
+			</properties>
+		</profile>
+		<profile>
+			<id>dev</id>
+			<properties>
+				<package.environment>dev</package.environment>
+			</properties>
+		</profile>
+	</profiles>
 </project>

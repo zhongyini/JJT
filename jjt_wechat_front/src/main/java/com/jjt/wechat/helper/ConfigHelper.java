@@ -10,5 +10,11 @@ public class ConfigHelper {
 	
 	@Value(value="${jjt.cookie}")
 	public String cookieKey;
+	
+	@Value(value="${jjt.appid}")
+	public String appId;
+	
+	@Value(value="${jjt.appsecret}")
+	public String appSecret;
 
 }

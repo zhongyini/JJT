@@ -25,6 +25,7 @@ import com.jjt.wechat.common.wechat.api.enums.ResultType;
 import com.jjt.wechat.core.config.SystemConfig;
 import com.jjt.wechat.core.config.WechatConfig;
 import com.jjt.wechat.core.service.WechatTokenService;
+import com.jjt.wechat.helper.ConfigHelper;
 
 /**
  * 程序啟動時創建菜單

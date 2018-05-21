@@ -1,9 +1,9 @@
 package com.jjt.wechat.core.service;
 
-import com.jjt.wechat.core.dao.entity.User;
+import com.jjt.wechat.core.dao.entity.WechatUser;
 
 public interface UserService {
 	
-	User findByOpenId(String openId);
+	WechatUser findByOpenId(String openId);
 
 }

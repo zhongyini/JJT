@@ -40,8 +40,8 @@ public class OauthApi extends BaseApi {
     	CheckUtils.requireNonNull(code, "code is null");
     	String tokenurl =  String.format(Constant.WechatUrl.ACCESS_TOKEN_OAUTH2_GET,this.appid, this.secret,code);
     	String response = HttpRequest.httpGetRequest(tokenurl);
-    	String openId = JsonUtils.getStringFromJSONObject(response, "openid").toString();
-    	return openId;
+    	//String openId = JsonUtils.getStringFromJSONObject(response, "openid").toString();
+    	return response;
     }
     
     

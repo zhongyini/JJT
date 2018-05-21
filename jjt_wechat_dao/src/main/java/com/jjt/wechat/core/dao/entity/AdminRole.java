@@ -7,19 +7,19 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table(name = "t_jjt_role")
-public class Role implements Serializable {
+@Table(name = "jjt_admin_role")
+public class AdminRole implements Serializable {
 
 	private static final long serialVersionUID = 6687894475472223044L;
 
-	public Role() {
+	public AdminRole() {
 
 	}
 
-	public Role(String roleId) {
+	public AdminRole(String roleId) {
 		this.roleId = roleId;
 	}
-	public Role(String roleId,String roleName) {
+	public AdminRole(String roleId,String roleName) {
 		this.roleId = roleId;
 		this.roleName =roleName;
 	}

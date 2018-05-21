@@ -26,6 +26,7 @@ public class MenuViewController extends BaseController {
 			RedirectAttributes redirectAttributes) {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("user/button");
+		logger.info(openId);
 		return mav; 
 	}
 	

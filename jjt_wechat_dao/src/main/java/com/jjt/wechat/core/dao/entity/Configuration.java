@@ -12,7 +12,7 @@ import javax.persistence.Table;
  */
 
 @Entity
-@Table(name = "t_configuration")
+@Table(name = "jjt_configuration")
 public class Configuration implements Serializable {
 
 	private static final long serialVersionUID = -8659326752435236115L;

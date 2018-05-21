@@ -13,8 +13,8 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "t_wechat_user")
-public class User implements Serializable {
+@Table(name = "jjt_wechat_user")
+public class WechatUser implements Serializable {
 	
 	private static final long serialVersionUID = -6824624926439743435L;
 	@Id
@@ -24,20 +24,18 @@ public class User implements Serializable {
 	private String nickName;
 	@Column(name = "SEX")
 	private String sex;
-	@Column(name = "CITY")
-	private String city;
 	@Column(name = "PROVINCE")
 	private String province;
+	@Column(name = "CITY")
+	private String city;
 	@Column(name = "COUNTRY")
 	private String country;
-	@Column(name = "LANGUAGE")
-	private String language;
-	@Column(name = "subscribeTime")
-	private Timestamp subscribeTime;
-	@Column(name = "createDate")
-	private Timestamp createDate;
-	@Column(name = "deleteFlag")
-	private String deleteFlag;
+	@Column(name = "HEADIMGURL")
+	private String headimgurl;
+	@Column(name = "UNIONID")
+	private String unionid;
+	@Column(name = "UPDATETIME")
+	private Timestamp updatetime;
 	public String getOpenId() {
 		return openId;
 	}
@@ -74,31 +72,23 @@ public class User implements Serializable {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-	public String getLanguage() {
-		return language;
+	public Timestamp getUpdatetime() {
+		return updatetime;
 	}
-	public void setLanguage(String language) {
-		this.language = language;
+	public void setUpdatetime(Timestamp updatetime) {
+		this.updatetime = updatetime;
 	}
-	public Timestamp getSubscribeTime() {
-		return subscribeTime;
+	public String getHeadimgurl() {
+		return headimgurl;
 	}
-	public void setSubscribeTime(Timestamp subscribeTime) {
-		this.subscribeTime = subscribeTime;
+	public void setHeadimgurl(String headimgurl) {
+		this.headimgurl = headimgurl;
 	}
-	public Timestamp getCreateDate() {
-		return createDate;
+	public String getUnionid() {
+		return unionid;
 	}
-	public void setCreateDate(Timestamp createDate) {
-		this.createDate = createDate;
+	public void setUnionid(String unionid) {
+		this.unionid = unionid;
 	}
-	public String getDeleteFlag() {
-		return deleteFlag;
-	}
-	public void setDeleteFlag(String deleteFlag) {
-		this.deleteFlag = deleteFlag;
-	}
-	
-	
 
 }
