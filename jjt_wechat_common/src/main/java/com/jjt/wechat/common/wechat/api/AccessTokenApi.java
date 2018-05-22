@@ -13,14 +13,18 @@ import com.jjt.wechat.common.utils.CheckUtils;
 import com.jjt.wechat.common.utils.JsonUtils;
 import com.jjt.wechat.common.wechat.api.response.AccessTokenResponse;
 
-public class AccessTokenApi extends BaseApi{
+public class AccessTokenApi extends BaseApi {
+	
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	public AccessTokenApi(String accessToken) {
+		super(accessToken);
+	}
 	
 	public AccessTokenApi() {
-		
+		super();
 	}
-
-
+	
 	/**
 	 * 获取AccessToken
 	 * @param appId

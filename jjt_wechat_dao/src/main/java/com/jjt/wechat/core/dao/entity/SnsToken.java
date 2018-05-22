@@ -122,5 +122,11 @@ public class SnsToken implements Serializable {
 	public void setCreateDate(Timestamp createDate) {
 		this.createDate = createDate;
 	}
+	@Override
+	public String toString() {
+		return "SnsToken [openid=" + openid + ", accessToken=" + accessToken + ", jsapiTicket=" + jsapiTicket
+				+ ", expiresIn=" + expiresIn + ", refreshToken=" + refreshToken + ", scope=" + scope + ", unionid="
+				+ unionid + ", errcode=" + errcode + ", errmsg=" + errmsg + ", createDate=" + createDate + "]";
+	}
 
 }

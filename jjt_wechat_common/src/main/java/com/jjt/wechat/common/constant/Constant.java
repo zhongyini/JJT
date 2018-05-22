@@ -12,6 +12,9 @@ public interface Constant {
 	 * 
 	 */
 	interface WechatUrl {
+		
+		String BASE_API_URL = "https://api.weixin.qq.com/";
+		
 		// 获取access_token
 		String GET_ACCESS_TOKEN_GET = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=%s&secret=%s";
 
@@ -94,6 +97,7 @@ public interface Constant {
 		String GET_MATERIAL_COUNT_GET = "https://api.weixin.qq.com/cgi-bin/material/get_materialcount?access_token=%s";
 
 		// 第一步：用户同意授权，获取code
+		String AUTHORIZE_CONNECT_QRCONNECT = "https://open.weixin.qq.com/connect/qrconnect?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect";
 		String AUTHORIZE_OAUTH2_CONNECT = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect";
 		// 第二步：通过code换取网页授权access_token
 		String ACCESS_TOKEN_OAUTH2_GET = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code";
@@ -140,6 +144,12 @@ public interface Constant {
 		public static final String EVENT = "Event";
 		//事件KEY值
 		public static final String EVENTKEY = "EventKey";
+		// zh_CN 简体
+		public static final String ZH_CN = "zh_CN";
+		// zh_TW 繁体
+		public static final String ZH_TW = "zh_TW";
+		// en 英语
+		public static final String EN = "en";
 	}
 
 	/**

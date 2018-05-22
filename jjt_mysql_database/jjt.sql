@@ -1,17 +1,19 @@
-/*
-Navicat MySQL Data Transfer
 
-Source Server         : password
-Source Server Version : 50516
-Source Host           : localhost:3306
-Source Database       : jjt
+--用户表
 
-Target Server Type    : MYSQL
-Target Server Version : 50516
-File Encoding         : 65001
+--管理员表
 
-Date: 2018-05-20 22:06:26
-*/
+--卡券表
+
+--推荐者表
+
+--被推荐者表
+
+--snstoken表
+
+--核销记录表
+
+--
 
 SET FOREIGN_KEY_CHECKS=0;
 

@@ -34,6 +34,12 @@ public class WechatUser implements Serializable {
 	private String headimgurl;
 	@Column(name = "UNIONID")
 	private String unionid;
+	@Column(name = "GROUPID")
+	private Integer groupid;
+	@Column(name = "SUBSCRIBE")
+	private Integer subscribe;
+	@Column(name = "SUBSCRIBE_TIME")
+	private Long subscribeTime;
 	@Column(name = "UPDATETIME")
 	private Timestamp updatetime;
 	public String getOpenId() {
@@ -72,12 +78,6 @@ public class WechatUser implements Serializable {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-	public Timestamp getUpdatetime() {
-		return updatetime;
-	}
-	public void setUpdatetime(Timestamp updatetime) {
-		this.updatetime = updatetime;
-	}
 	public String getHeadimgurl() {
 		return headimgurl;
 	}
@@ -90,5 +90,17 @@ public class WechatUser implements Serializable {
 	public void setUnionid(String unionid) {
 		this.unionid = unionid;
 	}
-
+	public Integer getSubscribe() {
+		return subscribe;
+	}
+	public void setSubscribe(Integer subscribe) {
+		this.subscribe = subscribe;
+	}
+	public Timestamp getUpdatetime() {
+		return updatetime;
+	}
+	public void setUpdatetime(Timestamp updatetime) {
+		this.updatetime = updatetime;
+	}
+	
 }
