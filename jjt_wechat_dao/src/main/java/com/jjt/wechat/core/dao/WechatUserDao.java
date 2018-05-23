@@ -3,11 +3,11 @@ package com.jjt.wechat.core.dao;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.jjt.wechat.core.BaseDao;
-import com.jjt.wechat.core.dao.entity.WechatUser;
+import com.jjt.wechat.core.dao.entity.WechatUserInfo;
 
 @Mapper
-public interface WechatUserDao extends BaseDao<WechatUser> {
+public interface WechatUserDao extends BaseDao<WechatUserInfo> {
 	
-	WechatUser selectByOpenId(String openId);
+	WechatUserInfo selectByOpenId(String openId);
 
 }

@@ -13,6 +13,7 @@ import com.jjt.wechat.core.service.IConfigurationService;
 import com.jjt.wechat.core.util.AppContextUtils;
 
 public class SystemConfig {
+	
 	//日志
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -43,15 +44,21 @@ public class SystemConfig {
 		List<Configuration> configList = null;
 		//获取系统配置的list
 		try {
-			configList = AppContextUtils.getBean(IConfigurationService.class).findAll();
+			configList = (List<Configuration>)AppContextUtils.getBean(IConfigurationService.class).findAll();
 		} catch (Exception e) {
 			logger.error("System config init error:"+e.getMessage());
 		}
+		
 		if(!CheckUtils.isNullOrEmpty(configList)){
 			propMap.clear();
-			for (Configuration configuration : configList) {
-				propMap.put(configuration.getItem(), configuration.getProperty());
+			int length = configList.size();
+			for (int i = 0; length > i; i++) {
+				logger.info(configList.get(i).toString());
+				propMap.put(configList.get(i).getItem(), configList.get(i).getProperty());
 			}
+//			for (Configuration configuration : configList) {
+//				propMap.put(configuration.getItem(), configuration.getProperty());
+//			}
 			return;
 		}
 		logger.error("System config init is empty");

@@ -19,7 +19,7 @@ import com.jjt.wechat.common.utils.CheckUtils;
 import com.jjt.wechat.common.wechat.api.UserAPI;
 import com.jjt.wechat.common.wechat.api.response.GetUserInfoResponse;
 import com.jjt.wechat.core.config.WechatConfig;
-import com.jjt.wechat.core.dao.entity.WechatUser;
+import com.jjt.wechat.core.dao.entity.WechatUserInfo;
 import com.jjt.wechat.front.exception.ErrorPageException;
 import com.jjt.wechat.front.service.IWechatUserService;
 import com.jjt.wechat.helper.ConfigHelper;
@@ -78,7 +78,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			logger.info("openid不为空：" + openId);
 			// 判断用户信息是否存在
 			try {
-				WechatUser wechatUser = userService.findByOpenId(openId);
+				WechatUserInfo wechatUser = userService.findByOpenId(openId);
 				if (CheckUtils.isNull(wechatUser)) {
 					logger.info("openID：" + openId + "的用户不存在");
 					response.sendRedirect(contextPath + "/oauth/api?resultUrl=" + requestUrl);

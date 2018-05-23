@@ -2,48 +2,32 @@ SET SESSION FOREIGN_KEY_CHECKS=0;
 
 /* Drop Tables */
 
-DROP TABLE IF EXISTS jjt_admin_authority;
-DROP TABLE IF EXISTS jjt_admin_authority_code;
 DROP TABLE IF EXISTS jjt_admin_role;
 DROP TABLE IF EXISTS jjt_admin_user;
 DROP TABLE IF EXISTS jjt_configuration;
-DROP TABLE IF EXISTS jjt_sns_token;
+DROP TABLE IF EXISTS jjt_red_packet;
 DROP TABLE IF EXISTS jjt_wechat_card;
+DROP TABLE IF EXISTS jjt_wechat_card_code;
+DROP TABLE IF EXISTS jjt_wechat_card_consume;
 DROP TABLE IF EXISTS jjt_wechat_qrcode;
 DROP TABLE IF EXISTS jjt_wechat_qrcode_type;
 DROP TABLE IF EXISTS jjt_wechat_recommend;
 DROP TABLE IF EXISTS jjt_wechat_token;
 DROP TABLE IF EXISTS jjt_wechat_user;
-DROP TABLE IF EXISTS t_wechat_card_consume;
+DROP TABLE IF EXISTS jjt_wechat_user_info;
 
 
 
 
 /* Create Tables */
 
-CREATE TABLE jjt_admin_authority
-(
-	role_id varchar(20) NOT NULL,
-	code varchar(50) NOT NULL,
-	PRIMARY KEY (role_id, code)
-) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-
-CREATE TABLE jjt_admin_authority_code
-(
-	CODE varchar(50) NOT NULL,
-	-- 配置名
-	NAME varchar(50) NOT NULL COMMENT '配置名',
-	PRIMARY KEY (CODE)
-) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-
 CREATE TABLE jjt_admin_role
 (
 	role_id varchar(20) NOT NULL,
 	role_name varchar(50) NOT NULL,
-	modify_user varchar(20) NOT NULL,
-	modify_date datetime NOT NULL,
+	create_user varchar(20),
+	create_date datetime,
+	updatetime timestamp,
 	PRIMARY KEY (role_id)
 ) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -52,17 +36,19 @@ CREATE TABLE jjt_admin_user
 (
 	admin_id varchar(20) NOT NULL,
 	role_id varchar(20),
-	name varchar(20) NOT NULL,
-	password varchar(128) NOT NULL,
-	password_overdue_date varchar(8) NOT NULL,
-	mail varchar(200),
-	portrait varchar(200),
-	delete_flag char NOT NULL,
-	create_user varchar(20) NOT NULL,
+	name varchar(20),
+	password varchar(64),
+	-- 密码过期日期
+	password_overdue_date date COMMENT '密码过期日期',
+	mail varchar(50),
+	-- 头像
+	headImgUrl varchar(200) COMMENT '头像',
+	delete_flag char,
+	create_user varchar(20),
 	-- 生成时间
-	create_date datetime NOT NULL COMMENT '生成时间',
-	modify_user varchar(20) NOT NULL,
-	modify_date datetime NOT NULL,
+	create_date datetime COMMENT '生成时间',
+	modify_user varchar(20),
+	modify_date datetime,
 	PRIMARY KEY (admin_id)
 ) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
@@ -72,7 +58,7 @@ CREATE TABLE jjt_configuration
 	-- 配置码
 	ITEM varchar(50) NOT NULL COMMENT '配置码',
 	-- 配置属性
-	property varchar(600) NOT NULL COMMENT '配置属性',
+	property varchar(100) NOT NULL COMMENT '配置属性',
 	-- 配置名
 	NAME varchar(50) COMMENT '配置名',
 	-- 配置类型(0系统配置;1后台配置;2业务配置)
@@ -83,26 +69,18 @@ CREATE TABLE jjt_configuration
 ) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
 
-CREATE TABLE jjt_sns_token
+CREATE TABLE jjt_red_packet
 (
-	openid varchar(30) NOT NULL,
-	-- 微信凭证access_token
-	access_token varchar(255) COMMENT '微信凭证access_token',
-	-- JS接口的临时票据
-	jsapi_ticket varchar(255) COMMENT 'JS接口的临时票据',
-	-- 凭证有效时间，单位：秒
-	expires_in int COMMENT '凭证有效时间，单位：秒',
-	refresh_token varchar(255),
-	scope varchar(100),
-	unionid varchar(50),
-	-- 错误码
-	errcode varchar(8) COMMENT '错误码',
-	-- 错误信息
-	errmsg varchar(256) COMMENT '错误信息',
-	-- 生成时间
-	create_date datetime NOT NULL COMMENT '生成时间',
-	PRIMARY KEY (openid)
-) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+	packet_id int NOT NULL AUTO_INCREMENT,
+	-- 卡券code
+	code varchar(20) COMMENT '卡券code',
+	card_id varchar(30),
+	-- 领取红包用户
+	open_id varchar(30) COMMENT '领取红包用户',
+	-- 创建时间
+	create_date datetime COMMENT '创建时间',
+	PRIMARY KEY (packet_id)
+);
 
 
 CREATE TABLE jjt_wechat_card
@@ -147,14 +125,48 @@ CREATE TABLE jjt_wechat_card
 );
 
 
-CREATE TABLE jjt_wechat_qrcode
+CREATE TABLE jjt_wechat_card_code
 (
 	id int NOT NULL AUTO_INCREMENT,
+	-- 核销Code号
+	code varchar(20) COMMENT '核销Code号',
+	-- 核销卡券号
+	card_id varchar(30) NOT NULL COMMENT '核销卡券号',
+	-- 核销对象
+	open_id varchar(30) NOT NULL COMMENT '核销对象',
+	-- 卡券状态(0未核销;1已核销)
+	code_status int COMMENT '卡券状态(0未核销;1已核销)',
+	-- 红包生成状态(0未生成;1生成成功)
+	red_packet_status int COMMENT '红包生成状态(0未生成;1生成成功)',
+	updatetime datetime,
+	PRIMARY KEY (id)
+);
+
+
+CREATE TABLE jjt_wechat_card_consume
+(
+	id int NOT NULL AUTO_INCREMENT,
+	-- 核销Code号
+	code varchar(20) COMMENT '核销Code号',
+	-- 核销卡券号
+	card_id varchar(30) COMMENT '核销卡券号',
+	-- 核销对象
+	open_id varchar(30) COMMENT '核销对象',
+	-- 核销者
+	admin_id varchar(30) COMMENT '核销者',
+	updatetime datetime,
+	PRIMARY KEY (id)
+);
+
+
+CREATE TABLE jjt_wechat_qrcode
+(
+	qrcode_id int NOT NULL AUTO_INCREMENT,
 	open_id varchar(30),
 	ticket varchar(200),
 	qrcode_type int,
 	create_date datetime,
-	PRIMARY KEY (id)
+	PRIMARY KEY (qrcode_id)
 );
 
 
@@ -171,12 +183,15 @@ CREATE TABLE jjt_wechat_qrcode_type
 
 CREATE TABLE jjt_wechat_recommend
 (
-	id int NOT NULL AUTO_INCREMENT,
-	open_id varchar(30),
-	qrcode_id int,
+	recommend_id int NOT NULL AUTO_INCREMENT,
+	-- 被推荐者的openid
+	rec_open_id varchar(30) COMMENT '被推荐者的openid',
+	-- 推荐者的openid
+	rec_ed_open_id varchar(30) COMMENT '推荐者的openid',
+	qrcode_type_id int,
 	status int DEFAULT 0,
 	updatetime timestamp,
-	PRIMARY KEY (id)
+	PRIMARY KEY (recommend_id)
 );
 
 
@@ -202,6 +217,18 @@ CREATE TABLE jjt_wechat_user
 (
 	-- 微信openid
 	openid varchar(30) NOT NULL COMMENT '微信openid',
+	-- 微信unionid
+	unionid varchar(10) COMMENT '微信unionid',
+	-- 更新时间
+	updatetime datetime COMMENT '更新时间',
+	PRIMARY KEY (openid)
+) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+
+CREATE TABLE jjt_wechat_user_info
+(
+	-- 微信openid
+	openid varchar(30) NOT NULL COMMENT '微信openid',
 	-- 微信昵称
 	nickname varchar(50) COMMENT '微信昵称',
 	-- 性别
@@ -216,28 +243,26 @@ CREATE TABLE jjt_wechat_user
 	headimgurl varchar(255) COMMENT '头像url',
 	-- 微信unionid
 	unionid varchar(10) COMMENT '微信unionid',
+	-- 用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。
+	subscribe int COMMENT '用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。',
+	-- 用户的语言，简体中文为zh_CN
+	language varchar(10) COMMENT '用户的语言，简体中文为zh_CN',
+	-- 用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间
+	subscribe_time timestamp COMMENT '用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间',
+	-- 公众号运营者对粉丝的备注，公众号运营者可在微信公众平台用户管理界面对粉丝添加备注
+	remark varchar(30) COMMENT '公众号运营者对粉丝的备注，公众号运营者可在微信公众平台用户管理界面对粉丝添加备注',
+	-- 用户所在的分组ID（兼容旧的用户分组接口）
+	groupid varchar(10) COMMENT '用户所在的分组ID（兼容旧的用户分组接口）',
+	-- 返回用户关注的渠道来源
+	subscribe_scene varchar(30) COMMENT '返回用户关注的渠道来源',
+	-- 二维码扫码场景（开发者自定义）
+	qr_scene int COMMENT '二维码扫码场景（开发者自定义）',
+	-- 二维码扫码场景描述（开发者自定义）
+	qr_scene_str varchar(50) COMMENT '二维码扫码场景描述（开发者自定义）',
 	-- 更新时间
-	updatetime datetime NOT NULL COMMENT '更新时间',
+	updatetime datetime COMMENT '更新时间',
 	PRIMARY KEY (openid)
 ) DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-
-
-CREATE TABLE t_wechat_card_consume
-(
-	id int NOT NULL AUTO_INCREMENT,
-	-- 核销对象
-	open_id varchar(30) NOT NULL COMMENT '核销对象',
-	-- 核销者
-	admin_id varchar(30) COMMENT '核销者',
-	-- 核销卡券号
-	card_id varchar(30) NOT NULL COMMENT '核销卡券号',
-	-- 核销Code号
-	code varchar(20) COMMENT '核销Code号',
-	-- 状态(0未核销;1已核销)
-	status int COMMENT '状态(0未核销;1已核销)',
-	updatetime datetime,
-	PRIMARY KEY (id)
-);
 
 
 

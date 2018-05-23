@@ -36,11 +36,8 @@ public class AdminRole implements Serializable {
 	@Column(name = "CREATE_DATE")
 	private Timestamp createDate;
 
-	@Column(name = "MODIFY_USER")
-	private String modifyUser;
-
-	@Column(name = "MODIFY_DATE")
-	private Timestamp modifyDate;
+	@Column(name = "UPDATETIME")
+	private Timestamp updatetime;
 
 	public String getRoleId() {
 		return roleId;
@@ -74,20 +71,12 @@ public class AdminRole implements Serializable {
 		this.createDate = createDate;
 	}
 
-	public String getModifyUser() {
-		return modifyUser;
+	public Timestamp getUpdatetime() {
+		return updatetime;
 	}
 
-	public void setModifyUser(String modifyUser) {
-		this.modifyUser = modifyUser;
-	}
-
-	public Timestamp getModifyDate() {
-		return modifyDate;
-	}
-
-	public void setModifyDate(Timestamp modifyDate) {
-		this.modifyDate = modifyDate;
+	public void setUpdatetime(Timestamp updatetime) {
+		this.updatetime = updatetime;
 	}
 
 }

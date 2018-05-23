@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -12,7 +11,6 @@ import javax.persistence.Table;
  * 微信Access Token的实体类
  * 
  */
-@Entity
 @Table(name = "jjt_wechat_token")
 public class WechatToken implements Serializable {
 
@@ -24,6 +22,7 @@ public class WechatToken implements Serializable {
 	@Id
 	@Column(name="ACCESS_TOKEN")
 	private String accessToken;
+	
 	@Column(name="JSAPI_TICKET")
 	private String jsapiTicket;
 	/**
@@ -37,8 +36,10 @@ public class WechatToken implements Serializable {
 	 */
 	@Column(name="ERRCODE")
 	private String errcode;
+	
 	@Column(name="ERRMSG")
 	private String errmsg;
+	
 	@Column(name="CREATE_DATE")
 	private Timestamp createDate;
 

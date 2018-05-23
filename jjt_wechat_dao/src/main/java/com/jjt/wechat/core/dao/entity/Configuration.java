@@ -3,7 +3,6 @@ package com.jjt.wechat.core.dao.entity;
 import java.io.Serializable;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 /**
@@ -11,7 +10,6 @@ import javax.persistence.Table;
  *
  */
 
-@Entity
 @Table(name = "jjt_configuration")
 public class Configuration implements Serializable {
 
@@ -24,13 +22,13 @@ public class Configuration implements Serializable {
 	@Column(name = "property")
 	private String property;
 	
-	@Column(name = "name", nullable = false)
+	@Column(name = "name")
 	private String name;
 	
-	@Column(name = "type", nullable = false)
+	@Column(name = "type")
 	private String type;
 	
-	@Column(name = "memo", nullable = false)
+	@Column(name = "memo")
 	private String memo;
 
 	public String getItem() {

@@ -11,6 +11,7 @@ import com.jjt.wechat.core.service.IConfigurationService;
 
 @Service
 public class ConfigurationServiceImpl implements IConfigurationService{
+	
 	@Autowired
 	ConfigurationDao configurationDao;
 	

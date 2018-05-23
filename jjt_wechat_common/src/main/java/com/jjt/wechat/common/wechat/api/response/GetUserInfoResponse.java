@@ -20,6 +20,12 @@ public class GetUserInfoResponse extends BaseResponse {
     private String  unionid;
     private String remark;
     private Integer groupid;
+    @JSONField(name = "subscribe_scene")
+    private String subscribeScene;
+    @JSONField(name = "qr_scene")
+    private Integer qrScene;
+    @JSONField(name = "qr_scene_str")
+    private String qrSceneStr;
 
     public Integer getSubscribe() {
         return subscribe;
@@ -124,4 +130,29 @@ public class GetUserInfoResponse extends BaseResponse {
 	public void setGroupid(Integer groupid) {
 		this.groupid = groupid;
 	}
+
+	public String getSubscribeScene() {
+		return subscribeScene;
+	}
+
+	public void setSubscribeScene(String subscribeScene) {
+		this.subscribeScene = subscribeScene;
+	}
+
+	public Integer getQrScene() {
+		return qrScene;
+	}
+
+	public void setQrScene(Integer qrScene) {
+		this.qrScene = qrScene;
+	}
+
+	public String getQrSceneStr() {
+		return qrSceneStr;
+	}
+
+	public void setQrSceneStr(String qrSceneStr) {
+		this.qrSceneStr = qrSceneStr;
+	}
+	
 }

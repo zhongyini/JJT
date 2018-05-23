@@ -22,7 +22,7 @@ import com.jjt.wechat.common.wechat.api.UserAPI;
 import com.jjt.wechat.common.wechat.api.response.AccessTokenResponse;
 import com.jjt.wechat.common.wechat.api.response.GetUserInfoResponse;
 import com.jjt.wechat.core.config.WechatConfig;
-import com.jjt.wechat.core.dao.entity.WechatUser;
+import com.jjt.wechat.core.dao.entity.WechatUserInfo;
 import com.jjt.wechat.front.service.IWechatUserService;
 import com.jjt.wechat.helper.ConfigHelper;
 
@@ -130,7 +130,7 @@ public class OAuthController extends BaseController {
 				return "/common/error";
 			}
 			openId = accessTokenResponse.getOpenid();
-			WechatUser wecahtUser = new WechatUser();
+			WechatUserInfo wecahtUser = new WechatUserInfo();
 			wecahtUser = getWechatUserInfo(accessTokenResponse.getOpenid(), wecahtUser);
 			
 		} catch (Exception e) {
@@ -145,7 +145,7 @@ public class OAuthController extends BaseController {
 		return "common/jump";
 	}
 
-	private WechatUser getWechatUserInfo(String openId, WechatUser wechatUser) {
+	private WechatUserInfo getWechatUserInfo(String openId, WechatUserInfo wechatUser) {
 		UserAPI userAPI = new UserAPI(WechatConfig.getInstance().getAccessToken());
 		GetUserInfoResponse userInfoResponse = userAPI.getUserInfo(openId);
 		try {
