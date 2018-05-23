@@ -2,10 +2,10 @@ package com.jjt.wechat.front.service;
 
 import com.jjt.wechat.core.dao.entity.WechatUser;
 
-public interface IUserService {
+public interface IWechatUserService {
 	
 	WechatUser findByOpenId(String openId);
 	
-	void insert(WechatUser wechatUser);
+	int insert(WechatUser wechatUser);
 
 }

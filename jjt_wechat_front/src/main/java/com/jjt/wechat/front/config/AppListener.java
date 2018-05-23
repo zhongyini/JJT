@@ -24,7 +24,7 @@ import com.jjt.wechat.common.wechat.api.enums.MenuType;
 import com.jjt.wechat.common.wechat.api.enums.ResultType;
 import com.jjt.wechat.core.config.SystemConfig;
 import com.jjt.wechat.core.config.WechatConfig;
-import com.jjt.wechat.core.service.WechatTokenService;
+import com.jjt.wechat.core.service.IWechatTokenService;
 import com.jjt.wechat.helper.ConfigHelper;
 
 /**
@@ -37,7 +37,7 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 	private static final Logger logger = LoggerFactory.getLogger(AppListener.class);
 	
 	@Autowired
-	private WechatTokenService wechatTokenService;
+	private IWechatTokenService wechatTokenService;
 	
 	private static final String menu_1 = "我的";
 	
@@ -64,10 +64,10 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 		
 		String accessToken = WechatConfig.getInstance().getAccessToken();
 		SystemConfig systemConfig = SystemConfig.getInstance();
-		String appId = systemConfig.getProperty(Constant.Configuration.APPID);
-		String scope = Constant.WechatParams.AUTHORIZE_SCOPE_BASE;
-		String url = Constant.WechatUrl.AUTHORIZE_OAUTH2_CONNECT;
-		String state = systemConfig.getProperty(Constant.Configuration.STATE);
+//		String appId = systemConfig.getProperty(Constant.Configuration.APPID);
+//		String scope = Constant.WechatParams.AUTHORIZE_SCOPE_BASE;
+//		String url = Constant.WechatUrl.AUTHORIZE_OAUTH2_CONNECT;
+//		String state = systemConfig.getProperty(Constant.Configuration.STATE);
 		String hosturl = systemConfig.getProperty(Constant.Configuration.HOST_URL);
 		if (CheckUtils.isNullOrEmpty(accessToken)) {
 			logger.error("系统配置参数accessToken错误：" + "[" + accessToken + "]");
@@ -75,15 +75,13 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 			System.exit(-1);
 		}
 		Menu menu = new Menu();
-		// 千人影家
 		MenuButton menuB1 = new MenuButton();
 		menuB1.setName(menu_1);
-		// 千人影家
 		MenuButton menuB11 = new MenuButton();
 		menuB11.setName(menu_1_1);
 		menuB11.setType(MenuType.VIEW.toString());
-		String redirectUrl = http+hosturl+jump+http+hosturl+Constant.ControllerUrl.MENU_VOUCHER;
-		String urlre = String.format(url,appId,redirectUrl ,scope,state);
+		String redirectUrl = hosturl+Constant.ControllerUrl.MENU_VOUCHER;
+		String urlre = redirectUrl;//String.format(url,appId,redirectUrl ,scope,state);
 		menuB11.setUrl(urlre);
 		
 		List<MenuButton> list1 = new ArrayList<MenuButton>();

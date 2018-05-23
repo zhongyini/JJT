@@ -21,7 +21,7 @@ import com.jjt.wechat.common.wechat.api.response.GetUserInfoResponse;
 import com.jjt.wechat.core.config.WechatConfig;
 import com.jjt.wechat.core.dao.entity.WechatUser;
 import com.jjt.wechat.front.exception.ErrorPageException;
-import com.jjt.wechat.front.service.IUserService;
+import com.jjt.wechat.front.service.IWechatUserService;
 import com.jjt.wechat.helper.ConfigHelper;
 import com.jjt.wechat.helper.TokenHelper;
 
@@ -36,11 +36,12 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 	private ConfigHelper configHelper;
 	
 	@Autowired
-	private IUserService userService;
+	private IWechatUserService userService;
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		
 		//用户是否需要处于登陆
 		boolean isLand = false;
 		String requestUrl = null;
@@ -48,7 +49,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		try {
 			//判断该接口用户是否需要处于登陆状态
 			isLand = checkUserLand(handler);
-			if (isLand) {
+			if (!isLand) {
 				return true;
 			}
 		} catch (ErrorPageException e) {
@@ -130,15 +131,4 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		return openId;
 	}
 
-	private WechatUser getWechatUserInfo(String openId) {
-		UserAPI userAPI = new UserAPI(WechatConfig.getInstance().getAccessToken());
-		GetUserInfoResponse userInfoResponse = userAPI.getUserInfo(openId);
-		WechatUser wechatUser = new WechatUser();
-		try {
-			BeanUtils.copyProperties(userInfoResponse, wechatUser);
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		return wechatUser;
-	}
 }

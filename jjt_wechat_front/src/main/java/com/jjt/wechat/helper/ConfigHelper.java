@@ -16,5 +16,10 @@ public class ConfigHelper {
 	
 	@Value(value="${jjt.appsecret}")
 	public String appSecret;
+	
+	@Value(value="${jjt.state}")
+	public String state;
 
+	@Value(value="${jjt.host.url}")
+	public String hostUrl;
 }

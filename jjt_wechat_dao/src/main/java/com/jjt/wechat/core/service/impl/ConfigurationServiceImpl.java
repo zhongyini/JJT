@@ -5,16 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jjt.wechat.core.dao.ConfigurationRepository;
+import com.jjt.wechat.core.dao.ConfigurationDao;
 import com.jjt.wechat.core.dao.entity.Configuration;
-import com.jjt.wechat.core.service.ConfigurationService;
+import com.jjt.wechat.core.service.IConfigurationService;
 
 @Service
-public class ConfigurationServiceImpl implements ConfigurationService{
+public class ConfigurationServiceImpl implements IConfigurationService{
 	@Autowired
-	ConfigurationRepository configurationRepository;
+	ConfigurationDao configurationDao;
 	
 	public List<Configuration> findAll(){
-		return configurationRepository.findAll();
+		return configurationDao.selectAll();
 	}
 }

@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jjt.wechat.common.utils.CheckUtils;
 import com.jjt.wechat.core.dao.entity.Configuration;
-import com.jjt.wechat.core.service.ConfigurationService;
+import com.jjt.wechat.core.service.IConfigurationService;
 import com.jjt.wechat.core.util.AppContextUtils;
 
 public class SystemConfig {
@@ -43,7 +43,7 @@ public class SystemConfig {
 		List<Configuration> configList = null;
 		//获取系统配置的list
 		try {
-			configList = AppContextUtils.getBean(ConfigurationService.class).findAll();
+			configList = AppContextUtils.getBean(IConfigurationService.class).findAll();
 		} catch (Exception e) {
 			logger.error("System config init error:"+e.getMessage());
 		}

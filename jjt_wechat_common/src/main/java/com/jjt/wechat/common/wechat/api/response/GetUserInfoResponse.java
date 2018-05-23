@@ -4,7 +4,9 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 public class GetUserInfoResponse extends BaseResponse {
 
-    private Integer subscribe;
+	private static final long serialVersionUID = 8897809949513748784L;
+	
+	private Integer subscribe;
     private String  openid;
     private String  nickname;
     private Integer sex;

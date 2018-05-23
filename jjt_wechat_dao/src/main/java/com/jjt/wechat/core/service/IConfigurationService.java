@@ -4,6 +4,6 @@ import java.util.List;
 
 import com.jjt.wechat.core.dao.entity.Configuration;
 
-public interface ConfigurationService {
+public interface IConfigurationService {
 	List<Configuration> findAll();
 }

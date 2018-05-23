@@ -4,10 +4,12 @@ import java.util.List;
 
 import com.jjt.wechat.core.dao.entity.WechatToken;
 
-public interface WechatTokenService {
+public interface IWechatTokenService {
+
 	List<WechatToken> findAll();
 	
-	void save(WechatToken wechatToken);
-	
 	WechatToken findFirstByOrderByCreateDateDesc();
+	
+	int add(WechatToken wechatToken);
+	
 }

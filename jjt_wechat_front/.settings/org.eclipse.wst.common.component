@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="wechat-front">
+    <wb-module deploy-name="jjt_wechat_front">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources/${package.environment}"/>
         <wb-resource deploy-path="/" source-path="/target/m2e-jee/web-resources"/>
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
@@ -12,7 +12,7 @@
         <dependent-module archiveName="jjt_wechat_dao-1.0.0.RELEASE.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/jjt_wechat_dao/jjt_wechat_dao">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <property name="context-root" value="wechat-front"/>
         <property name="java-output-path" value="/jjt_wechat_front/target/classes"/>
+        <property name="context-root" value="jjt_wechat_front"/>
     </wb-module>
 </project-modules>

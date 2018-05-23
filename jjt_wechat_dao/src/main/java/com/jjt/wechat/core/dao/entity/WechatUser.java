@@ -18,7 +18,7 @@ public class WechatUser implements Serializable {
 	
 	private static final long serialVersionUID = -6824624926439743435L;
 	@Id
-	@Column(name = "openId")
+	@Column(name = "open_id")
 	private String openId;
 	@Column(name = "NICKNAME")
 	private String nickName;

@@ -49,4 +49,20 @@ public class AccessTokenApi extends BaseApi {
 		}
 		return null;
 	}
+	
+	public AccessTokenResponse getAccessTokenByCode(String appId, String appSecret, String code) throws ClientProtocolException, IOException, HttpResponseNullException{
+		String method = "getRefreshToken";
+		String requestUrl = String.format(Constant.WechatUrl.ACCESS_TOKEN_OAUTH2_GET, appId, appSecret, code);
+		
+		String result = HttpRequest.httpGetRequest(requestUrl);
+		
+		logInfoResult(method, result);
+		
+		AccessTokenResponse response = JsonUtils.parseObject(result, AccessTokenResponse.class);
+		// 若errcode为空（请求成功）时，返回response
+		if(CheckUtils.isNullOrEmpty(response.getErrcode())){
+			return response;
+		}
+		return null;
+	}
 }

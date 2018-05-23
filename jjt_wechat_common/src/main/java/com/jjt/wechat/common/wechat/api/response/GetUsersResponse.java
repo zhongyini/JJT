@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
-/**
- */
 public class GetUsersResponse extends BaseResponse {
 
-    private long   total;
+	private static final long serialVersionUID = 3551370984958430118L;
+	
+	private long   total;
     private int    count;
     private Openid data;
     @JSONField(name = "next_openid")
@@ -47,7 +47,10 @@ public class GetUsersResponse extends BaseResponse {
     }
 
     public class Openid implements Serializable {
-        private String[] openid;
+    	
+		private static final long serialVersionUID = -2931139153015391303L;
+		
+		private String[] openid;
 
         public String[] getOpenid() {
             return openid;

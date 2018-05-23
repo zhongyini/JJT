@@ -44,11 +44,10 @@ public class OauthApi extends BaseApi {
     	return openId;
     }
     
-    public String getWechatUserInfo(String code) throws ClientProtocolException, IOException, HttpResponseNullException {
-    	CheckUtils.requireNonNull(code, "code is null");
-    	String tokenurl =  String.format(Constant.WechatUrl.GET_USER_INFO_GET,this.appid, this.secret,code);
+    public String getWechatUserInfo(String accessToken, String openId, String language) throws ClientProtocolException, IOException, HttpResponseNullException {
+    	CheckUtils.requireNonNull(openId, "openId is null");
+    	String tokenurl =  String.format(Constant.WechatUrl.GET_USER_INFO_GET, this.accessToken, openId, language);
     	String response = HttpRequest.httpGetRequest(tokenurl);
-    	//String openId = JsonUtils.getStringFromJSONObject(response, "openid").toString();
     	return response;
     }
     

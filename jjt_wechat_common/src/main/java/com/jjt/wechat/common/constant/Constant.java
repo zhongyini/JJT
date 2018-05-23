@@ -97,10 +97,12 @@ public interface Constant {
 		String GET_MATERIAL_COUNT_GET = "https://api.weixin.qq.com/cgi-bin/material/get_materialcount?access_token=%s";
 
 		// 第一步：用户同意授权，获取code
-		String AUTHORIZE_CONNECT_QRCONNECT = "https://open.weixin.qq.com/connect/qrconnect?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect";
 		String AUTHORIZE_OAUTH2_CONNECT = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect";
+		String AUTHORIZE_CONNECT_QRCONNECT = "https://open.weixin.qq.com/connect/qrconnect?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=%s#wechat_redirect";
 		// 第二步：通过code换取网页授权access_token
 		String ACCESS_TOKEN_OAUTH2_GET = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code";
+		// 通过refresh_token刷新access_token
+		String GET_OAUTH2_REFRESH_TOKEN = "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=%s&grant_type=refresh_token&refresh_token=%s";
 		
 	}
 	

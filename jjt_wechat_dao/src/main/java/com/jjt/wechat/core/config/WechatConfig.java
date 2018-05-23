@@ -9,7 +9,7 @@ import com.jjt.wechat.common.utils.DateUtils;
 import com.jjt.wechat.common.wechat.api.AccessTokenApi;
 import com.jjt.wechat.common.wechat.api.response.AccessTokenResponse;
 import com.jjt.wechat.core.dao.entity.WechatToken;
-import com.jjt.wechat.core.service.WechatTokenService;
+import com.jjt.wechat.core.service.IWechatTokenService;
 import com.jjt.wechat.core.util.AppContextUtils;
 
 public class WechatConfig {
@@ -48,7 +48,7 @@ public class WechatConfig {
 		
 		try {
 			//获取wechatTokenService对象
-			WechatTokenService wechatTokenService = AppContextUtils.getBean(WechatTokenService.class);
+			IWechatTokenService wechatTokenService = AppContextUtils.getBean(IWechatTokenService.class);
 			//调用方法，从数据库获取最新的Token
 			wechatToken = wechatTokenService.findFirstByOrderByCreateDateDesc();
 			//若从数据库获取的Token为不为空时，将accessToken赋值
@@ -79,7 +79,7 @@ public class WechatConfig {
 		WechatToken wechatToken = null;
 		AccessTokenApi accessTokenApi = new AccessTokenApi();
 
-		WechatTokenService wechatTokenService = AppContextUtils.getBean(WechatTokenService.class);
+		IWechatTokenService wechatTokenService = AppContextUtils.getBean(IWechatTokenService.class);
 		
 		//若没有获取到Token则直接返回null
 		try {
@@ -99,7 +99,7 @@ public class WechatConfig {
 		
 		//将新的Token插入数据库
 		try {
-			wechatTokenService.save(wechatToken);
+			wechatTokenService.add(wechatToken);
 		} catch (Exception e) {
 			logger.error("Insert Access Token error."+e.getMessage());
 			return null;

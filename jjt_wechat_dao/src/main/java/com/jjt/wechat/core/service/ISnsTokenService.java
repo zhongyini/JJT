@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.jjt.wechat.core.dao.entity.SnsToken;
 
-public interface SnsTokenService {
+public interface ISnsTokenService {
 
 	List<SnsToken> findAll();
 	
