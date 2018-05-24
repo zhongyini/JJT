@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@ComponentScan("com.jjt.wechat")
-@MapperScan(basePackages = "com.jjt.wechat.*.dao")
+@ComponentScan("com.jjt")
+@MapperScan(basePackages = "com.jjt.wechat.core.dao")
 public class Application {
 	
 	public static void main(String[] args) {

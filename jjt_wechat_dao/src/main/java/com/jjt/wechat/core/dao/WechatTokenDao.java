@@ -11,5 +11,5 @@ public interface WechatTokenDao extends BaseDao<WechatToken>{
 	 * 获取最新的Token
 	 * @return
 	 */
-	WechatToken findFirstByOrderByCreateDateDesc();
+	//WechatToken findFirstByOrderByCreateDateDesc();
 }

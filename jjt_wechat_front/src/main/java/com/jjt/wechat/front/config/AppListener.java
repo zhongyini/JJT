@@ -25,6 +25,7 @@ import com.jjt.wechat.common.wechat.api.enums.ResultType;
 import com.jjt.wechat.core.config.SystemConfig;
 import com.jjt.wechat.core.config.WechatConfig;
 import com.jjt.wechat.core.service.IWechatTokenService;
+import com.jjt.wechat.core.util.SysPropUtil;
 import com.jjt.wechat.helper.ConfigHelper;
 
 /**
@@ -63,12 +64,11 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 	private static void createMenu() {
 		
 		String accessToken = WechatConfig.getInstance().getAccessToken();
-		SystemConfig systemConfig = SystemConfig.getInstance();
 //		String appId = systemConfig.getProperty(Constant.Configuration.APPID);
 //		String scope = Constant.WechatParams.AUTHORIZE_SCOPE_BASE;
 //		String url = Constant.WechatUrl.AUTHORIZE_OAUTH2_CONNECT;
 //		String state = systemConfig.getProperty(Constant.Configuration.STATE);
-		String hosturl = systemConfig.getProperty(Constant.Configuration.HOST_URL);
+		String hosturl = SysPropUtil.getProperty(Constant.Configuration.HOST_URL);
 		if (CheckUtils.isNullOrEmpty(accessToken)) {
 			logger.error("系统配置参数accessToken错误：" + "[" + accessToken + "]");
 			// 强制系统退出

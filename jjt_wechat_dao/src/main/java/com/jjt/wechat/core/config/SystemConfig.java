@@ -1,6 +1,8 @@
 package com.jjt.wechat.core.config;
 
+import java.io.Serializable;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -8,12 +10,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jjt.wechat.common.utils.CheckUtils;
+import com.jjt.wechat.core.dao.ConfigurationDao;
 import com.jjt.wechat.core.dao.entity.Configuration;
 import com.jjt.wechat.core.service.IConfigurationService;
 import com.jjt.wechat.core.util.AppContextUtils;
 
-public class SystemConfig {
+public class SystemConfig implements Serializable {
 	
+	private static final long serialVersionUID = -5521090852200151806L;
+
 	//日志
 	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
@@ -44,25 +49,15 @@ public class SystemConfig {
 		List<Configuration> configList = null;
 		//获取系统配置的list
 		try {
-			configList = (List<Configuration>)AppContextUtils.getBean(IConfigurationService.class).findAll();
+			configList = AppContextUtils.getBean(ConfigurationDao.class).selectAll();
+			propMap.clear();
+			for(Configuration config : configList) {
+				propMap.put(config.getItem(), config.getProperty());
+			}
+			return;
 		} catch (Exception e) {
 			logger.error("System config init error:"+e.getMessage());
 		}
-		
-		if(!CheckUtils.isNullOrEmpty(configList)){
-			propMap.clear();
-			int length = configList.size();
-			for (int i = 0; length > i; i++) {
-				logger.info(configList.get(i).toString());
-				propMap.put(configList.get(i).getItem(), configList.get(i).getProperty());
-			}
-//			for (Configuration configuration : configList) {
-//				propMap.put(configuration.getItem(), configuration.getProperty());
-//			}
-			return;
-		}
-		logger.error("System config init is empty");
-		
 	}
 
 

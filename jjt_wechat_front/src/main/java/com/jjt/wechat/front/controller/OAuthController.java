@@ -63,7 +63,7 @@ public class OAuthController extends BaseController {
 		}
 		// 获取请求认证参数
 		String appid = configHelper.appId;
-		String scope = Constant.WechatParams.AUTHORIZE_SCOPE_USERINFO;
+		String scope = Constant.WechatParams.AUTHORIZE_SCOPE_BASE;
 		String state = configHelper.state;
 		// check appID
 		if (CheckUtils.isNullOrEmpty(appid)) {// 跳转至错误画面

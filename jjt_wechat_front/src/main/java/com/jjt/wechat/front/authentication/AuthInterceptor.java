@@ -58,8 +58,9 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			response.sendRedirect("/common/error");
 			return false;
 		}
-		
+		// 从cookie获取openid
 		String openId = tokenHelper.parseJWT(getCookieValue(request));
+		
 		if (CheckUtils.isNullOrEmpty(openId)) {
 			logger.info("openid为空或null,重新获取");
 			try {

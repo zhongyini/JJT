@@ -9,26 +9,25 @@ import javax.persistence.Table;
  * 系统配置表
  *
  */
-
 @Table(name = "jjt_configuration")
 public class Configuration implements Serializable {
 
 	private static final long serialVersionUID = -8659326752435236115L;
 
 	@Id
-	@Column(name = "item")
+	@Column(name = "ITEM")
 	private String item;
 	
 	@Column(name = "property")
 	private String property;
 	
-	@Column(name = "name")
+	@Column(name = "NAME")
 	private String name;
 	
-	@Column(name = "type")
+	@Column(name = "TYPE")
 	private String type;
 	
-	@Column(name = "memo")
+	@Column(name = "MEMO")
 	private String memo;
 
 	public String getItem() {

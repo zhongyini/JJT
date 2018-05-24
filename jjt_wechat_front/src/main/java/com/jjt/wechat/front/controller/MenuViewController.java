@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.jjt.wechat.front.authentication.LoginRequired;
+
 /**
  * 按鈕控制器
  *
@@ -21,6 +23,7 @@ public class MenuViewController extends BaseController {
      * @param state
      * @return
      */
+	@LoginRequired(isLand = true)
 	@RequestMapping(value = "/voucher")
 	public ModelAndView membershipcard(@ModelAttribute("openId") String openId,
 			RedirectAttributes redirectAttributes) {
