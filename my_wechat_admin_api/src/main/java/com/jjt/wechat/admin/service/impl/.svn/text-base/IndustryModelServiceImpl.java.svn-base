@@ -1,0 +1,214 @@
+package com.qiaohu.wechat.admin.service.impl;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.Criteria;
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.qiaohu.wechat.admin.RestResult;
+import com.qiaohu.wechat.admin.service.IIndustryModelService;
+import com.qiaohu.wechat.common.api.TemplateMsgAPI;
+import com.qiaohu.wechat.common.api.response.BaseResponse;
+import com.qiaohu.wechat.common.api.response.PrivateTemplate;
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.config.AppConfig;
+import com.qiaohu.wechat.constants.Constants;
+import com.qiaohu.wechat.core.config.ApiConfig;
+import com.qiaohu.wechat.core.dao.IndustryModelDao;
+import com.qiaohu.wechat.core.entity.WxTemplate;
+import com.qiaohu.wechat.core.entity.extend.WxTemplateExt;
+import com.qiaohu.wechat.core.exception.AppException;
+import com.qiaohu.wechat.helper.MessageHelper;
+
+@Service("industryModelService")
+public class IndustryModelServiceImpl implements IIndustryModelService {
+	
+	private static final Logger logger = LoggerFactory
+			.getLogger(IndustryModelServiceImpl.class);
+	@Autowired
+	protected AppConfig appConfig;
+	
+	@Autowired
+	private IndustryModelDao industryModelDao;
+	
+	@Autowired
+	private MessageHelper messageHelper;
+	
+	@Override
+	public int update(WxTemplate tr) throws AppException {
+		try {
+			// 更新方法
+			return industryModelDao.updateByPrimaryKey(tr);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new AppException(e);
+		}
+	}
+	
+	
+	@Override
+	@Transactional
+	public int delete(WxTemplate tr) throws AppException {
+		
+		try {
+			int ret = industryModelDao.delete(tr);
+			if(ret<=Constants.SUCCESS){
+				throw new AppException(messageHelper.mesg_error_0001);
+			}
+					
+			String accessToken = ApiConfig.getInstance().getAccessToken();
+			if (CheckUtils.isNullOrEmpty(accessToken)) {
+				throw new AppException(messageHelper.mesg_error_0001);
+			}
+			//获取模板ID
+			TemplateMsgAPI templateMsgAPI = new TemplateMsgAPI(accessToken);
+			
+			//获取所有的模板
+			PrivateTemplate[] allTemplate = templateMsgAPI.getAllPrivateTemplate();
+			
+			if(allTemplate.length>0){
+				for (int i = 0; i < allTemplate.length; i++) {
+					
+					if((tr.getTemplateId().equals(allTemplate[i].getTemplateId()))){
+						//删除微信端模板
+						BaseResponse baseResponse = templateMsgAPI.delTemplate(tr.getTemplateId());
+						if(!"0".equals(baseResponse.getErrcode())){
+							throw new AppException(messageHelper.mesg_error_0001);
+						}
+					}
+				}
+			}
+			
+			// 删除方法
+			return ret;
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new AppException(e);
+		}
+	}
+
+	@Override
+	public WxTemplate detail(String id) throws AppException {
+		try {
+			// 详细方法
+			return industryModelDao.selectByPrimaryKey(id);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new AppException(e);
+		}
+	}
+
+	@Override
+	public int insert(WxTemplate tr) throws AppException {
+		try {
+			// 新增方法
+			return industryModelDao.insert(tr);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			throw new AppException(e);
+		}
+	}
+	
+	@Override
+	public Page<WxTemplate> search(WxTemplateExt tr) throws AppException {
+		
+		// 查询条件做成
+		Example example = new Example(WxTemplate.class);
+		Criteria criteria = example.createCriteria();
+		// 根据模板编号查询
+		if (!CheckUtils.isNullOrEmpty(tr.getTemplateIdShort())) {
+			criteria.andLike("templateIdShort","%"+ tr.getTemplateIdShort()+"%");
+		}
+		// 根据消息名称查询
+		if (!CheckUtils.isNullOrEmpty(tr.getMessageName())) {
+			criteria.andLike("messageName", "%"+tr.getMessageName()+"%");
+		}
+		// 根据标题查询
+		if (!CheckUtils.isNullOrEmpty(tr.getTitle())) {
+			criteria.andLike("title", "%"+tr.getTitle()+"%");
+		}
+		// 根据开始、结束时间查询
+		if (!CheckUtils.isNull(tr.getStartDate())) {
+			criteria.andGreaterThanOrEqualTo("createDate",
+					tr.getStartDate());
+		}
+		if (!CheckUtils.isNull(tr.getEndDate())) {
+			criteria.andLessThanOrEqualTo("createDate", tr.getEndDate());
+		}
+		// 排序
+		example.setOrderByClause(" create_date desc");
+		// 根据条件查询
+		try {
+			// 分页查询
+			PageHelper.startPage(tr.getPage(), tr.getCount());
+			// 查询方法
+			return (Page<WxTemplate>) industryModelDao.selectByExample(example);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			// 异常信息
+			throw new AppException(e);
+		}
+	}
+
+	@Override
+	public WxTemplate findByTemplateId(String templateId) throws AppException {
+		
+		try {
+			// 查询方法
+			return industryModelDao.selectByPrimaryKey(templateId);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			// 异常信息
+			throw new AppException(e);
+		}
+	}
+
+
+	@Override
+	public List<WxTemplate> selectAll() throws AppException {
+		try {
+			// 查询方法
+			return industryModelDao.selectAll();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			// 异常信息
+			throw new AppException(e);
+		}
+	}
+
+
+	@Override
+	public void deleteAll() throws AppException {
+		try {
+			// 查询方法
+			industryModelDao.deleteAll();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			// 异常信息
+			throw new AppException(e);
+		}
+	}
+	
+	@Override
+	public int deleteByTemplateId(String templateId){
+		
+		try {
+			// 查询方法
+			return industryModelDao.deleteByPrimaryKey(templateId);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			// 异常信息
+			throw new AppException(e);
+		}
+	}
+	
+
+}

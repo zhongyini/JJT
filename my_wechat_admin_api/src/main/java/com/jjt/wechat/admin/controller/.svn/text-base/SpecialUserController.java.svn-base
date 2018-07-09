@@ -1,0 +1,76 @@
+package com.qiaohu.wechat.admin.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.Page;
+import com.qiaohu.wechat.admin.BaseController;
+import com.qiaohu.wechat.admin.RestResult;
+import com.qiaohu.wechat.admin.dto.BasePage;
+import com.qiaohu.wechat.admin.service.IUserService;
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.core.entity.UserWeiXin;
+import com.qiaohu.wechat.core.entity.extend.UserWeiXinExt;
+import com.qiaohu.wechat.core.exception.AppException;
+
+
+@RestController
+@RequestMapping("/specialUser")
+public class SpecialUserController extends BaseController {
+	
+	
+	@Autowired
+	IUserService userService;
+	
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	public RestResult list(@RequestBody UserWeiXinExt user) {
+		// 参数检查
+		
+		if (!CheckUtils.checkPara(user.getWebId(),
+				CheckUtils.CHINESE_LETTER_DIGIT, 30)) {
+			return new RestResult(messageHelper.mesg_info_1404);
+		}
+		if (!CheckUtils.checkPara(user.getUcode(),
+				CheckUtils.CHINESE_LETTER_DIGIT, 30)) {
+			return new RestResult(messageHelper.mesg_info_1405);
+		}
+		
+		try {
+			Page<UserWeiXin> list = userService.search(user);
+			return new RestResult(new BasePage(list.getTotal(),
+					list.getResult()));
+		} catch (AppException e) {
+			logger.error(e.getMessage(), e);
+			// 返回异常信息
+			return new RestResult(e.getMessage());
+		}
+
+	}
+	
+	@RequestMapping(value = "/selectOne", method = RequestMethod.POST)
+	public RestResult selectByWebIdAndUcode(@RequestBody UserWeiXinExt user) {
+		// 参数检查
+
+		
+		if (!CheckUtils.checkPara(user.getWebId(),
+				CheckUtils.CHINESE_LETTER_DIGIT, 30)) {
+			return new RestResult(messageHelper.mesg_info_1404);
+		}
+		if (!CheckUtils.checkPara(user.getUcode(),
+				CheckUtils.CHINESE_LETTER_DIGIT, 30)) {
+			return new RestResult(messageHelper.mesg_info_1405);
+		}
+		try {
+			UserWeiXinExt userWeixin = userService.selectByWebIdAndUcode(user);
+			return new RestResult(userWeixin);
+		} catch (AppException e) {
+			logger.error(e.getMessage(), e);
+			// 返回异常信息
+			return new RestResult(e.getMessage());
+		}
+
+	}
+}

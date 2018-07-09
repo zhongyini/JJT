@@ -1,0 +1,188 @@
+package com.qiaohu.wechat.admin.controller;
+
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.Page;
+import com.qiaohu.wechat.admin.BaseController;
+import com.qiaohu.wechat.admin.RestResult;
+import com.qiaohu.wechat.admin.auth.AuthRequired;
+import com.qiaohu.wechat.admin.dto.BasePage;
+import com.qiaohu.wechat.admin.util.DateUtil;
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.common.utils.DateUtils;
+import com.qiaohu.wechat.constants.Constants;
+import com.qiaohu.wechat.core.entity.News;
+import com.qiaohu.wechat.core.entity.extend.NewsExt;
+import com.qiaohu.wechat.core.exception.AppException;
+import com.qiaohu.wechat.core.service.INewsService;
+
+@RestController
+@RequestMapping("news/")
+public class NewsController extends BaseController {
+
+	@Autowired
+	private INewsService newsService;
+
+	@AuthRequired(permission = "wx.news.list")
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	public RestResult list(@RequestBody NewsExt para) {
+		// 开始时间和结束时间比较
+		if (!CheckUtils.isNull(para.getStartDate())
+				&& !CheckUtils.isNull(para.getEndDate())) {
+			if (!DateUtils.comparable(para.getStartDate(), para.getEndDate())) {
+				// 开始日期不是大于结束日期
+				return new RestResult(messageHelper.mesg_info_0019);
+			}
+
+			para.setStartDate(DateUtil.getStartDate(para.getStartDate()));
+
+			para.setEndDate(DateUtil.getEndDate(para.getEndDate()));
+		}
+		Page<News> list = null;
+		try {
+			// 返回查询结果
+			list = newsService.search(para);
+			if (CheckUtils.isNullOrEmpty(list.getResult())
+					&& para.getPage() > 0) {
+				para.setPage(0);
+				list = newsService.search(para);
+			}
+			return new RestResult(new BasePage(list.getTotal(),
+					list.getResult()));
+		} catch (AppException e) {
+			// 返回异常信息
+			return new RestResult(e.getMessage());
+		}
+
+	}
+
+	@AuthRequired(permission = "wx.news.create")
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public RestResult create(@RequestBody News news) {
+		// 新闻标题检测
+		if (CheckUtils.isNullOrEmpty(news.getTitle())
+				|| news.getTitle().length() > 100) {
+			return new RestResult(messageHelper.mesg_info_0701);
+		}
+		// 新闻URL检测
+		if (!CheckUtils.checkParas(news.getUrl(), CheckUtils.HTTP, 255)) {
+			return new RestResult(messageHelper.mesg_info_0702);
+		}
+		if (CheckUtils.isNull(news.getNewsDate())) {
+			return new RestResult(messageHelper.mesg_info_0703);
+		}
+		if (CheckUtils.isNull(news.getNewsEndDate())) {
+			return new RestResult(messageHelper.mesg_info_0704);
+		}
+		if (!DateUtils.comparable(news.getNewsDate(), new Date())) {
+
+			return new RestResult(messageHelper.mesg_info_0707);
+		}
+		if (!DateUtils.comparable(news.getNewsDate(), news.getNewsEndDate())) {
+
+			return new RestResult(messageHelper.mesg_info_0706);
+		}
+		if (!CheckUtils.checkPara(news.getMemo(), 50)) {
+			return new RestResult(messageHelper.mesg_info_0705);
+		}
+		if (CheckUtils.isNull(news.getMemo())) {
+			news.setMemo("");
+		}
+		try {
+			news.setDeleteFlag(Constants.NORMAL_STATUS);
+			news.setCreateDate(DateUtils.getNowTimestamp());
+			int ret = newsService.insert(news);
+			if (ret > Constants.SUCCESS) {
+				return new RestResult(Constants.SUCCESS,
+						messageHelper.mesg_info_0001);
+			} else {
+				return new RestResult(messageHelper.mesg_info_0004);
+			}
+		} catch (AppException e) {
+			return new RestResult(messageHelper.mesg_error_0001);
+		}
+
+	}
+
+	@AuthRequired(permission = "wx.news.update")
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public RestResult update(@RequestBody News news) {
+		// 新闻标题检测
+		if (CheckUtils.isNullOrEmpty(news.getTitle())
+				|| news.getTitle().length() > 100) {
+			return new RestResult(messageHelper.mesg_info_0701);
+		}
+		// 新闻URL检测
+		if (!CheckUtils.checkParas(news.getUrl(), CheckUtils.HTTP, 255)) {
+			return new RestResult(messageHelper.mesg_info_0702);
+		}
+		if (CheckUtils.isNull(news.getNewsDate())) {
+			return new RestResult(messageHelper.mesg_info_0703);
+		}
+		if (CheckUtils.isNull(news.getNewsEndDate())) {
+			return new RestResult(messageHelper.mesg_info_0704);
+		}
+		if (!DateUtils.comparable(news.getNewsDate(), new Date())) {
+			return new RestResult(messageHelper.mesg_info_0707);
+		}
+		if (!DateUtils.comparable(news.getNewsDate(), news.getNewsEndDate())) {
+			return new RestResult(messageHelper.mesg_info_0706);
+		}
+		if (!CheckUtils.checkPara(news.getMemo(), 50)) {
+			return new RestResult(messageHelper.mesg_info_0705);
+		}
+		if (CheckUtils.isNull(news.getMemo())) {
+			news.setMemo(" ");
+		}
+		try {
+			int ret = newsService.update(news);
+			if (ret > Constants.SUCCESS) {
+				return new RestResult(Constants.SUCCESS,
+						messageHelper.mesg_info_0003);
+			} else {
+				return new RestResult(messageHelper.mesg_info_0005);
+			}
+		} catch (AppException e) {
+			return new RestResult(messageHelper.mesg_error_0001);
+		}
+
+	}
+
+	@AuthRequired(permission = "wx.news.delete")
+	@RequestMapping(value = "/delete", method = RequestMethod.POST)
+	public RestResult delete(@RequestBody News news) {
+		try {
+			news.setDeleteFlag(Constants.DELETE_STATUS);
+			int ret = newsService.update(news);
+			if (ret > Constants.SUCCESS) {
+				return new RestResult(Constants.SUCCESS,
+						messageHelper.mesg_info_0002);
+			} else {
+				return new RestResult(messageHelper.mesg_info_0006);
+			}
+
+		} catch (AppException e) {
+			return new RestResult(messageHelper.mesg_error_0001);
+		}
+	}
+
+	@RequestMapping(value = "/detail", method = RequestMethod.GET)
+	public RestResult detail(String id) {
+		News news = null;
+		try {
+			news = newsService.detail(id);
+			if (CheckUtils.isNull(news)) {
+				return new RestResult(messageHelper.mesg_info_0007);
+			}
+			return new RestResult(news);
+		} catch (AppException e) {
+			return new RestResult(messageHelper.mesg_error_0001);
+		}
+	}
+}

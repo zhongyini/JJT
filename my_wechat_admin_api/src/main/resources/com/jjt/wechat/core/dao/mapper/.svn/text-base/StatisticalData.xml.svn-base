@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.qiaohu.wechat.core.dao.StatisticalDataDao">
+
+	<!-- <select id="selectStatisticalDataAll" parameterType="com.qiaohu.wechat.core.entity.extend.ReportExt"
+		resultType="com.qiaohu.wechat.core.entity.StatisticalData">
+		SELECT   DISTINCT title,
+	  			 send_time,
+	  
+	  			 SUM(target_user) target_user ,
+	  			 SUM(target_user) target_user ,
+	             SUM(int_page_read_user) int_page_read_user ,
+	             SUM(ori_page_read_user) ori_page_read_user ,
+	             SUM(share_user) share_user ,
+	             SUM(add_to_fav_user) add_to_fav_user 
+		FROM
+	            t_wx_statistical
+		 <where> 1=1 
+  				
+				<if test="startDate != null and startDate != ''">
+				and send_time &gt;=#{startDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				and send_time &lt;= #{endDate}
+			</if>
+  		</where>
+		GROUP BY  title
+	</select> -->
+	
+	<select id="selectStatisticalDataAll" parameterType="com.qiaohu.wechat.core.entity.extend.ReportExt"
+		resultType="com.qiaohu.wechat.core.entity.StatisticalData">
+		select * from t_wx_statistical
+	</select>
+	
+	
+</mapper>

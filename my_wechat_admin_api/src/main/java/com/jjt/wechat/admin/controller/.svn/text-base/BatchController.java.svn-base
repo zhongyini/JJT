@@ -1,0 +1,130 @@
+package com.qiaohu.wechat.admin.controller;
+
+import java.io.File;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.Page;
+import com.qiaohu.wechat.admin.BaseController;
+import com.qiaohu.wechat.admin.RestResult;
+import com.qiaohu.wechat.admin.auth.AuthRequired;
+import com.qiaohu.wechat.admin.dto.BasePage;
+import com.qiaohu.wechat.admin.service.IBatchService;
+import com.qiaohu.wechat.admin.util.DateUtil;
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.config.AppConfig;
+import com.qiaohu.wechat.core.constants.ConfigConstants;
+import com.qiaohu.wechat.core.entity.BatchStatus;
+import com.qiaohu.wechat.core.entity.extend.BatchExt;
+import com.qiaohu.wechat.core.exception.AppException;
+import com.qiaohu.wechat.core.util.SysPropUtil;
+
+@RestController
+@RequestMapping("/batch")
+public class BatchController extends BaseController {
+
+	@Autowired
+	IBatchService batchService;
+	
+	@Autowired
+	protected AppConfig appConfig;
+
+	/*
+	 * 一览画面数据取得 返回一个RestResult对象
+	 */
+	@AuthRequired(permission = "search.batch.list")
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	public RestResult list(@RequestBody BatchExt para) {
+
+		// 英数字或者汉字检查
+		if (!CheckUtils.checkPara(para.getBathName(),
+				CheckUtils.CHINESE_LETTER_DIGIT, 50)) {
+			return new RestResult(messageHelper.mesg_info_0016);
+		}
+		if (!CheckUtils.isNull(para.getStartTime())
+				&& !CheckUtils.isNull(para.getEndTime())) {
+			if (para.getEndTime().getTime() < para.getStartTime().getTime()) {
+				// 开始日期不是大于结束日期
+				return new RestResult(messageHelper.mesg_info_0019);
+			}
+			para.setStartTime(DateUtil.getStartDate(para.getStartTime()));
+			para.setEndTime(DateUtil.getEndDate(para.getEndTime()));
+		}
+		Page<BatchStatus> list = null;
+		try {
+			// 查询结果放入list
+			list = batchService.search(para);
+			if (CheckUtils.isNullOrEmpty(list.getResult())
+					&& para.getPage() > 0) {
+				para.setPage(0);
+				list = batchService.search(para);
+			}
+			list = judgeURL(list);
+			// 分开返回结果
+			if(list.getTotal()>100){
+				return new RestResult(new BasePage(100,
+						list.getResult()));
+			}
+			return new RestResult(new BasePage(list.getTotal(),
+					list.getResult()));
+		} catch (AppException e) {
+
+			// 返回异常信息
+			return new RestResult(e.getMessage());
+		}
+
+	}
+	/**
+	 * 后台判断服务器上的错误csv文件路下是否有该文件
+	 * 有显示文件名称，无不显示文件名称
+	 * @param list
+	 * @return
+	 */
+	public Page<BatchStatus> judgeURL(Page<BatchStatus> list){
+		
+		for (int i = 0; i < list.size(); i++) {
+			String fileName= list.get(i).getFileName();
+			
+			/*//获取到完整的fileURL URL判断文件路径是否正确，这种做法请求次数太多，导致Nginx响应会超时
+			String fileUrl = appConfig.errorCsvUrl+fileName;
+
+			URL url;
+			try {
+				url = new URL(fileUrl);
+				 HttpURLConnection urlcon = (HttpURLConnection) url.openConnection();
+				 int state = urlcon.getResponseCode();  
+		            if (state==200){
+		                //System.out.println("文件存在"); 
+		            }else{
+		            	list.get(i).setFileName("");
+		            }
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
+		}*/
+			
+			//获取文件路径
+			String savePath = SysPropUtil.getString(ConfigConstants.CSV_FILE_PATH_ERR);
+	
+			try {
+				
+				File file = new File(savePath+fileName);
+		            if (file.isFile()&&file.exists()){
+		                System.out.println("文件存在"); 
+		            }else{
+		            	list.get(i).setFileName("");
+		            }
+			} catch (Exception e) {
+				e.printStackTrace();
+			}	
+		}
+		return list;
+	}
+
+}

@@ -1,0 +1,53 @@
+package com.qiaohu.wechat.admin.service.impl;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.qiaohu.wechat.admin.dto.UserWeiXinSignListDto;
+import com.qiaohu.wechat.admin.service.IUserSignListService;
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.core.dao.UserWeiXinSignListDao;
+import com.qiaohu.wechat.core.entity.UserWeiXinSignList;
+import com.qiaohu.wechat.core.exception.AppException;
+
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.Criteria;
+
+@Service("userSignListService")
+public class UserSignListServiceImpl implements IUserSignListService{
+	
+	private static Logger logger = LoggerFactory
+			.getLogger(UserSignListServiceImpl.class);
+
+	@Autowired
+	private UserWeiXinSignListDao userWeiXinSignListDao;
+
+	@Override
+	public Page<UserWeiXinSignList> search(UserWeiXinSignListDto userWeiXinSignListDto) throws AppException {
+		Example example = new Example(UserWeiXinSignList.class);
+		Criteria criteria = example.createCriteria();
+		if (!CheckUtils.isNullOrEmpty(userWeiXinSignListDto.getUcode())) {
+			criteria.andEqualTo("ucode", userWeiXinSignListDto.getUcode());
+		}
+		if (!CheckUtils.isNullOrEmpty(userWeiXinSignListDto.getWebId())) {
+			criteria.andEqualTo("webId", userWeiXinSignListDto.getWebId());
+		}
+		example.setOrderByClause("SIGNDATE DESC");
+		
+		try {
+			// 分页查询
+			PageHelper.startPage(userWeiXinSignListDto.getPage(), userWeiXinSignListDto.getCount());
+			// 查询方法
+			return (Page<UserWeiXinSignList>)userWeiXinSignListDao.selectByExample(example);
+		} catch (Exception e) {
+			// 异常信息
+			logger.error("查询失败");
+			throw new AppException(e);
+		}
+	}
+
+}

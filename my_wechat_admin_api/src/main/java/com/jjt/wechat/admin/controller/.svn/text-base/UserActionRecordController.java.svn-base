@@ -1,0 +1,178 @@
+package com.qiaohu.wechat.admin.controller;
+
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.github.pagehelper.Page;
+import com.qiaohu.wechat.admin.BaseController;
+import com.qiaohu.wechat.admin.RestResult;
+import com.qiaohu.wechat.admin.dto.BasePage;
+import com.qiaohu.wechat.admin.util.ThreadPool;
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.common.utils.DateUtils;
+import com.qiaohu.wechat.constants.Constants;
+import com.qiaohu.wechat.core.constants.ConfigConstants;
+import com.qiaohu.wechat.core.entity.UserActionRecord;
+import com.qiaohu.wechat.core.entity.extend.UserActionRecordExt;
+import com.qiaohu.wechat.core.exception.AppException;
+import com.qiaohu.wechat.core.service.IUserActionRecordService;
+import com.qiaohu.wechat.core.util.CSVUtils;
+import com.qiaohu.wechat.core.util.SysPropUtil;
+
+@RestController
+@RequestMapping("/userActionRecord")
+public class UserActionRecordController extends BaseController {
+
+	@Autowired
+	IUserActionRecordService userActionRecordService;
+	
+	@RequestMapping(value = "/list", method = RequestMethod.POST)
+	public RestResult list(@RequestBody UserActionRecordExt userActionRecordExt) {
+		// 参数检查
+		if (CheckUtils.isNullOrEmpty(userActionRecordExt.getWebId()) && 
+				CheckUtils.isNullOrEmpty(userActionRecordExt.getUcode()) &&
+				CheckUtils.isNull(userActionRecordExt.getEndDate()) &&
+				CheckUtils.isNull(userActionRecordExt.getStartDate())) {
+			return new RestResult();
+		}
+		// 开始时间和结束时间比较
+		if(!CheckUtils.isNull(userActionRecordExt.getEndDate())){
+			long et = userActionRecordExt.getEndDate().getTime();
+			userActionRecordExt.setEndDate(DateUtils.parse(
+					DateFormatUtils.format(new Date(et), "yyyy-MM-dd 23:59:59"),
+					DateUtils.YMDHHMMSS));
+		}
+		if(!CheckUtils.isNull(userActionRecordExt.getStartDate())){
+			long st = userActionRecordExt.getStartDate().getTime();
+			userActionRecordExt.setStartDate(DateUtils.parse(
+					DateFormatUtils.format(new Date(st), "yyyy-MM-dd 00:00:00"),
+					DateUtils.YMDHHMMSS));
+		}
+		if (!CheckUtils.isNull(userActionRecordExt.getEndDate())
+				&& !CheckUtils.isNull(userActionRecordExt.getStartDate())) {
+			if (!DateUtils.comparable(userActionRecordExt.getStartDate(),
+					userActionRecordExt.getEndDate())) {
+				return new RestResult(messageHelper.mesg_info_0019);
+			}
+		}
+		try {
+			Page<UserActionRecord> list = userActionRecordService.search(userActionRecordExt);
+			return new RestResult(new BasePage(list.getTotal(), list.getResult()));
+		} catch (AppException e) {
+			logger.error(e.getMessage(), e);
+			// 返回异常信息
+			return new RestResult(messageHelper.mesg_info_0007);
+		}
+
+	}
+	
+	@RequestMapping(value = "/download", method = RequestMethod.POST)
+	public RestResult download(@RequestBody UserActionRecordExt para) {
+
+		try {
+			if(!CheckUtils.isNull(para.getEndDate())){
+				long et = para.getEndDate().getTime();
+				para.setEndDate(DateUtils.parse(
+						DateFormatUtils.format(new Date(et), "yyyy-MM-dd 23:59:59"),
+						DateUtils.YMDHHMMSS));
+			}
+			if(!CheckUtils.isNull(para.getStartDate())){
+				long st = para.getStartDate().getTime();
+				para.setStartDate(DateUtils.parse(
+						DateFormatUtils.format(new Date(st), "yyyy-MM-dd 00:00:00"),
+						DateUtils.YMDHHMMSS));
+			}
+			if (!CheckUtils.isNull(para.getEndDate())
+					&& !CheckUtils.isNull(para.getStartDate())) {
+				if (!DateUtils.comparable(para.getStartDate(),
+						para.getEndDate())) {
+					return new RestResult(messageHelper.mesg_info_0019);
+				}
+			}
+			//获取当前时间
+			String nowtime = DateUtils.getStringTimeTwo(DateUtils.getNowTimestamp());
+			String filename = nowtime.substring(0, 8)+"_"+nowtime.substring(8, 14);
+			//String aid = getAdminId();
+			String finalFileName ="微信用户操作记录一览_"+filename;
+			//生成文件前判断如果文件存在删除已存在文件
+			File serviceFile = new File(finalFileName+".csv");
+			File serviceTmpFile = new File(finalFileName+".tmp");
+			if(serviceFile.isFile()&&serviceFile.exists()){
+				serviceFile.delete();
+			}	
+			if(serviceTmpFile.isFile()&&serviceTmpFile.exists()){
+				serviceTmpFile.delete();
+			}
+			//获取文件保存路径
+			String savePath = SysPropUtil.getString(ConfigConstants.WECHAT_USER_CSV_URL);
+			//获取线程池对象
+			ThreadPool t = ThreadPool.getThreadPool(1);
+			t.execute(new Runnable[]{new DownloadTask(para,savePath,finalFileName)});
+			logger.info("生成csv文件线程:"+t);
+				
+			return new RestResult(Constants.SUCCESS,finalFileName+".csv文件正在下载！");
+		} catch (AppException e) {
+			// 返回异常信息
+			return new RestResult(e.getMessage());
+		}
+
+	}
+	
+	/**
+	 * 线程的任务类
+	 * @author Administrator
+	 *
+	 */
+	class DownloadTask extends Thread{
+		
+		UserActionRecordExt userActionRecordExt;
+		String savePath;
+		String finalFileName;
+		File file;
+		
+		public File getFile() {
+			return file;
+		}
+
+		public void setFile(File file) {
+			this.file = file;
+		}
+
+		public DownloadTask() {
+			// TODO Auto-generated constructor stub
+		}
+
+		public DownloadTask(UserActionRecordExt userActionRecordExt, String savePath,
+				String finalFileName) {
+			this.userActionRecordExt = userActionRecordExt;
+			this.savePath = savePath;
+			this.finalFileName = finalFileName;
+		}
+		
+		@Override
+		public void run() {
+			super.run();
+
+			List<UserActionRecord> list = null;
+			// 返回查询结果
+			list = userActionRecordService.download(userActionRecordExt);
+			file =CSVUtils.createUserActionRecordCSV(list, savePath, finalFileName);
+			if(file.isFile()&&file.exists()){
+				String fileName =savePath + File.separator + finalFileName + ".csv";
+				File finalFile = new File(fileName);
+				file.renameTo(finalFile);
+				logger.info("CSV文件生成成功！"+"文件名称："+finalFileName);
+			}else{
+				logger.error("CSV文件生成失败！");
+			}
+		}
+	}
+}

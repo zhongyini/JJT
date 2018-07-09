@@ -1,0 +1,89 @@
+package com.qiaohu.wechat.admin.util;
+
+import com.github.pagehelper.Page;
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.core.entity.extend.MassSendExt;
+
+/**
+ * 群推管理用的工具类
+ * @author bob
+ *
+ */
+public class MassAddressUtil {
+	
+	/**
+	 * 群推主页面的地区模糊查询
+	 * @param x city
+	 * @param y province
+	 * @param z country
+	 * @param list
+	 * @return
+	 */
+	public static Page<MassSendExt> getPage(String x,String y,String z,Page<MassSendExt> list){
+		
+		
+		Page<MassSendExt> newList = new Page<MassSendExt>();
+		if(!CheckUtils.isNullOrEmpty(x)&&CheckUtils.isNullOrEmpty(y)&&CheckUtils.isNullOrEmpty(z)){
+			for (int i = 0; i < list.size(); i++) {
+				if(list.get(i).getAreas()!=null){
+					if(list.get(i).getAreas().contains(x)){
+						newList.add(list.get(i));
+					}
+				}
+			}
+		}
+		
+		if(!CheckUtils.isNullOrEmpty(x)&&!CheckUtils.isNullOrEmpty(y)&&CheckUtils.isNullOrEmpty(z)){
+			for (int i = 0; i < list.size(); i++) {
+				if(list.get(i).getAreas()!=null){
+					if(list.get(i).getAreas().contains(x)&&list.get(i).getAreas().contains(y)){
+						newList.add(list.get(i));
+					}
+				}
+			}
+		}
+		
+		if(!CheckUtils.isNullOrEmpty(x)&&!CheckUtils.isNullOrEmpty(y)&&!CheckUtils.isNullOrEmpty(z)){
+			for (int i = 0; i < list.size(); i++) {
+				if(list.get(i).getAreas()!=null){
+					if(list.get(i).getAreas().contains(x)&&list.get(i).getAreas().contains(y)&&list.get(i).getAreas().contains(z)){
+						newList.add(list.get(i));
+					}
+				}
+			}
+		}
+		
+		if(CheckUtils.isNullOrEmpty(x)&&!CheckUtils.isNullOrEmpty(y)&&!CheckUtils.isNullOrEmpty(z)){
+			for (int i = 0; i < list.size(); i++) {
+				if(list.get(i).getAreas()!=null){
+					if(list.get(i).getAreas().contains(y)&&list.get(i).getAreas().contains(z)){
+						newList.add(list.get(i));
+					}
+				}
+			}
+		}
+		
+		if(CheckUtils.isNullOrEmpty(x)&&CheckUtils.isNullOrEmpty(y)&&!CheckUtils.isNullOrEmpty(z)){
+			for (int i = 0; i < list.size(); i++) {
+				if(list.get(i).getAreas()!=null){
+					if(list.get(i).getAreas().contains(z)){
+						newList.add(list.get(i));
+					}
+				}
+			}
+		}
+		
+		if(CheckUtils.isNullOrEmpty(x)&&!CheckUtils.isNullOrEmpty(y)&&CheckUtils.isNullOrEmpty(z)){
+			for (int i = 0; i < list.size(); i++) {
+				if(list.get(i).getAreas()!=null){
+					if(list.get(i).getAreas().contains(y)){
+					newList.add(list.get(i));
+					}
+				}
+			}
+		}
+		
+		return newList;
+		
+	}
+}

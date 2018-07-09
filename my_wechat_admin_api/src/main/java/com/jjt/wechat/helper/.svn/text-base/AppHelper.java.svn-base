@@ -1,0 +1,83 @@
+package com.qiaohu.wechat.helper;
+
+import java.util.List;
+import java.util.Vector;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.qiaohu.wechat.common.utils.CheckUtils;
+import com.qiaohu.wechat.core.entity.Area;
+import com.qiaohu.wechat.core.exception.AppException;
+import com.qiaohu.wechat.core.service.IAreaService;
+
+@Component
+public class AppHelper {
+
+	private static final Logger logger = LoggerFactory
+			.getLogger(AppHelper.class);
+	@Autowired
+	private IAreaService areaService;
+
+	private Vector<Area> areas = new Vector<Area>();
+	
+	public Vector<Area> getAreas() {
+		return areas;
+	}
+	public String getAreaName(String id) {
+		if (CheckUtils.isNullOrEmpty(id)) {
+			return "";
+		}
+		@SuppressWarnings("unchecked")
+		List<Area> list = (List<Area>) areas.clone();
+		int len = list.size();
+		for (int i = 0; i < len; i++) {
+			if (list.get(i).getId().equals(id)) {
+				return list.get(i).getName();
+			}
+		}
+		return "";
+	}
+	/**
+	 * 根据省市 以及 类型获取唯一的地区名称
+	 * @param name
+	 * @param Type
+	 * @return
+	 */
+	public String getAreaKey(String name,String Type) {
+		if (CheckUtils.isNullOrEmpty(name)) {
+			return "";
+		}
+		@SuppressWarnings("unchecked")
+		List<Area> list = (List<Area>) areas.clone();
+		int len = list.size();
+		for (int i = 0; i < len; i++) {
+			if (list.get(i).getName().equals(name)&&list.get(i).getType().equals(Type)) {
+				return list.get(i).getId();
+			}
+		}
+		return "";
+	}
+	
+	public void load() {
+		List<Area> list = null;
+		try {
+			list = areaService.searchAll();
+			if (!CheckUtils.isNullOrEmpty(list)) {
+				areas.addAll(list);
+			}
+		} catch (AppException e) {
+			logger.error(e.getMessage(), e.getCause());
+		}
+	}
+
+	public void reLoad() {
+
+		areas.clear();
+		load();
+
+	}
+
+}
