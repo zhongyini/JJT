@@ -2,12 +2,12 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.jjt</groupId>
-	<artifactId>jjt_wechat_common</artifactId>
+	<groupId>com.xxx</groupId>
+	<artifactId>xxx-wechat-common</artifactId>
 	<version>1.0.0.RELEASE</version>
 	<packaging>jar</packaging>
 
-	<name>jjt_wechat_common</name>
+	<name>xxx-wechat-common</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -49,7 +49,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>jjt_wechat_common</finalName>
+		<finalName>jjt-wechat-common</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>

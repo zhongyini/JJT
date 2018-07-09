@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.jjt</groupId>
-	<artifactId>jjt_wechat_front</artifactId>
+	<groupId>com.xxx</groupId>
+	<artifactId>xxx-wechat-front</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0.RELEASE</version>
-	<name>jjt_wechat_front</name>
+	<name>xxx-wechat-front</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,14 +20,14 @@
 	<dependencies>
 		<!-- 导入common的工程 -->
 		<dependency>
-			<groupId>com.jjt</groupId>
-			<artifactId>jjt_wechat_common</artifactId>
+			<groupId>com.xxx</groupId>
+			<artifactId>xxx-wechat-common</artifactId>
 			<version>1.0.0.RELEASE</version>
 		</dependency>
 		<!-- 导入dao的工程 -->
 		<dependency>
-			<groupId>com.jjt</groupId>
-			<artifactId>jjt_wechat_dao</artifactId>
+			<groupId>com.xxx</groupId>
+			<artifactId>xxx-wechat-dao</artifactId>
 			<version>1.0.0.RELEASE</version>
 		</dependency>
 		<dependency>
@@ -110,7 +110,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>jjt_wechat_front</finalName>
+		<finalName>xxx-wechat-front</finalName>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
