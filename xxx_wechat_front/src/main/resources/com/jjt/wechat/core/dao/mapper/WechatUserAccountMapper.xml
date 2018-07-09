@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxx.wechat.core.dao.WechatUserAccountDao">
+
+    <select id="get" resultType="com.xxx.wechat.core.dao.entity.WechatUserAccount">
+        select
+          *
+        from
+          xxx_wechat_user_account a
+        where
+          a.openid = #{openId}
+    </select>
+
+    <update id="updateAccountBalance" parameterType="com.xxx.wechat.core.dao.entity.WechatUserAccount">
+        update
+          xxx_wechat_user_account a
+        set
+          a.balance = #{balance},
+          a.update_datetime = now(3)
+        where
+          a.openid = #{openid}
+        and a.update_datetime = #{updateDatetime}
+    </update>
+
+</mapper>

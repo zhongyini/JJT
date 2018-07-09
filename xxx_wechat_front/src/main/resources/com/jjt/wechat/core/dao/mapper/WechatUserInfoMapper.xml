@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xxx.wechat.core.dao.WechatUserInfoDao">
+
+<select id="selectByOpenid"  parameterType="String" resultType="com.xxx.wechat.core.dao.entity.WechatUserInfo">
+	SELECT openid,nickname,sex,province,city,country,headimgurl,unionid,subscribe,language,
+	subscribe_time as subscribeTime,remark,groupid,subscribe_scene as subscribe_scene,
+	qr_scene as qrScene,qr_scene_str as qrSceneStr,updatetime 
+	FROM xxx_wechat_user_info WHERE openid = #{openid} 
+</select>
+
+</mapper>

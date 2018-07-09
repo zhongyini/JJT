@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxx.wechat.core.dao.WechatPaymentDao">
+
+    <insert id="insert" parameterType="com.xxx.wechat.core.dao.entity.WechatPayment" keyProperty="payId"
+            useGeneratedKeys="true">
+        insert into xxx_wechat_payment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != openid">openid,</if>
+            <if test="null != amount">amount,</if>
+            <if test="null != tradeNo">trade_no,</if>
+            <if test="null != redpackUrl">redpack_url,</if>
+            <if test="null != status">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != openid">#{openid},</if>
+            <if test="null != amount">#{amount},</if>
+            <if test="null != tradeNo">#{tradeNo},</if>
+            <if test="null != redpackUrl">#{redpackUrl},</if>
+            <if test="null != status">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.xxx.wechat.core.dao.entity.WechatPayment">
+        update xxx_wechat_payment
+        <trim prefix="set" suffixOverrides=",">
+            <if test="null != tradeNo">trade_no = #{tradeNo},</if>
+            <if test="null != redpackUrl">redpack_url = #{redpackUrl},</if>
+            <if test="null != status">status = #{status},</if>
+            update_datetime = now(3)
+        </trim>
+        where pay_id = #{payId}
+    </update>
+
+    <select id="listRedPack" resultType="com.xxx.wechat.core.dao.entity.WechatPayment">
+        select
+            p.amount,
+            p.redpack_url,
+            p.update_datetime,
+            hour(timediff(now(), p.update_datetime)) > '24' as timeout
+        from
+            xxx_wechat_payment p
+        where
+            p.openid = #{openId}
+        and p.trade_no is not null
+        and p.redpack_url is not null
+        order by p.update_datetime desc
+    </select>
+
+    <select id="listUnclaimedRedPack" resultType="com.xxx.wechat.core.dao.entity.WechatPayment">
+    </select>
+
+</mapper>

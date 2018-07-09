@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xxx.wechat.core.dao.WechatPayApiLogDao">
+
+    <insert id="insert" parameterType="com.xxx.wechat.core.dao.entity.WechatPayApiLog" keyProperty="payApiId" useGeneratedKeys="true">
+        insert into xxx_wechat_pay_api_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != payId">pay_id,</if>
+            <if test="null != tradeNo">trade_no,</if>
+            <if test="null != apiUrl">api_url,</if>
+            <if test="null != parameters">parameters,</if>
+            <if test="null != returnCode">return_code,</if>
+            <if test="null != returnJson">return_json,</if>
+            <if test="null != elapsed">elapsed,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != payId">#{payId},</if>
+            <if test="null != tradeNo">#{tradeNo},</if>
+            <if test="null != apiUrl">#{apiUrl},</if>
+            <if test="null != parameters">#{parameters},</if>
+            <if test="null != returnCode">#{returnCode},</if>
+            <if test="null != returnJson">#{returnJson},</if>
+            <if test="null != elapsed">#{elapsed},</if>
+        </trim>
+    </insert>
+
+</mapper>

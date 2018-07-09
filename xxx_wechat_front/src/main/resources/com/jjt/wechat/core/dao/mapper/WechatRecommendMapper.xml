@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xxx.wechat.core.dao.WechatRecommendDao">
+
+<select id="selectRecommendListByRecOpenid"  parameterType="java.lang.String" resultType="com.xxx.wechat.core.dao.entity.extend.WechatRecommendExt">
+	SELECT wcc.rec_ed_openid ,wui.headimgurl AS headimgurl,wui.nickname AS nickname,wcc.updatetime AS createDate,wcc.money AS money
+	FROM xxx_wechat_card_code wcc 
+	LEFT JOIN xxx_wechat_user_info wui
+	ON wcc.rec_ed_openid = wui.openid
+	WHERE wcc.rec_openid =  #{recOpenid}
+
+</select>
+
+<select id="selectBrotherListByRecEdOpenid"  parameterType="java.lang.String" resultType="com.xxx.wechat.core.dao.entity.extend.WechatRecommendExt">
+	SELECT wui.headimgurl AS headimgurl,wui.nickname AS nickname,wcc.updatetime AS createDate,wcc.money AS money
+	FROM xxx_wechat_card_code wcc 
+	LEFT JOIN xxx_wechat_user_info wui
+	ON wcc.rec_ed_openid = wui.openid
+	WHERE wcc.rec_openid IN 
+	(SELECT wcc.rec_openid FROM xxx_wechat_card_code wcc 
+	WHERE wcc.rec_ed_openid = #{recEdOpenid}) 
+	<!-- AND wcc.rec_ed_openid != #{recEdOpenid} -->
+
+</select>
+
+<select id="selectRecNumByRecOpenid"  parameterType="java.lang.String" resultType="java.lang.Integer">
+	SELECT SUM(0) FROM xxx_wechat_recommend WHERE rec_openid = #{recOpenid}
+</select>
+
+<select id="selectRecListByRecEdOpenid"  parameterType="java.lang.String" resultType="com.xxx.wechat.core.dao.entity.WechatRecommend">
+	SELECT recommend_id AS recommendId, rec_openid AS recOpenid, rec_ed_openid AS recEdOpenid, updatetime 
+	FROM xxx_wechat_recommend WHERE rec_ed_openid = #{openid}
+</select>
+
+<select id="selectAmountCashByRecOpenid"  parameterType="java.lang.String" resultType="java.lang.Integer">
+	SELECT SUM(wcc.money) FROM xxx_wechat_card_consume wcc 
+	LEFT JOIN xxx_wechat_recommend wr ON wcc.openid = wr.rec_ed_openid 
+	WHERE wcc.`code` IN (SELECT `code` FROM xxx_wechat_card_code cc WHERE cc.red_packet_status = 0) 
+	AND wr.rec_openid =  #{openid}
+</select>
+
+</mapper>

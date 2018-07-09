@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xxx.wechat.core.dao.WechatUserDao">
+
+	<select id="selectByOpenid"  parameterType="String" resultType="com.xxx.wechat.core.dao.entity.WechatUser">
+		SELECT openid,unionid,phone,updatetime FROM xxx_wechat_user WHERE openid = #{openid}
+	</select>
+
+</mapper>

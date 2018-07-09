@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xxx.wechat.core.dao.WechatQrcodeDao">
+
+<select id="selectByOpenid"  parameterType="java.lang.String" resultType="com.xxx.wechat.core.dao.entity.WechatQrcode">
+	SELECT qrcode_id AS qrcodeId, openid, ticket, url, qrcode_type AS qrcodeType, create_date AS createDate
+	FROM xxx_wechat_qrcode WHERE openid = #{openid}
+</select>
+
+</mapper>

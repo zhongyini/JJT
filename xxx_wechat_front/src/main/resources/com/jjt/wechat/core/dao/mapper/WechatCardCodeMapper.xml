@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xxx.wechat.core.dao.WechatCardCodeDao">
+
+<select id="selectAmountCashByRecOpenid"  parameterType="java.lang.String" resultType="java.lang.String">
+	SELECT IF(SUM(wcc.money) is null,0,SUM(wcc.money)) FROM xxx_wechat_card_code wcc 
+	WHERE wcc.red_packet_status = 0 
+	AND wcc.rec_openid =  #{openid}
+</select>
+
+<select id="selectCodeNumByRecEdOpenid"  parameterType="java.lang.String" resultType="java.lang.Integer">
+	SELECT IF(SUM(0) is null,0,SUM(0)) sum FROM xxx_wechat_card_code 
+	WHERE rec_ed_openid = #{recEdOpenid}
+</select>
+
+<select id="selectCountNum" resultType="java.lang.Integer">
+	SELECT IF(COUNT(0) is null,0,COUNT(0)) count FROM xxx_wechat_card_code 
+</select>
+
+</mapper>
