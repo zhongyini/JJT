@@ -144,7 +144,23 @@ public interface Constant {
         public final static String CARD_VIEW = "/card/view";
 
         public final static String SHARE_VIEW = "/share/view";
-
+        
+        public final static String MENU_ONE_ONE = "/menu/one/one";
+        public final static String MENU_ONE_TWO = "/menu/one/two";
+        public final static String MENU_ONE_THREE = "/menu/one/three";
+        public final static String MENU_ONE_FOUR = "/menu/one/four";
+        public final static String MENU_ONE_FIVE = "/menu/one/five";
+        public final static String MENU_TWO_ONE = "/menu/two/one";
+        public final static String MENU_TWO_TWO = "/menu/two/two";
+        public final static String MENU_TWO_THREE = "/menu/two/three";
+        public final static String MENU_TWO_FOUR = "/menu/two/four";
+        public final static String MENU_TWO_FIVE = "/menu/two/five";
+        public final static String MENU_THREE_ONE = "/menu/three/one";
+        public final static String MENU_THREE_TWO = "/menu/three/two";
+        public final static String MENU_THREE_THREE = "/menu/three/three";
+        public final static String MENU_THREE_FOUR = "/menu/three/four";
+        public final static String MENU_THREE_FIVE = "/menu/three/five";
+        
     }
 
     /**
@@ -177,6 +193,7 @@ public interface Constant {
         public final static String ZH_TW = "zh_TW";
         // en 英语
         public final static String EN = "en";
+        
         /**
          * 开发者微信号
          */
@@ -220,7 +237,7 @@ public interface Constant {
         /**
          * 域名
          */
-//        public final static String HOST_URL = "hostUrl";
+        public final static String HOST_URL = "hostUrl";
         /**
          * 一页显示数
          */
@@ -228,7 +245,7 @@ public interface Constant {
         /**
          * state
          */
-//        public final static String STATE = "state";
+        public final static String STATE = "state";
 
         /**
          * 推荐数上限
@@ -248,7 +265,12 @@ public interface Constant {
         /**
          * 微信配置Token
          */
-//        public final static String SERVER_CONFIG_TOKEN = "server_config_token";
+        public final static String SERVER_CONFIG_TOKEN = "server_config_token";
+        
+        /**
+    	 * 微信个性化动态菜单标签id
+    	 */
+    	public static String WECHAT_TAG_ID = "wechat_tag_id";
     }
 
     interface Str {

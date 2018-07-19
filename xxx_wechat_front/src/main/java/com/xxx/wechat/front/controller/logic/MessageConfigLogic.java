@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import com.xxx.wechat.common.constant.ConfigurationEnum;
 import com.xxx.wechat.common.constant.Constant;
 import com.xxx.wechat.common.utils.CheckUtils;
-import com.xxx.wechat.helper.ConfigHelper;
+import com.xxx.wechat.core.config.ConfigurationConfig;
 
 /**
  * 微信配置逻辑层
@@ -24,9 +24,6 @@ import com.xxx.wechat.helper.ConfigHelper;
 public class MessageConfigLogic extends BaseLogic {
 
 	protected static final Logger logger = LoggerFactory.getLogger(MessageConfigLogic.class);
-	
-	@Autowired
-	private static ConfigHelper configHelper;
 	
 	private static final char[] digit = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E',
 			'F' };
@@ -41,7 +38,7 @@ public class MessageConfigLogic extends BaseLogic {
 		String echostr = request.getParameter(Constant.WechatParams.MSG_PARAM_ECHOSTR);
 
 		logger.info("\n接收到来自微信服务器的认证消息：[{}, {}, {}, {}]", signature, timestamp, nonce, echostr);
-		String token = configHelper.wechatToken;
+		String token = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.SERVER_CONFIG_TOKEN);
 		boolean ret = checkSignature(token, signature, timestamp, nonce);
 
 		if (ret) {

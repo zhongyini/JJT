@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.xxx.wechat.common.constant.ConfigurationEnum;
 import com.xxx.wechat.common.constant.Constant;
 import com.xxx.wechat.common.utils.CheckUtils;
 import com.xxx.wechat.common.wechat.api.AccessTokenApi;
 import com.xxx.wechat.common.wechat.api.response.AccessTokenResponse;
+import com.xxx.wechat.core.config.ConfigurationConfig;
 import com.xxx.wechat.core.dao.entity.WechatUserInfo;
 import com.xxx.wechat.front.service.IWechatUserInfoService;
-import com.xxx.wechat.helper.ConfigHelper;
 
 /**
  * 跳转网页时获得openid
@@ -26,9 +27,6 @@ import com.xxx.wechat.helper.ConfigHelper;
 @Controller
 @RequestMapping("/oauth")
 public class OAuthController extends BaseController {
-
-	@Autowired
-	private ConfigHelper configHelper;
 
 	@Autowired
 	private IWechatUserInfoService wechatUserInfoService;
@@ -43,16 +41,16 @@ public class OAuthController extends BaseController {
 	@RequestMapping("/api")
 	public String oauth2Api(HttpServletRequest request, @RequestParam String resultUrl) {
 		// 做成回调url，将客户端请求地址埋入回调url中
-		String backUrl = configHelper.hostUrl + "/oauth/url?redirectUrl=" + resultUrl;
+		String backUrl = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.HOST_URL) + "/oauth/url?redirectUrl=" + resultUrl;
 		try {
 			backUrl = java.net.URLEncoder.encode(backUrl, "utf-8");
 		} catch (UnsupportedEncodingException e) {
 			logger.error("backUrl 进行utf-8编码错误.错误信息：" + e.getMessage());
 		}
 		// 获取请求认证参数
-		String appId = configHelper.appId;
+		String appId = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.APPID);
 		String scope = Constant.WechatParams.AUTHORIZE_SCOPE_USERINFO;
-		String state = configHelper.state;
+		String state = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.STATE);
 		// check appID
 		if (CheckUtils.isNullOrEmpty(appId)) {// 跳转至错误画面
 			logger.error("appId：[" + appId + "]为空，请检查配置文件是否正确");
@@ -91,8 +89,8 @@ public class OAuthController extends BaseController {
 			return "common/error";
 		}
 
-		String appId = configHelper.appId;
-		String appSecret = configHelper.appSecret;
+		String appId = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.APPID);
+		String appSecret = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.APPSECRET);
 		if (CheckUtils.isNullOrEmpty(appId) || CheckUtils.isNullOrEmpty(appSecret)) {
 			logger.error("appId：[" + appId + "]或者appSecret：[" + appSecret + "]为空，请检查配置文件是否正确");
 			return "/common/error";
@@ -125,8 +123,8 @@ public class OAuthController extends BaseController {
 		}
 		model.addAttribute("openid", openid);
 		model.addAttribute("url", redirectUrl);
-		setResponseCookie(configHelper.cookieKey, tokenHelper.createJWT(openid));
-		logger.info("yucj url redirect : " + redirectUrl);
+		setResponseCookie(ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.OPENID_COOKIE), tokenHelper.createJWT(openid));
+		logger.info("url redirect : " + redirectUrl);
 
 		return "common/jump";
 	}

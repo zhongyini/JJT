@@ -13,10 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
+import com.xxx.wechat.common.constant.ConfigurationEnum;
 import com.xxx.wechat.common.constant.Constant;
 import com.xxx.wechat.common.utils.CheckUtils;
 import com.xxx.wechat.common.utils.DateUtils;
-import com.xxx.wechat.core.config.SystemConfig;
+import com.xxx.wechat.core.config.ConfigurationConfig;
 import com.xxx.wechat.core.dao.entity.WechatCard;
 import com.xxx.wechat.core.dao.entity.WechatCardCode;
 import com.xxx.wechat.core.dao.entity.WechatRecommend;
@@ -96,7 +97,7 @@ public class UserController extends BaseController {
 			// 根据被推荐者openid查询已领过多少券
 			List<WechatCardCode> wechatCardCodeList = selectWechatCardCode(wechatCardCode);
 			// 查询领券上限
-			String limitStr = SystemConfig.getInstance().getProperty(Constant.Configuration.GET_NUM_LIMIT);
+			String limitStr = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.GET_NUM_LIMIT);
 			// 转型
 			int limit = CheckUtils.isNullOrEmpty(limitStr) ? 0 : Integer.valueOf(limitStr);
 			// 没领过或领取次数未到达上限，可再次领取

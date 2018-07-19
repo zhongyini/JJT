@@ -13,13 +13,14 @@ import org.springframework.web.servlet.ModelAndView;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
+import com.xxx.wechat.common.constant.ConfigurationEnum;
 import com.xxx.wechat.common.constant.Constant;
 import com.xxx.wechat.common.utils.CheckUtils;
 import com.xxx.wechat.common.utils.DateUtils;
 import com.xxx.wechat.common.utils.JsonUtils;
 import com.xxx.wechat.common.wechat.api.CardApi;
-import com.xxx.wechat.core.config.SystemConfig;
-import com.xxx.wechat.core.config.WechatConfig;
+import com.xxx.wechat.core.config.ConfigurationConfig;
+import com.xxx.wechat.core.config.WechatTokenConfig;
 import com.xxx.wechat.core.dao.entity.WechatCardCode;
 import com.xxx.wechat.core.dao.entity.WechatUser;
 import com.xxx.wechat.core.dao.entity.extend.WechatRecommendExt;
@@ -80,7 +81,7 @@ public class CardController extends BaseController {
 //				userCardCodeDto.setCardId(wechatCardCodeList.get(Constant.Num.INT_ZERO).getCardId());
 //				userCardCodeDto.setCode(wechatCardCodeList.get(Constant.Num.INT_ZERO).getCode());
 			}
-			Page<WechatRecommendExt> brotherList = selectBrotherListByRecEdOpenid(openid, Constant.Num.INT_ONE, Integer.valueOf(SystemConfig.getInstance().getProperty(Constant.Configuration.LIST_PAGE_SIZE)));
+			Page<WechatRecommendExt> brotherList = selectBrotherListByRecEdOpenid(openid, Constant.Num.INT_ONE, Integer.valueOf(ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.LIST_PAGE_SIZE)));
 			if (CheckUtils.isNull(brotherList)) {
 				brotherList = new Page<WechatRecommendExt>();
 			}
@@ -182,7 +183,7 @@ public class CardController extends BaseController {
 	private String decryptCode(String encryptCode) {
 		try {
 			// 解密卡号接口，返回解密后的卡号
-			return new CardApi(WechatConfig.getInstance().getAccessToken()).decryptCode(encryptCode);
+			return new CardApi(WechatTokenConfig.getInstance().getAccessToken()).decryptCode(encryptCode);
 		} catch (Exception e) {
 			logger.error("解码code失败：" + encryptCode);
 		}

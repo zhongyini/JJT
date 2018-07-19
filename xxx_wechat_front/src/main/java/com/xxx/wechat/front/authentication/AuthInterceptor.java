@@ -13,12 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.xxx.wechat.common.constant.ConfigurationEnum;
 import com.xxx.wechat.common.constant.Constant;
 import com.xxx.wechat.common.utils.CheckUtils;
+import com.xxx.wechat.core.config.ConfigurationConfig;
 import com.xxx.wechat.core.dao.entity.WechatUser;
 import com.xxx.wechat.front.exception.ErrorPageException;
 import com.xxx.wechat.front.service.IWechatUserService;
-import com.xxx.wechat.helper.ConfigHelper;
 import com.xxx.wechat.helper.TokenHelper;
 
 public class AuthInterceptor extends HandlerInterceptorAdapter {
@@ -27,9 +28,6 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 
 	@Autowired
 	private TokenHelper tokenHelper;
-
-	@Autowired
-	private ConfigHelper configHelper;
 
 	@Autowired
 	private IWechatUserService wechatUserService;
@@ -125,7 +123,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			if (request.getCookies() != null) {
 				for (Cookie cookie : request.getCookies()) {
 					String cookieName = cookie.getName();
-					if (configHelper.cookieKey.equals(cookieName)) {
+					if (ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.OPENID_COOKIE).equals(cookieName)) {
 						openid = cookie.getValue();
 						break;
 					}

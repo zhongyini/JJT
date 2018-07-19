@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.xxx.wechat.common.constant.ConfigurationEnum;
 import com.xxx.wechat.common.constant.Constant;
 import com.xxx.wechat.common.utils.CheckUtils;
 import com.xxx.wechat.common.utils.JsonUtils;
@@ -22,8 +23,8 @@ import com.xxx.wechat.common.wechat.api.entity.QrCode;
 import com.xxx.wechat.common.wechat.api.response.CardResponse;
 import com.xxx.wechat.common.wechat.api.response.GetUserInfoResponse;
 import com.xxx.wechat.common.wechat.api.response.QrcodeResponse;
-import com.xxx.wechat.core.config.SystemConfig;
-import com.xxx.wechat.core.config.WechatConfig;
+import com.xxx.wechat.core.config.ConfigurationConfig;
+import com.xxx.wechat.core.config.WechatTokenConfig;
 import com.xxx.wechat.core.dao.entity.WechatCard;
 import com.xxx.wechat.core.dao.entity.WechatCardCode;
 import com.xxx.wechat.core.dao.entity.WechatQrcode;
@@ -77,7 +78,7 @@ public abstract class BaseController {
 	 */
 	protected String getOpenid() {
 		return tokenHelper
-				.parseJWT(getCookieValue(configHelper.cookieKey));
+				.parseJWT(getCookieValue(ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.OPENID_COOKIE)));
 	}
 	
 	/**
@@ -122,7 +123,7 @@ public abstract class BaseController {
 	 */
 	protected WechatUserInfo getWechatUserInfo(String token, String openid) throws UnsupportedEncodingException {
 		WechatUserInfo wechatUserInfo = new WechatUserInfo();
-		UserAPI userAPI = new UserAPI(WechatConfig.getInstance().getAccessToken());
+		UserAPI userAPI = new UserAPI(WechatTokenConfig.getInstance().getAccessToken());
 		logger.info("getWechatUserInfo start");
 		// 已关注
 		GetUserInfoResponse userInfoResponse = userAPI.getUserInfo(openid);
@@ -187,7 +188,7 @@ public abstract class BaseController {
 				// 根据推荐者openid查看该用户的推荐数
 				int recNum = wechatRecommendService.selectRecNumByRecOpenid(wechatRecommend.getRecOpenid());
 				// 推荐数跟推荐上限数对比
-				if (recNum >= Integer.valueOf(SystemConfig.getInstance().getProperty(Constant.Configuration.REC_NUM_LIMIT))) {
+				if (recNum >= Integer.valueOf(ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.REC_NUM_LIMIT))) {
 					// 推荐数已达上限
 					logger.info("openid:" + wechatRecommend.getRecOpenid() +"推荐数已达上限");
 					return;
@@ -224,7 +225,7 @@ public abstract class BaseController {
 		// 将openid赋值
 		userCardCodeDto.setOpenid(openid);
 		// 初始化卡券接口
-		CardApi cardApi = new CardApi(WechatConfig.getInstance().getAccessToken());
+		CardApi cardApi = new CardApi(WechatTokenConfig.getInstance().getAccessToken());
 		// 获取用户卡券信息
 		CardResponse cardResponse = cardApi.getCardList(openid, cardId);
 		if (CheckUtils.isNull(cardResponse) || CheckUtils.isNull(cardResponse.getCardList()) || cardResponse.getCardList().size() == Constant.Num.INT_ZERO) {
@@ -254,7 +255,7 @@ public abstract class BaseController {
 	 * @throws Exception
 	 */
 	protected WechatQrcode getQrcode(QrCode qrCode) throws Exception {
-		QrcodeAPI qrcodeAPI = new QrcodeAPI(WechatConfig.getInstance().getAccessToken());
+		QrcodeAPI qrcodeAPI = new QrcodeAPI(WechatTokenConfig.getInstance().getAccessToken());
 		QrcodeResponse qrcodeResponse = null;
 		WechatQrcode wechatQrcode = new WechatQrcode();
 		qrcodeResponse = qrcodeAPI.createQrcode(qrCode);

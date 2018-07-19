@@ -2,16 +2,16 @@ package com.xxx.wechat.front.controller;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.xxx.wechat.common.constant.ConfigurationEnum;
 import com.xxx.wechat.common.utils.SignUtil;
 import com.xxx.wechat.common.wechat.api.entity.WxCardApiSignature;
-import com.xxx.wechat.core.config.WechatConfig;
-import com.xxx.wechat.helper.ConfigHelper;
+import com.xxx.wechat.core.config.ConfigurationConfig;
+import com.xxx.wechat.core.config.WechatTokenConfig;
 
 /**
  * 微信jssdk配置
@@ -22,9 +22,6 @@ import com.xxx.wechat.helper.ConfigHelper;
 @RequestMapping("/config")
 public class ConfigController extends BaseController {
 
-	@Autowired
-	private ConfigHelper configHelper;
-	
 	/**
 	 * 配置jsapi_ticket
 	 * @param url
@@ -33,8 +30,8 @@ public class ConfigController extends BaseController {
 	@RequestMapping("/jsapiTicket")
 	public @ResponseBody Map<String, String> jsapiTicket(@RequestParam(value = "url", required = true) String url) {
 		try {
-			String appId = configHelper.appId;
-			String jsApiTicket = WechatConfig.getInstance().getJsapiTicket();
+			String appId = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.APPID);
+			String jsApiTicket = WechatTokenConfig.getInstance().getJsapiTicket();
 			Map<String, String> resultMap = SignUtil.jsApiTicketSign(jsApiTicket, url);
 			resultMap.put("appid", appId);
 			return resultMap;
@@ -53,7 +50,7 @@ public class ConfigController extends BaseController {
 	@RequestMapping("/apiTicket")
 	public @ResponseBody WxCardApiSignature apiTicket(WxCardApiSignature apiSignature) {
 		try {
-			String apiTicket = WechatConfig.getInstance().getApiTicket();
+			String apiTicket = WechatTokenConfig.getInstance().getApiTicket();
 			apiSignature = SignUtil.createWxCardJsApiSignature(apiTicket, apiSignature);
 			return apiSignature;
 		} catch (Exception e) {

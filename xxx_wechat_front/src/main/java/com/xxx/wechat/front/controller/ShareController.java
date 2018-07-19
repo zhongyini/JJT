@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.github.pagehelper.Page;
+import com.xxx.wechat.common.constant.ConfigurationEnum;
 import com.xxx.wechat.common.constant.Constant;
 import com.xxx.wechat.common.utils.CheckUtils;
-import com.xxx.wechat.core.config.SystemConfig;
+import com.xxx.wechat.core.config.ConfigurationConfig;
 import com.xxx.wechat.core.dao.entity.WechatUserAccount;
 import com.xxx.wechat.core.dao.entity.extend.WechatRecommendExt;
 import com.xxx.wechat.front.authentication.LoginRequired;
@@ -65,7 +66,7 @@ public class ShareController extends BaseController {
 			amountCash = String.valueOf(wechatUserAccount.getBalance()/100);
 		}
 		// 推荐列表
-		Page<WechatRecommendExt> recommendList = selectRecommendListByRecOpenid(openid, Constant.Num.INT_ONE, Integer.valueOf(SystemConfig.getInstance().getProperty(Constant.Configuration.LIST_PAGE_SIZE)));
+		Page<WechatRecommendExt> recommendList = selectRecommendListByRecOpenid(openid, Constant.Num.INT_ONE, Integer.valueOf(ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.LIST_PAGE_SIZE)));
 		if (CheckUtils.isNull(recommendList)) {
 			recommendList = new Page<WechatRecommendExt>();
 		}
