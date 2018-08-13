@@ -1,5 +1,8 @@
 package com.xxx.wechat.front.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,7 +37,9 @@ public class MenuController extends BaseController {
 	}
 	@RequestMapping(value = "/two/one")
 	public String twoOne() {
-		return "redirect:http://www.baidu.com"; 
+		String url = "https://apis.map.qq.com/tools/poimarker?type=0&marker=coord:37.978845,114.541397;title:NO.1;addr:河北省石家庄市裕华区鑫源东路|coord:37.991293,114.640961;title:NO.2;addr:河北省石家庄市裕华区冲江河道|coord:38.059175,114.479942;title:NO.3;addr:河北省石家庄市新华区和平西路223号&key=FMEBZ-W5B66-YRVSG-EKKE2-AEVRJ-6RBGO&referer=cdztest";
+		System.out.println(url);
+		return "redirect:"+url;
 	}
 	@RequestMapping(value = "/two/two")
 	public String twoTwo() {
