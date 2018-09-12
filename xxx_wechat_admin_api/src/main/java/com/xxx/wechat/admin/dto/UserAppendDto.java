@@ -2,7 +2,7 @@ package com.xxx.wechat.admin.dto;
 
 import java.io.Serializable;
 
-import com.xxx.wechat.core.constants.Constants;
+import com.xxx.wechat.constants.Constants;
 
 public class UserAppendDto implements Serializable {
 

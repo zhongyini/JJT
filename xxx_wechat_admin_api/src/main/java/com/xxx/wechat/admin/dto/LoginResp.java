@@ -2,21 +2,22 @@ package com.xxx.wechat.admin.dto;
 
 import java.util.List;
 
-import com.xxx.wechat.core.entity.UserAdmin;
+import com.xxx.wechat.core.dao.entity.AdminUser;
+
 
 public class LoginResp{
 
 	private boolean passwordOverdue= false;
 	
-	private UserAdmin admin;
+	private AdminUser admin;
 
 	private List<String> permissions;
 
-	public UserAdmin getAdmin() {
+	public AdminUser getAdmin() {
 		return admin;
 	}
 
-	public void setAdmin(UserAdmin admin) {
+	public void setAdmin(AdminUser admin) {
 		this.admin = admin;
 	}
 

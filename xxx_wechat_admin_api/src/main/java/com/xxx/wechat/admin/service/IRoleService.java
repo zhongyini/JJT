@@ -3,20 +3,20 @@ package com.xxx.wechat.admin.service;
 import java.util.List;
 
 import com.github.pagehelper.Page;
-import com.xxx.wechat.core.entity.Authority;
-import com.xxx.wechat.core.entity.Role;
-import com.xxx.wechat.core.entity.extend.RoleExt;
+import com.xxx.wechat.core.dao.entity.AdminAuthority;
+import com.xxx.wechat.core.dao.entity.AdminRole;
+import com.xxx.wechat.core.dao.entity.extend.AdminRoleExt;
 import com.xxx.wechat.core.exception.AppException;
 
 public interface IRoleService {
 
-	public Page<Role> searchAll(RoleExt roleExt) throws AppException;
+	public Page<AdminRole> searchAll(AdminRoleExt roleExt) throws AppException;
 
-	int create(Role role, List<Authority> permissions) throws AppException;
+	int create(AdminRole role, List<AdminAuthority> permissions) throws AppException;
 
-	int update(Role role, List<Authority> permissions) throws AppException;
+	int update(AdminRole role, List<AdminAuthority> permissions) throws AppException;
 
-	int delete(Role role) throws AppException;
+	int delete(AdminRole role) throws AppException;
 
-	Role detail(String roleId) throws AppException;
+	AdminRole detail(String roleId) throws AppException;
 }

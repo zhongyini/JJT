@@ -2,7 +2,7 @@ package com.xxx.wechat.admin.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.xxx.wechat.core.entity.UserAdmin;
+import com.xxx.wechat.core.dao.entity.AdminUser;
 import com.xxx.wechat.core.exception.AppException;
 
 public interface IAdminService {
@@ -14,7 +14,7 @@ public interface IAdminService {
 	 * @return
 	 * @throws AppException
 	 */
-	UserAdmin login(UserAdmin user) throws AppException;
+	AdminUser login(AdminUser user) throws AppException;
 
 	/**
 	 * 保存新用户
@@ -23,7 +23,7 @@ public interface IAdminService {
 	 * @return
 	 * @throws AppException
 	 */
-	int save(UserAdmin user) throws AppException;
+	int save(AdminUser user) throws AppException;
 
 	/**
 	 * 更新用户信息
@@ -32,7 +32,7 @@ public interface IAdminService {
 	 * @return
 	 * @throws AppException
 	 */
-	int update(UserAdmin user) throws AppException;
+	int update(AdminUser user) throws AppException;
 
 	/**
 	 * 删除用户信息
@@ -41,7 +41,7 @@ public interface IAdminService {
 	 * @return
 	 * @throws AppException
 	 */
-	int delete(UserAdmin req) throws AppException;
+	int delete(AdminUser req) throws AppException;
 
 	/**
 	 * 获取用户详细信息
@@ -50,7 +50,7 @@ public interface IAdminService {
 	 * @return
 	 * @throws AppException
 	 */
-	UserAdmin detail(String id) throws AppException;
+	AdminUser detail(String id) throws AppException;
 
 	/**
 	 * 重置用户密码
@@ -59,7 +59,7 @@ public interface IAdminService {
 	 * @return
 	 * @throws AppException
 	 */
-	int restPwd(UserAdmin admin) throws AppException;
+	int restPwd(AdminUser admin) throws AppException;
 
 	/**
 	 * 更新用户状态
@@ -68,7 +68,7 @@ public interface IAdminService {
 	 * @return
 	 * @throws AppException
 	 */
-	int updateStatue(UserAdmin admin) throws AppException;
+	int updateStatue(AdminUser admin) throws AppException;
 
 	/**
 	 * 上传头像

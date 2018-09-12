@@ -8,7 +8,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
-import com.xxx.wechat.core.entity.UserAdmin;
+import com.xxx.wechat.core.dao.entity.AdminUser;
 
 @WebListener
 public class SessionListener implements HttpSessionListener {
@@ -33,7 +33,7 @@ public class SessionListener implements HttpSessionListener {
 
 	public static synchronized void delSession(HttpSession session) {
 		if (session != null) {
-			UserAdmin admin = (UserAdmin) session.getAttribute("users");
+			AdminUser admin = (AdminUser) session.getAttribute("users");
 			if (admin != null) {
 				SessionListener.sessionMap.remove(admin.getAdminId());
 			}
