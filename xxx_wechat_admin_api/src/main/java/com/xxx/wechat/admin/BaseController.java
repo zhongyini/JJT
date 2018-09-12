@@ -6,9 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.xxx.common.utils.CheckUtils;
 import com.xxx.wechat.core.exception.AppException;
 import com.xxx.wechat.admin.dto.LoginReq;
+import com.xxx.wechat.common.utils.CheckUtils;
 import com.xxx.wechat.constants.Constants;
 import com.xxx.wechat.helper.MessageHelper;
 

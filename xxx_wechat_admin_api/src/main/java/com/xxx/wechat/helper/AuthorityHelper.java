@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.xxx.wechat.admin.service.IAuthorityService;
-import com.xxx.common.utils.CheckUtils;
-import com.xxx.wechat.core.entity.Authority;
+import com.xxx.wechat.common.utils.CheckUtils;
 import com.xxx.wechat.core.exception.AppException;
 
 @Component
