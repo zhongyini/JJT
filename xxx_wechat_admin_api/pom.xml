@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xxx</groupId>
 	<artifactId>xxx-wechat-admin-api</artifactId>
-	<version>1.0.1.RELEASE</version>
+	<version>1.0.0.RELEASE</version>
 	<packaging>war</packaging>
 
 	<properties>
@@ -43,12 +43,12 @@
 		<dependency>
 			<groupId>com.xxx</groupId>
 			<artifactId>xxx-wechat-common</artifactId>
-			<version>1.0.1.RELEASE</version>
+			<version>1.0.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>com.xxx</groupId>
 			<artifactId>xxx-wechat-dao</artifactId>
-			<version>1.0.1.RELEASE</version>
+			<version>1.0.0.RELEASE</version>
 		</dependency>
 		<!-- 基干 end -->
 
