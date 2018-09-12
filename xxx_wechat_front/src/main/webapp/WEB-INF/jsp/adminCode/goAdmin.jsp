@@ -70,10 +70,10 @@
 		window.location.href="../share/view";
 	});
 	// TODO 需要根据环境修改路径
-	var url = "http://wechat.zdjiujiantang.com/wechat-front/card/newWCard";
+	var url = "http://www.ykstudy.cn/wechat-front/card/newWCard";
 	var code = $("#code").val();
 	// TODO 需要根据环境修改路径
-	var redirectUrl =  "http://admin.zdjiujiantang.com/admin-api/adminManager/checkAdmin?url="+url+"&code="+code;
+	var redirectUrl =  "http://www.ykstudy.cn/admin-api/adminManager/checkAdmin?url="+url+"&code="+code;
 	var qrcode = new QRCode(document.getElementById("qrcode"),{
 		render: "table"});  // 设置要生成二维码的链接
 	qrcode.makeCode(redirectUrl);
