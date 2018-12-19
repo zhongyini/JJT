@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xxx.wechat.core.dao.NameConfigDao">
+
+	<select id="list" parameterType="String"
+		resultType="com.xxx.wechat.core.dao.entity.NameConfig">
+		SELECT * FROM xxx_name_config WHERE delete_flag = 0
+	</select>
+
+	<insert id="insertNameConfig" useGeneratedKeys="true"
+		parameterType="com.xxx.wechat.core.dao.entity.NameConfig">
+		
+		<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">  
+	        SELECT LAST_INSERT_ID()  
+	    </selectKey>
+	    INSERT INTO xxx_name_config(word, delete_flag, update_user,
+		update_time) VALUES(#{word}, #{deleteFlag}, #{updateUser},
+		#{updateTime})
+	</insert>
+</mapper>

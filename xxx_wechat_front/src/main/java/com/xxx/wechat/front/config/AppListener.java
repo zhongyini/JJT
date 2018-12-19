@@ -44,7 +44,7 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 		
 		logger.info("Create WeChat Menu Start");
 		
-		if (!CheckUtils.isNull(wechatTokenService)) {
+		/*if (!CheckUtils.isNull(wechatTokenService)) {
 			try {
 				WechatTokenConfig.getInstance().getWechatTokenOnline();
 			} catch (Exception e) {
@@ -52,7 +52,7 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 			}
 			createMenu();
 			createAddconditionalMenu();
-		}
+		}*/
 	}
 
 	/**
@@ -74,11 +74,13 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 		MenuButton sub11 = new MenuButton();
 		sub11.setName("愿");
 		sub11.setType(MenuType.VIEW.toString());
-		sub11.setUrl(hosturl+Constant.ControllerUrl.MENU_ONE_ONE);
+//		sub11.setUrl(hosturl+Constant.ControllerUrl.MENU_ONE_ONE);
+		sub11.setUrl("http://zmall.99zmall.com/hot_goods?shopId=73808&kind=00&type=0");
 		MenuButton sub12 = new MenuButton();
 		sub12.setName("得");
 		sub12.setType(MenuType.VIEW.toString());
 		sub12.setUrl(hosturl+Constant.ControllerUrl.MENU_ONE_TWO);
+		sub12.setUrl("http://www.elizabece.com/#/?uname=test");
 		MenuButton sub13 = new MenuButton();
 		sub13.setName("一");
 		sub13.setType(MenuType.VIEW.toString());
@@ -216,11 +218,13 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 		MenuButton sub11 = new MenuButton();
 		sub11.setName("愿");
 		sub11.setType(MenuType.VIEW.toString());
-		sub11.setUrl(hosturl+Constant.ControllerUrl.MENU_ONE_ONE);
+//		sub11.setUrl(hosturl+Constant.ControllerUrl.MENU_ONE_ONE);
+		sub11.setUrl("http://zmall.99zmall.com/hot_goods?shopId=73808&kind=00&type=0");
 		MenuButton sub12 = new MenuButton();
 		sub12.setName("得");
 		sub12.setType(MenuType.VIEW.toString());
 		sub12.setUrl(hosturl+Constant.ControllerUrl.MENU_ONE_TWO);
+		sub12.setUrl("http://www.elizabece.com/#/?uname=test");
 		MenuButton sub13 = new MenuButton();
 		sub13.setName("一");
 		sub13.setType(MenuType.VIEW.toString());
