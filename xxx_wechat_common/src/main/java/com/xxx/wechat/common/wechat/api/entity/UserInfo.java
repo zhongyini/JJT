@@ -2,7 +2,7 @@ package com.xxx.wechat.common.wechat.api.entity;
 
 /**
  */
-public class UserInfo extends BaseModel{
+public class UserInfo extends BaseModel {
     /**
 	 * 
 	 */
