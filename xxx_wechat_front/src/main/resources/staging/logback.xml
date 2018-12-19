@@ -12,7 +12,7 @@
         FILEDEBUG对应debug级别，文件名以log-debug-xxx.log形式命名 stdout将日志信息输出到控制上，为方便开发测试使用 -->
     <contextName>JJT_ADMIN</contextName>
 
-    <property name="log_path" value="/srv/jiujiantang/logs"/>
+    <property name="log_path" value="/srv/xxx/logs"/>
     <!--设置系统日志目录 -->
     <property name="appdir" value="wechat"/>
     <!-- 日志记录器，日期滚动记录 -->

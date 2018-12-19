@@ -18,10 +18,10 @@ import com.xxx.wechat.admin.dto.LoginResp;
 import com.xxx.wechat.admin.enums.AdminStatus;
 import com.xxx.wechat.admin.service.IAdminService;
 import com.xxx.wechat.admin.service.IAuthorityService;
-import com.xxx.common.utils.CheckUtils;
+import com.xxx.wechat.common.utils.CheckUtils;
 import com.xxx.wechat.config.AppConfig;
 import com.xxx.wechat.constants.Constants;
-import com.xxx.wechat.core.entity.UserAdmin;
+import com.xxx.wechat.core.dao.entity.AdminUser;
 import com.xxx.wechat.core.exception.AppException;
 import com.xxx.wechat.helper.TokenHelper;
 
@@ -64,7 +64,7 @@ public class LoginController extends BaseController {
 		}
 
 		// 登录验证
-		UserAdmin admin = new UserAdmin(loginReq.getName(), loginReq.getPassword());
+		AdminUser admin = new AdminUser(loginReq.getName(), loginReq.getPassword());
 		try {
 			admin = adminService.login(admin);
 			resp = new LoginResp();

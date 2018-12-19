@@ -8,8 +8,8 @@ import java.util.Date;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 
-import com.xxx.common.utils.CheckUtils;
-import com.xxx.common.utils.DateUtils;
+import com.xxx.wechat.common.utils.CheckUtils;
+import com.xxx.wechat.common.utils.DateUtils;
 
 public class DateUtil {
 	/**
@@ -119,13 +119,13 @@ public class DateUtil {
 
 	public static Date getStartDate(Date date) {
 		return new Date(DateUtils.parse(
-				DateFormatUtils.format(date, YMDHHMMSS1), DateUtils.YMDHHMMSS)
+				DateFormatUtils.format(date, YMDHHMMSS1), YMDHHMMSS)
 				.getTime());
 	}
 
 	public static Date getEndDate(Date date) {
 		return new Date(DateUtils.parse(
-				DateFormatUtils.format(date, YMDHHMMSS2), DateUtils.YMDHHMMSS)
+				DateFormatUtils.format(date, YMDHHMMSS2), YMDHHMMSS)
 				.getTime());
 	}
 

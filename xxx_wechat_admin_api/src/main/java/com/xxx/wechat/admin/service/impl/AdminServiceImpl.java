@@ -6,54 +6,52 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.xxx.wechat.admin.service.IAdminService;
-import com.xxx.wechat.core.entity.UserAdmin;
+import com.xxx.wechat.core.dao.entity.AdminUser;
 import com.xxx.wechat.core.exception.AppException;
 
 @Service("adminService")
 public class AdminServiceImpl implements IAdminService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(AdminServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(AdminServiceImpl.class);
 
 	@Override
-	public UserAdmin login(UserAdmin user) throws AppException {
-		// TODO Auto-generated method stub
-		logger.info("login");
-		return null;
-	}
-
-	@Override
-	public int save(UserAdmin user) throws AppException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int update(UserAdmin user) throws AppException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int delete(UserAdmin req) throws AppException {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public UserAdmin detail(String id) throws AppException {
+	public AdminUser login(AdminUser user) throws AppException {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int restPwd(UserAdmin admin) throws AppException {
+	public int save(AdminUser user) throws AppException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int updateStatue(UserAdmin admin) throws AppException {
+	public int update(AdminUser user) throws AppException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int delete(AdminUser req) throws AppException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public AdminUser detail(String id) throws AppException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int restPwd(AdminUser admin) throws AppException {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int updateStatue(AdminUser admin) throws AppException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
