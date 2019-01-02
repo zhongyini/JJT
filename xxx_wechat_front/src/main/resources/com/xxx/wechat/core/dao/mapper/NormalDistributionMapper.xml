@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xxx.wechat.core.dao.NormalDistributionDao">
+
+	<resultMap id="resultMap"
+		type="com.xxx.wechat.core.dao.entity.NormalDistribution">
+		<id property="id" column="id" />
+		<result property="number" column="number" />
+		<result property="result" column="result" />
+		<result property="deleteFlag" column="delete_flag" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+	<select id="selectNormalDistributionByNumber" parameterType="java.math.BigDecimal"
+		resultMap="resultMap">
+		SELECT * FROM xxx_normal_nistribution WHERE
+		<if test="number != null ">
+		    <![CDATA[number = #{number}]]>
+		</if>
+		AND DELETE_FLAG = 0
+	</select>
+
+	<select id="selectNormalDistributionListByNumberGreateThan"
+		parameterType="java.math.BigDecimal" resultMap="resultMap">
+		SELECT * FROM
+		xxx_normal_nistribution WHERE
+		<if test="number != null ">
+		    <![CDATA[number >= #{number}]]>
+		</if>
+		AND DELETE_FLAG = 0 ORDER BY number ASC 
+	</select>
+
+	<select id="selectNormalDistributionListByNumberLessThan"
+		parameterType="java.math.BigDecimal" resultMap="resultMap">
+		SELECT * FROM
+		xxx_normal_nistribution WHERE
+		<if test="number != null ">
+		   AND <![CDATA[number <= #{number}]]>
+		</if>
+		AND DELETE_FLAG = 0 ORDER BY number DESC
+	</select>
+</mapper>

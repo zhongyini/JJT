@@ -111,10 +111,11 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			if (!CheckUtils.isNull(annotation) && annotation.isLand() == true) {
 				isLand = true;
 			}
-			return isLand;
 		} catch (Exception e) {
-			throw new ErrorPageException("接口登录判断出错" + e.getMessage());
+			logger.error("接口登录判断出错" + e.getMessage());
+			isLand = false;
 		}
+		return isLand;
 	}
 
 	private String getCookieValue(HttpServletRequest request) {

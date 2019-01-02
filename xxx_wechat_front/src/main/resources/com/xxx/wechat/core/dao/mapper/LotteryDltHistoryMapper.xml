@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xxx.wechat.core.dao.LotteryDltHistoryDao">
+
+	<resultMap id="resultMap"
+		type="com.xxx.wechat.core.dao.entity.LotteryDltHistory">
+		<id property="term" column="term" />
+		<result property="drawNews" column="draw_news" />
+		<result property="numSequence" column="num_sequence" />
+		<result property="number" column="number" />
+		<result property="redOne" column="red_one" />
+		<result property="redTwo" column="red_two" />
+		<result property="redThree" column="red_three" />
+		<result property="redFour" column="red_four" />
+		<result property="redFive" column="red_five" />
+		<result property="blueOne" column="blue_one" />
+		<result property="blueTwo" column="blue_two" />
+		<result property="lotteryDate" column="lottery_date" />
+		<result property="deleteFlag" column="delete_flag" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateTime" column="update_time" />
+	</resultMap>
+
+	<select id="selectList" parameterType="com.xxx.wechat.core.dao.entity.LotteryDltHistory"
+		resultMap="resultMap">
+		SELECT term, draw_news, num_sequence, number, red_one, red_two,
+		red_three, red_four, red_five, blue_one, blue_two, lottery_date,
+		delete_flag, update_user, update_time FROM lottery_dlt_history
+		WHERE
+		<if test="term != null ">
+		   AND <![CDATA[term == #{term}]]>
+		</if>
+		<if test="drawNews != null ">
+		   AND <![CDATA[drawNews == #{drawNews}]]>
+		</if>
+		<if test="number != null ">
+		   AND <![CDATA[number == #{number}]]>
+		</if>
+		<if test="numSequence != null ">
+		   AND <![CDATA[numSequence == #{numSequence}]]>
+		</if>
+		<if test="redOne != null ">
+		   AND <![CDATA[redOne == #{redOne}]]>
+		</if>
+		<if test="redTwo != null ">
+		   AND <![CDATA[redTwo == #{redTwo}]]>
+		</if>
+		<if test="redThree != null ">
+		   AND <![CDATA[redThree == #{redThree}]]>
+		</if>
+		<if test="redFour != null ">
+		   AND <![CDATA[redFour == #{redFour}]]>
+		</if>
+		<if test="redFive != null ">
+		   AND <![CDATA[redFive == #{redFive}]]>
+		</if>
+		<if test="blueOne != null ">
+		   AND <![CDATA[blueOne == #{blueOne}]]>
+		</if>
+		<if test="blueTwo != null ">
+		   AND <![CDATA[blueTwo == #{blueTwo}]]>
+		</if>
+		<if test="lotteryDate != null ">
+		   AND <![CDATA[lotteryDate == #{lotteryDate}]]>
+		</if>
+		<if test="deleteFlag != null ">
+		   AND <![CDATA[deleteFlag == #{deleteFlag}]]>
+		</if>
+		<if test="updateUser != null ">
+		   AND <![CDATA[updateUser == #{updateUser}]]>
+		</if>
+		<if test="updateTime != null ">
+		   AND <![CDATA[updateTime == #{updateTime}]]>
+		</if>
+	</select>
+
+</mapper>
