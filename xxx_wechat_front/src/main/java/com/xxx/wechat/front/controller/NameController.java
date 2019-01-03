@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xxx.wechat.core.dao.entity.NameConfig;
+import com.xxx.wechat.front.dto.NameConfigDto;
 import com.xxx.wechat.front.dto.RestResult;
 import com.xxx.wechat.front.service.INameConfigService;
 
@@ -31,7 +32,9 @@ public class NameController {
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public RestResult add(@RequestBody NameConfig nameConfig) {
+	public RestResult add(@RequestBody(required = false) NameConfigDto nameConfigDto) {
+		NameConfig nameConfig = new NameConfig();
+		nameConfig.setWord(nameConfigDto.getWord());
 		NameConfig result = nameConfigService.insert(nameConfig);
 		return new RestResult(result);
 		

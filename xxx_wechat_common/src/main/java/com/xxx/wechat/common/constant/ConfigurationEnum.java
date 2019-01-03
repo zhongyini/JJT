@@ -1,6 +1,19 @@
 package com.xxx.wechat.common.constant;
 
 public enum ConfigurationEnum {
+	
+	/**
+	 * 百度appid
+	 */
+	BAIDU_APPID("baidu_appid"),
+	/**
+	 * 百度appkey
+	 */
+	BAIDU_APPKEY("baidu_appkey"),
+	/**
+	 * 百度appsecret
+	 */
+	BAIDU_APPSECRET("baidu_appsecret"),
 	/**
      * 微信appid
      */

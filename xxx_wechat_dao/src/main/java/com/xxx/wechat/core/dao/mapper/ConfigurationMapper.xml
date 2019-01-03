@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xxx.wechat.core.dao.ConfigurationDao">
+
+	<select id="selectList" resultType="com.xxx.wechat.core.dao.entity.MyConfiguration">
+		SELECT item,property,name,type,memo FROM xxx_configuration
+	</select>
+</mapper>
