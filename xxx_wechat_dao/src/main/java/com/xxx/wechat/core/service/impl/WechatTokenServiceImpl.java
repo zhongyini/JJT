@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.xxx.wechat.common.utils.CheckUtils;
-import com.xxx.wechat.common.utils.DateUtils;
 import com.xxx.wechat.core.dao.WechatTokenDao;
 import com.xxx.wechat.core.dao.entity.WechatToken;
 import com.xxx.wechat.core.exception.AppException;

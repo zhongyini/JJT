@@ -12,7 +12,9 @@ import java.util.Date;
 @Table(name = "xxx_wechat_user_account")
 public class WechatUserAccount implements Serializable {
 
-    @Id
+	private static final long serialVersionUID = 4543819892175695379L;
+
+	@Id
     @Column(name = "openid")
     private String openid;
 

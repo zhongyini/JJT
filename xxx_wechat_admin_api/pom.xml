@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.xxx</groupId>
-	<artifactId>xxx-wechat-admin-api</artifactId>
+	<artifactId>xxx_wechat_admin_api</artifactId>
 	<version>1.0.0.RELEASE</version>
 	<packaging>war</packaging>
 
@@ -42,12 +42,12 @@
 		<!-- 基干 start -->
 		<dependency>
 			<groupId>com.xxx</groupId>
-			<artifactId>xxx-wechat-common</artifactId>
+			<artifactId>xxx_wechat_common</artifactId>
 			<version>1.0.0.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>com.xxx</groupId>
-			<artifactId>xxx-wechat-dao</artifactId>
+			<artifactId>xxx_wechat_dao</artifactId>
 			<version>1.0.0.RELEASE</version>
 		</dependency>
 		<!-- 基干 end -->

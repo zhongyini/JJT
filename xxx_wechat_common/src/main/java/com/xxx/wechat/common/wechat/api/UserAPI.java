@@ -22,7 +22,6 @@ import com.xxx.wechat.common.utils.JsonUtils;
 import com.xxx.wechat.common.utils.StrUtil;
 import com.xxx.wechat.common.wechat.api.entity.UserInfo;
 import com.xxx.wechat.common.wechat.api.enums.ResultType;
-import com.xxx.wechat.common.wechat.api.response.AccessTokenResponse;
 import com.xxx.wechat.common.wechat.api.response.BaseResponse;
 import com.xxx.wechat.common.wechat.api.response.CreateGroupResponse;
 import com.xxx.wechat.common.wechat.api.response.GetGroupsResponse;

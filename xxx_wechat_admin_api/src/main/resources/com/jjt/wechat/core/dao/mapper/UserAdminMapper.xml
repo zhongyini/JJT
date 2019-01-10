@@ -12,8 +12,8 @@
 		PORTRAIT as portrait
 	</sql>
 
-	<select id="selectByUser" parameterType="com.xxx.wechat.core.entity.UserAdmin"
-		resultType="com.xxx.wechat.core.entity.UserAdmin">
+	<select id="selectByUser" parameterType="com.xxx.wechat.core.dao.entity.AdminUser"
+		resultType="com.xxx.wechat.core.dao.entity.AdminUser">
 		SELECT tua.ADMIN_ID as adminId,tua.name as name,tr.ROLE_NAME as
 		roleName,tr.ROLE_ID as roleId,mail as mail,DELETE_FLAG as
 		deleteFlag,PORTRAIT as portrait
@@ -41,7 +41,7 @@
 	</select>
 	
 	<select id="selectById" parameterType="String"
-		resultType="com.xxx.wechat.core.entity.UserAdmin">
+		resultType="com.xxx.wechat.core.dao.entity.AdminUser">
 		SELECT tua.ADMIN_ID as adminId,tua.name as
 		name,tr.ROLE_NAME as roleName,tr.ROLE_ID as roleId,mail as
 		mail,DELETE_FLAG as deleteFlag,PORTRAIT as portrait,

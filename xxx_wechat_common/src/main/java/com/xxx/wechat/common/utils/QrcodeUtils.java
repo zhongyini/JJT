@@ -32,7 +32,6 @@ public class QrcodeUtils {
 	 * @throws Exception
 	 */
 	public static String createQrcode(String text, String path, String filename, String format) throws Exception {
-		String qrcodeUrl = Constant.EMPTY;
 		int width = 900;
 		int height = 900;
 		// 设置编码，防止中文乱码

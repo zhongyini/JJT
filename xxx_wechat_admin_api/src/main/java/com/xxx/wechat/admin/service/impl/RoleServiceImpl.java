@@ -21,6 +21,7 @@ public class RoleServiceImpl implements IRoleService {
 	@Override
 	public Page<AdminRole> searchAll(AdminRoleExt roleExt) throws AppException {
 		// TODO Auto-generated method stub
+		logger.info("searchAll");
 		return null;
 	}
 

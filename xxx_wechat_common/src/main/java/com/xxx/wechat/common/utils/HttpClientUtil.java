@@ -16,7 +16,7 @@ import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -28,9 +28,6 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.net.ssl.SSLContext;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -47,27 +44,23 @@ public class HttpClientUtil {
 
     private static CloseableHttpClient createCloseableHttpClient(String url) {
         try {
-            SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, new TrustStrategy() {
-                @Override
-                public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                    return true;
-                }
-            }).build();
-
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-
+        	SSLContextBuilder builder = new SSLContextBuilder();
+            builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+                    builder.build());
+            
             Registry<ConnectionSocketFactory> registry = RegistryBuilder.<ConnectionSocketFactory>create()
                     .register("http", PlainConnectionSocketFactory.INSTANCE)
                     .register("https", sslsf)
                     .build();
 
             PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(registry);
-
-            return HttpClients.custom()
+            CloseableHttpClient httpclient = HttpClients.custom()
                     .setSSLSocketFactory(sslsf)
                     .setConnectionManager(connManager)
                     .setConnectionManagerShared(true)
                     .build();
+            return httpclient;
         } catch (Exception e) {
             LOGGER.error("设置信任签名证书失败", e);
         }
@@ -146,8 +139,6 @@ public class HttpClientUtil {
     private interface Charseter {
 
         String UTF_8 = "utf-8";
-
-        String SHIFT_JIS = "SHIFT_JIS";
 
     }
 

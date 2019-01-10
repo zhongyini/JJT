@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.xxx</groupId>
-	<artifactId>xxx-wechat-common</artifactId>
+	<artifactId>xxx_wechat_common</artifactId>
 	<version>1.0.0.RELEASE</version>
 	<packaging>jar</packaging>
 
-	<name>xxx-wechat-common</name>
+	<name>xxx_wechat_common</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>

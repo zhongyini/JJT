@@ -17,6 +17,7 @@ public class AdminServiceImpl implements IAdminService {
 	@Override
 	public AdminUser login(AdminUser user) throws AppException {
 		// TODO Auto-generated method stub
+		logger.info("login");
 		return null;
 	}
 

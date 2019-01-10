@@ -343,7 +343,7 @@ public class WechatPaymentServiceImpl implements IWechatPaymentService {
      * @param tradeNo 贸易号
      * @return PaymentResultDto
      */
-    private PaymentResultDto getPayInfo(String tradeNo) throws Exception {
+    /*private PaymentResultDto getPayInfo(String tradeNo) throws Exception {
         Map<String, Object> params = Maps.newHashMap();
         params.put("appkey", paymentHelper.paymentAppkey);
         params.put("method", paymentHelper.paymentGetMethod);
@@ -351,7 +351,7 @@ public class WechatPaymentServiceImpl implements IWechatPaymentService {
 
         ResponseResult result = sendJsonPost(paymentHelper.paymentGetUrl, params);
         return PaymentResultDto.jsonToBean(result);
-    }
+    }*/
 
     /**
      * obj to json

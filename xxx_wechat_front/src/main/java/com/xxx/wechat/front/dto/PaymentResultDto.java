@@ -68,7 +68,8 @@ public class PaymentResultDto {
     /**
      * json to bean
      */
-    public static PaymentResultDto jsonToBean(ResponseResult responseResult) throws IOException {
+    @SuppressWarnings("deprecation")
+	public static PaymentResultDto jsonToBean(ResponseResult responseResult) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

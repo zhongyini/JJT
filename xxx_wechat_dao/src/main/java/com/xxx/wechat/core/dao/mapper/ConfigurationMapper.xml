@@ -4,7 +4,7 @@
 
 <mapper namespace="com.xxx.wechat.core.dao.ConfigurationDao">
 
-	<select id="selectList" resultType="com.xxx.wechat.core.dao.entity.MyConfiguration">
+	<select id="selectList" resultType="com.xxx.wechat.core.dao.entity.Configuration">
 		SELECT item,property,name,type,memo FROM xxx_configuration
 	</select>
 </mapper>

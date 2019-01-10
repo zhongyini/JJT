@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.xxx</groupId>
-	<artifactId>xxx-wechat-dao</artifactId>
+	<artifactId>xxx_wechat_dao</artifactId>
 	<version>1.0.0.RELEASE</version>
 	<packaging>jar</packaging>
 
-	<name>xxx-wechat-dao</name>
+	<name>xxx_wechat_dao</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -33,7 +33,7 @@
 		<!-- 导入common的工程 -->
 		<dependency>
 			<groupId>com.xxx</groupId>
-			<artifactId>xxx-wechat-common</artifactId>
+			<artifactId>xxx_wechat_common</artifactId>
 			<version>1.0.0.RELEASE</version>
 		</dependency>
 

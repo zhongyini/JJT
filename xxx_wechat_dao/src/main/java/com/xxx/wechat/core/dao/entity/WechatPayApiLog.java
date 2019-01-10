@@ -12,7 +12,9 @@ import java.util.Date;
 @Table(name = "xxx_wechat_pay_api_log")
 public class WechatPayApiLog implements Serializable {
 
-    @Id
+	private static final long serialVersionUID = 5647736262790191398L;
+
+	@Id
     @Column(name = "pay_api_id")
     private Long payApiId;
 
