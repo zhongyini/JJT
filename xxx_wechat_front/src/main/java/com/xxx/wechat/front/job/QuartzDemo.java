@@ -38,7 +38,7 @@ public class QuartzDemo {
 		}
 	}
 	
-	@Scheduled(cron = "0 0/1 * * * ? ") // 20天执行一次
+	@Scheduled(cron = "0 0 0 */1 * ?") // 每天天执行一次
 	public void goBaiduAccessToken() {
 		logger.info("执行定时任务，获取百度accesstoken：GET accesstoken begin" + new Date());
 		String appkey = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.BAIDU_APPKEY);
