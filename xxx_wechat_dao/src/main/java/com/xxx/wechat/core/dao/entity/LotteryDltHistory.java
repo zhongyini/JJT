@@ -35,13 +35,13 @@ public class LotteryDltHistory implements Serializable {
 	 * 按照产生顺序显示
 	 */
 	@Column(name = "num_sequence")
-	private Integer numSequence;
+	private String numSequence;
 
 	/**
 	 * 从红到蓝、从小到大排序
 	 */
 	@Column(name = "number")
-	private Integer number;
+	private String number;
 
 	/**
 	 * 一号红色球
@@ -89,13 +89,13 @@ public class LotteryDltHistory implements Serializable {
 	 * 开奖日期
 	 */
 	@Column(name = "lottery_date")
-	private Integer lotteryDate;
+	private Timestamp lotteryDate;
 
 	/**
 	 * 删除标志
 	 */
 	@Column(name = "delete_flag")
-	private String deleteFlag;
+	private Integer deleteFlag;
 
 	/**
 	 * 创建者
@@ -125,19 +125,19 @@ public class LotteryDltHistory implements Serializable {
 		this.drawNews = drawNews;
 	}
 
-	public Integer getNumSequence() {
+	public String getNumSequence() {
 		return numSequence;
 	}
 
-	public void setNumSequence(Integer numSequence) {
+	public void setNumSequence(String numSequence) {
 		this.numSequence = numSequence;
 	}
 
-	public Integer getNumber() {
+	public String getNumber() {
 		return number;
 	}
 
-	public void setNumber(Integer number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 
@@ -197,19 +197,19 @@ public class LotteryDltHistory implements Serializable {
 		this.blueTwo = blueTwo;
 	}
 
-	public Integer getLotteryDate() {
+	public Timestamp getLotteryDate() {
 		return lotteryDate;
 	}
 
-	public void setLotteryDate(Integer lotteryDate) {
+	public void setLotteryDate(Timestamp lotteryDate) {
 		this.lotteryDate = lotteryDate;
 	}
 
-	public String getDeleteFlag() {
+	public Integer getDeleteFlag() {
 		return deleteFlag;
 	}
 
-	public void setDeleteFlag(String deleteFlag) {
+	public void setDeleteFlag(Integer deleteFlag) {
 		this.deleteFlag = deleteFlag;
 	}
 

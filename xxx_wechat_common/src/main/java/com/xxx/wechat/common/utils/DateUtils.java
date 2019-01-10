@@ -29,6 +29,30 @@ public class DateUtils {
 	}
 	
 	/**
+	 * 获取时间戳
+	 * 
+	 * @param time
+	 * @return
+	 */
+	public static Timestamp getTimestamp(Long time) {
+		Timestamp timestamp = new Timestamp(time);
+		return timestamp;
+
+	}
+	
+	/**
+	 * 获取时间戳
+	 * 
+	 * @param time
+	 * @return
+	 */
+	public static Timestamp getTimestamp(Date date) {
+		Timestamp timestamp = new Timestamp(date.getTime());
+		return timestamp;
+
+	}
+	
+	/**
 	 * 获取当前日期，时间格式为yyyy-MM-dd HH:mm:ss
 	 * 
 	 * @return

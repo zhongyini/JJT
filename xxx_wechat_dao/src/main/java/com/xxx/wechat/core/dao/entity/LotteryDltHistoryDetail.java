@@ -74,4 +74,93 @@ public class LotteryDltHistoryDetail implements Serializable {
 	private Integer deleteFlag;
 
 
+	public Integer getId() {
+		return id;
+	}
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
+	public String getLotteryTerm() {
+		return lotteryTerm;
+	}
+
+
+	public void setLotteryTerm(String lotteryTerm) {
+		this.lotteryTerm = lotteryTerm;
+	}
+
+
+	public String getAllmoney() {
+		return allmoney;
+	}
+
+
+	public void setAllmoney(String allmoney) {
+		this.allmoney = allmoney;
+	}
+
+
+	public String getLevel() {
+		return level;
+	}
+
+
+	public void setLevel(String level) {
+		this.level = level;
+	}
+
+
+	public String getMoney() {
+		return money;
+	}
+
+
+	public void setMoney(String money) {
+		this.money = money;
+	}
+
+
+	public Integer getNum() {
+		return num;
+	}
+
+
+	public void setNum(Integer num) {
+		this.num = num;
+	}
+
+
+	public String getPiece() {
+		return piece;
+	}
+
+
+	public void setPiece(String piece) {
+		this.piece = piece;
+	}
+
+
+	public String getSendPrize() {
+		return sendPrize;
+	}
+
+
+	public void setSendPrize(String sendPrize) {
+		this.sendPrize = sendPrize;
+	}
+
+
+	public Integer getDeleteFlag() {
+		return deleteFlag;
+	}
+
+
+	public void setDeleteFlag(Integer deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
 }
