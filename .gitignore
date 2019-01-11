@@ -30,6 +30,6 @@ target/
 
 /node_modules/
 
-###.gitignore###
+.gitignore
 
 .DS_Store
