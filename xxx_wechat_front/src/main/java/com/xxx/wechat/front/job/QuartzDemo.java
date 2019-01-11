@@ -48,7 +48,7 @@ public class QuartzDemo {
 		}
 	}
 	
-	@Scheduled(cron = "0 0 0 */1 * ?") // 每一小时执行一次
+	@Scheduled(cron = "0 0 0 */1 * ?") // 每天执行一次
 	public void goBaiduAccessToken() {
 		logger.info("执行定时任务，获取百度accesstoken：GET accesstoken begin" + new Date());
 		String appkey = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.BAIDU_APPKEY);
@@ -73,7 +73,7 @@ public class QuartzDemo {
 	}
 	
 	@Transactional
-	@Scheduled(cron = "0 0/1 * * * ? ") // 五分钟执行一次
+	@Scheduled(cron = "0 0 * */1 * ? ") // 五分钟执行一次
 	public void getLotteryDltHistory() throws Exception {
 		logger.info("五分钟执行一次的定时任务：GET getLotteryDltHistory begin" + new Date());
 		String lotteryDltUrl = "http://www.lottery.gov.cn/api/lottery_kj_detail_new.jspx?_ltype=4";
