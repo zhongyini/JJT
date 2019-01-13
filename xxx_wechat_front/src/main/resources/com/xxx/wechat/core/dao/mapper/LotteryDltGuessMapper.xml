@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.xxx.wechat.core.dao.LotteryDltGuessDao">
+
+	<!-- 批量插入 -->
+	<insert id="insertLotteryDltGuessList">
+		INSERT INTO lottery_dlt_guess
+		(
+			term, num_sequence, number, red_one, red_two, red_three, red_four, 
+			red_five, blue_one, blue_two, several_award, status, delete_flag, update_user, update_time
+		) VALUES
+		<foreach collection ="list" item="item" index= "index" separator =",">
+			(
+				#{item.term}, #{item.numSequence}, #{item.number}, #{item.redOne}, #{item.redTwo}, #{item.redThree}, 
+				#{item.redFour}, #{item.redFive}, #{item.blueOne}, #{item.blueTwo}, #{item.severalAward}, 
+				#{item.status}, #{item.deleteFlag}, #{item.updateUser}, #{item.updateTime}
+			)
+		</foreach>
+	</insert>
+	
+</mapper>

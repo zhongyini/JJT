@@ -50,7 +50,7 @@ public class LotteryDltHistoryResponse implements Serializable {
 		this.eventName = eventName;
 	}
 
-	public class Lottery {
+	public static class Lottery {
 		private String drawNews;
 		private String fTime;
 		private String isAP;
@@ -232,7 +232,7 @@ public class LotteryDltHistoryResponse implements Serializable {
 			this.verify = verify;
 		}
 
-		public class OpenTime {
+		public static class OpenTime {
 			private String date;
 			private String day;
 			private String hours;
@@ -326,7 +326,7 @@ public class LotteryDltHistoryResponse implements Serializable {
 		}
 	}
 
-	public class Details {
+	public static class Details {
 		private String allmoney;
 		private String level;
 		private String money;

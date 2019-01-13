@@ -76,6 +76,12 @@ public class RestResult {
 		this.result = result;
 	}
 
+	public void setSuccessResult(String message) {
+		this.status = Constant.Num.SUCCESS;
+		this.message = message;
+		this.result = Constant.EMPTY;
+	}
+	
 	public void setSuccessResult(String message, Object result) {
 		this.status = Constant.Num.SUCCESS;
 		this.message = message;

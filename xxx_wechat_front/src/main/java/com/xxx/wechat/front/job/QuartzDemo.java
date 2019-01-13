@@ -1,6 +1,7 @@
 package com.xxx.wechat.front.job;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.xxx.wechat.common.constant.ConfigurationEnum;
 import com.xxx.wechat.common.lottery.api.LotteryDltHistoryApi;
 import com.xxx.wechat.common.lottery.api.response.LotteryDltHistoryResponse;
+import com.xxx.wechat.common.lottery.api.response.LotteryDltHistoryTermResponse;
 import com.xxx.wechat.common.utils.CheckUtils;
 import com.xxx.wechat.common.utils.DateUtils;
 import com.xxx.wechat.core.config.ConfigurationConfig;
@@ -48,9 +50,9 @@ public class QuartzDemo {
 		}
 	}
 	
-	@Scheduled(cron = "0 0 0 */1 * ?") // 每天执行一次
+	@Scheduled(cron = "0 0 0 */15 * ?") // 每天执行一次
 	public void goBaiduAccessToken() {
-		logger.info("执行定时任务，获取百度accesstoken：GET accesstoken begin" + new Date());
+		logger.info("执行定时任务，获取百度access token： accesstoken begin" + new Date());
 		String appkey = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.BAIDU_APPKEY);
 		String appsecret = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.BAIDU_APPSECRET);
 		if (CheckUtils.isNullOrEmpty(appkey)) {
@@ -64,7 +66,7 @@ public class QuartzDemo {
 				IBaiduApiAccessTokenService wechatTokenService = AppContextUtils.getBean(IBaiduApiAccessTokenService.class);
 				boolean success = wechatTokenService.getAccessToken(appkey, appsecret);
 				if (success) {
-					return;
+					logger.info("获取百度： access token success" + new Date());
 				}
 			} catch (AppException e) {
 				logger.error("Get WechatToken Error.次数：" + i + ",错误信息："+e.getMessage());
@@ -72,49 +74,125 @@ public class QuartzDemo {
 		}
 	}
 	
+	//http://www.lottery.gov.cn/api/lottery_kj_detail_new.jspx?_ltype=4&_term=18153
 	@Transactional
-	@Scheduled(cron = "0 0 * */1 * ? ") // 五分钟执行一次
+	@Scheduled(cron = "0 0 22 * * *") // 每天晚上十点钟执行一次
 	public void getLotteryDltHistory() throws Exception {
-		logger.info("五分钟执行一次的定时任务：GET getLotteryDltHistory begin" + new Date());
+		logger.info("获取大乐透数据定时任务：GET getLotteryDltHistory begin" + new Date());
+		String lotteryDltTermUrl = "http://www.lottery.gov.cn/api/get_typeBytermAndnews.jspx?_ltype=4";
 		String lotteryDltUrl = "http://www.lottery.gov.cn/api/lottery_kj_detail_new.jspx?_ltype=4";
 		try {
 			LotteryDltHistoryApi lotteryDltHistoryApi = new LotteryDltHistoryApi();
-			LotteryDltHistoryResponse response = lotteryDltHistoryApi.getLotteryDltHistory();
+			LotteryDltHistoryTermResponse lotteryDltHistoryTermResponse = lotteryDltHistoryApi.getLotteryDltTerm(lotteryDltTermUrl);
 			logger.info("请求路径：" + lotteryDltUrl);
-			logger.info("返回结果：" + response);
-			
-			LotteryDltHistory lotteryDltHistory = convertLotteryDltHistory(response);
+			logger.info("返回结果：" + lotteryDltHistoryTermResponse);
 			
 			ILotteryDltHistoryService lotteryDltHistoryService = AppContextUtils.getBean(ILotteryDltHistoryService.class);
-			
-			int result = lotteryDltHistoryService.add(lotteryDltHistory);
-			if (result == 1) {
-				logger.info("插入大乐透数据成功");
-				List<LotteryDltHistoryDetail> lotteryDltHistoryDetailist = convertLotteryDltHistoryDetail(response);
-				ILotteryDltHistoryDetailService lotteryDltHistoryDetailService = AppContextUtils.getBean(ILotteryDltHistoryDetailService.class);
-				result = lotteryDltHistoryDetailService.add(lotteryDltHistoryDetailist);
-				if (result >= 1) {
-					logger.info(String.valueOf(result));
-					logger.info("插入大乐透详细数据成功");
-				}
+			// 历史期号
+			List<LotteryDltHistoryTermResponse.TremList> termList = lotteryDltHistoryTermResponse.getTremList();
+			if (CheckUtils.isNull(termList) || termList.size() == 0) {
+				return;
 			}
+			List<String> newTermList = new ArrayList<String>();
+			for (LotteryDltHistoryTermResponse.TremList trem : termList) {
+				newTermList.add(trem.getTerm());
+			}
+			if (!CheckUtils.isNull(newTermList) && newTermList.size() > 0) {
+				Collections.sort(newTermList);
+				// 数据库已保存的历史期号
+				List<String> dbTermList = lotteryDltHistoryService.getTermList();
+				if (CheckUtils.isNull(dbTermList)) {
+					dbTermList = new ArrayList<String>();
+				}
+				int eventNameLength = newTermList.size();
+				if (eventNameLength > dbTermList.size()) {
+					for (int i = 0; i < eventNameLength; i++) {
+						for (int j = 0; j < dbTermList.size(); j++) {
+							if (dbTermList.get(j).equals(newTermList.get(i))) {
+								newTermList.remove(i);
+								dbTermList.remove(j);
+								i--;
+								j--;
+								eventNameLength--;
+								break;
+							}
+						}
+					}
+				} else {
+					eventNameLength = 0;
+				}
+				
+				String newLotteryDltUrl = null;
+				LotteryDltHistoryResponse lotteryDltHistoryResponse = null;
+				for (int k = 0; k < eventNameLength; k++) {
+					newLotteryDltUrl = lotteryDltUrl + "&_term=" + newTermList.get(k);
+					lotteryDltHistoryResponse = lotteryDltHistoryApi.getLotteryDltHistory(newLotteryDltUrl);
+					LotteryDltHistory lotteryDltHistory = convertLotteryDltHistory(lotteryDltHistoryResponse);
+					int result = lotteryDltHistoryService.add(lotteryDltHistory);
+					if (result == 1) {
+						List<LotteryDltHistoryDetail> lotteryDltHistoryDetailist = convertLotteryDltHistoryDetail(lotteryDltHistoryResponse);
+						ILotteryDltHistoryDetailService lotteryDltHistoryDetailService = AppContextUtils.getBean(ILotteryDltHistoryDetailService.class);
+						result = lotteryDltHistoryDetailService.add(lotteryDltHistoryDetailist);
+					}
+				}
+				logger.info("成功插入大乐透数据" + eventNameLength + "条");
+				
+				int count = lotteryDltHistoryService.generateLotteryDltGuess();
+				logger.info("成功生成了" + count + "条预测数据");
+			}
+			
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error(e.getStackTrace().toString());
 		}
 	}
 	
 	private LotteryDltHistory convertLotteryDltHistory(LotteryDltHistoryResponse response) {
 		LotteryDltHistory lotteryDltHistory = new LotteryDltHistory();
-		String[] ballArray = response.getLottery().getNumSequence().substring(0, 20).split("-");
-		String[] redBallArray = ballArray[0].split(" ");
-		String[] buleBallArray = ballArray[1].split(" ");
-		lotteryDltHistory.setBlueOne(Integer.valueOf(buleBallArray[0]));
-		lotteryDltHistory.setBlueTwo(Integer.valueOf(buleBallArray[1]));
-		lotteryDltHistory.setRedOne(Integer.valueOf(redBallArray[0]));
-		lotteryDltHistory.setRedTwo(Integer.valueOf(redBallArray[1]));
-		lotteryDltHistory.setRedThree(Integer.valueOf(redBallArray[2]));
-		lotteryDltHistory.setRedFour(Integer.valueOf(redBallArray[3]));
-		lotteryDltHistory.setRedFive(Integer.valueOf(redBallArray[4]));
+		String numSequence = response.getLottery().getNumSequence();
+		// 早些年代的数据没有按照顺序排列
+		if (!CheckUtils.isEmpty(numSequence) && numSequence.length() >= 20) {
+			String[] codeNumber = new String[7];
+			String[] ballArray = response.getLottery().getNumSequence().substring(0, 20).split("-");
+			if (ballArray.length == 1) {
+				codeNumber = ballArray[0].split(" ");
+			} else if (ballArray.length == 2) {
+				String[] redBallArray = ballArray[0].split(" ");
+				String[] buleBallArray = ballArray[1].split(" ");
+				codeNumber[0] = redBallArray[0];
+				codeNumber[1] = redBallArray[1];
+				codeNumber[2] = redBallArray[2];
+				codeNumber[3] = redBallArray[3];
+				codeNumber[4] = redBallArray[4];
+				codeNumber[5] = buleBallArray[0];
+				codeNumber[6] = buleBallArray[1];
+				
+			} else if (ballArray.length == 3) {
+				String[] redBallArray = ballArray[0].split(" ");
+				codeNumber[0] = redBallArray[0];
+				codeNumber[1] = redBallArray[1];
+				codeNumber[2] = redBallArray[2];
+				codeNumber[3] = redBallArray[3];
+				codeNumber[4] = redBallArray[4];
+				codeNumber[5] = ballArray[1];
+				codeNumber[6] = ballArray[2];
+			}
+			lotteryDltHistory.setRedOne(Integer.valueOf(codeNumber[0]));
+			lotteryDltHistory.setRedTwo(Integer.valueOf(codeNumber[1]));
+			lotteryDltHistory.setRedThree(Integer.valueOf(codeNumber[2]));
+			lotteryDltHistory.setRedFour(Integer.valueOf(codeNumber[3]));
+			lotteryDltHistory.setRedFive(Integer.valueOf(codeNumber[4]));
+			lotteryDltHistory.setBlueOne(Integer.valueOf(codeNumber[5]));
+			lotteryDltHistory.setBlueTwo(Integer.valueOf(codeNumber[6]));
+		} else {
+			lotteryDltHistory.setRedOne(Integer.valueOf(response.getCodeNumber()[0]));
+			lotteryDltHistory.setRedTwo(Integer.valueOf(response.getCodeNumber()[1]));
+			lotteryDltHistory.setRedThree(Integer.valueOf(response.getCodeNumber()[2]));
+			lotteryDltHistory.setRedFour(Integer.valueOf(response.getCodeNumber()[3]));
+			lotteryDltHistory.setRedFive(Integer.valueOf(response.getCodeNumber()[4]));
+			lotteryDltHistory.setBlueOne(Integer.valueOf(response.getCodeNumber()[5]));
+			lotteryDltHistory.setBlueTwo(Integer.valueOf(response.getCodeNumber()[6]));
+		}
+		
 		lotteryDltHistory.setDeleteFlag(0);
 		lotteryDltHistory.setDrawNews(response.getLottery().getDrawNews());
 		lotteryDltHistory.setLotteryDate(DateUtils.getTimestamp(DateUtils.parse(response.getLottery().getfTime(), DateUtils.YYYYMMDDHHMMSS)));

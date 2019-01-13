@@ -33,47 +33,61 @@
 		   AND <![CDATA[term == #{term}]]>
 		</if>
 		<if test="drawNews != null ">
-		   AND <![CDATA[drawNews == #{drawNews}]]>
+		   AND <![CDATA[draw_news == #{drawNews}]]>
 		</if>
 		<if test="number != null ">
 		   AND <![CDATA[number == #{number}]]>
 		</if>
 		<if test="numSequence != null ">
-		   AND <![CDATA[numSequence == #{numSequence}]]>
+		   AND <![CDATA[num_sequence == #{numSequence}]]>
 		</if>
 		<if test="redOne != null ">
-		   AND <![CDATA[redOne == #{redOne}]]>
+		   AND <![CDATA[red_one == #{redOne}]]>
 		</if>
 		<if test="redTwo != null ">
-		   AND <![CDATA[redTwo == #{redTwo}]]>
+		   AND <![CDATA[red_two == #{redTwo}]]>
 		</if>
 		<if test="redThree != null ">
-		   AND <![CDATA[redThree == #{redThree}]]>
+		   AND <![CDATA[red_three == #{redThree}]]>
 		</if>
 		<if test="redFour != null ">
-		   AND <![CDATA[redFour == #{redFour}]]>
+		   AND <![CDATA[red_four == #{redFour}]]>
 		</if>
 		<if test="redFive != null ">
-		   AND <![CDATA[redFive == #{redFive}]]>
+		   AND <![CDATA[red_five == #{redFive}]]>
 		</if>
 		<if test="blueOne != null ">
-		   AND <![CDATA[blueOne == #{blueOne}]]>
+		   AND <![CDATA[blue_one == #{blueOne}]]>
 		</if>
 		<if test="blueTwo != null ">
-		   AND <![CDATA[blueTwo == #{blueTwo}]]>
+		   AND <![CDATA[blue_two == #{blueTwo}]]>
 		</if>
 		<if test="lotteryDate != null ">
-		   AND <![CDATA[lotteryDate == #{lotteryDate}]]>
+		   AND <![CDATA[lottery_date == #{lotteryDate}]]>
 		</if>
 		<if test="deleteFlag != null ">
-		   AND <![CDATA[deleteFlag == #{deleteFlag}]]>
+		   AND <![CDATA[delete_flag == #{deleteFlag}]]>
 		</if>
 		<if test="updateUser != null ">
-		   AND <![CDATA[updateUser == #{updateUser}]]>
+		   AND <![CDATA[update_user == #{updateUser}]]>
 		</if>
 		<if test="updateTime != null ">
-		   AND <![CDATA[updateTime == #{updateTime}]]>
+		   AND <![CDATA[update_time == #{updateTime}]]>
 		</if>
+	</select>
+	
+	<select id="selectTermList" resultType="java.lang.String">
+		SELECT term FROM lottery_dlt_history
+		WHERE delete_flag = 0 ORDER BY term ASC
+	</select>
+	
+	<select id="selectMaxTerm" resultType="java.lang.Integer">
+		SELECT term FROM lottery_dlt_history
+		WHERE delete_flag = 0 ORDER BY term DESC LIMIT 1
+	</select>
+	
+	<select id="selectFieldAndFieldCountByField" resultType="com.xxx.wechat.core.dao.entity.extend.LotteryDltHistoryExt">
+		SELECT #{fieldName} AS fieldName, ${fieldName} AS fieldValue, COUNT(${fieldName}) AS fieldCount FROM lottery_dlt_history WHERE delete_flag = 0 GROUP BY ${fieldName} ORDER BY COUNT(${fieldName});
 	</select>
 
 </mapper>
