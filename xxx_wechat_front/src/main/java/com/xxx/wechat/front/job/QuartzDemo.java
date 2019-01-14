@@ -76,7 +76,7 @@ public class QuartzDemo {
 	
 	//http://www.lottery.gov.cn/api/lottery_kj_detail_new.jspx?_ltype=4&_term=18153
 	@Transactional
-	@Scheduled(cron = "0 0 22 * * *") // 每天晚上十点钟执行一次
+	@Scheduled(cron = "0 0 0 * * *") // 每天晚上零点执行一次
 	public void getLotteryDltHistory() throws Exception {
 		logger.info("获取大乐透数据定时任务：GET getLotteryDltHistory begin" + new Date());
 		String lotteryDltTermUrl = "http://www.lottery.gov.cn/api/get_typeBytermAndnews.jspx?_ltype=4";
@@ -94,6 +94,7 @@ public class QuartzDemo {
 				return;
 			}
 			List<String> newTermList = new ArrayList<String>();
+			List<String> addTermList = new ArrayList<String>();
 			for (LotteryDltHistoryTermResponse.TremList trem : termList) {
 				newTermList.add(trem.getTerm());
 			}
@@ -105,27 +106,30 @@ public class QuartzDemo {
 					dbTermList = new ArrayList<String>();
 				}
 				int eventNameLength = newTermList.size();
-				if (eventNameLength > dbTermList.size()) {
+				int dbTermListLength = dbTermList.size();
+				if (eventNameLength > dbTermListLength) {
 					for (int i = 0; i < eventNameLength; i++) {
-						for (int j = 0; j < dbTermList.size(); j++) {
-							if (dbTermList.get(j).equals(newTermList.get(i))) {
-								newTermList.remove(i);
-								dbTermList.remove(j);
-								i--;
-								j--;
-								eventNameLength--;
-								break;
-							}
+						if (dbTermListLength == 0) {
+							addTermList.add(newTermList.get(i));
+						} else {
+							for (int j = 0; j < dbTermListLength; j++) {
+								if (dbTermList.get(j).equals(newTermList.get(i))) {
+									dbTermList.remove(j);
+									dbTermListLength--;
+									j--;
+									break;
+								} else {
+									addTermList.add(newTermList.get(i));
+								}
+							}	
 						}
 					}
-				} else {
-					eventNameLength = 0;
 				}
 				
 				String newLotteryDltUrl = null;
 				LotteryDltHistoryResponse lotteryDltHistoryResponse = null;
-				for (int k = 0; k < eventNameLength; k++) {
-					newLotteryDltUrl = lotteryDltUrl + "&_term=" + newTermList.get(k);
+				for (int k = 0; k < addTermList.size(); k++) {
+					newLotteryDltUrl = lotteryDltUrl + "&_term=" + addTermList.get(k);
 					lotteryDltHistoryResponse = lotteryDltHistoryApi.getLotteryDltHistory(newLotteryDltUrl);
 					LotteryDltHistory lotteryDltHistory = convertLotteryDltHistory(lotteryDltHistoryResponse);
 					int result = lotteryDltHistoryService.add(lotteryDltHistory);
@@ -135,7 +139,7 @@ public class QuartzDemo {
 						result = lotteryDltHistoryDetailService.add(lotteryDltHistoryDetailist);
 					}
 				}
-				logger.info("成功插入大乐透数据" + eventNameLength + "条");
+				logger.info("成功插入大乐透数据" + addTermList.size() + "条");
 				
 				int count = lotteryDltHistoryService.generateLotteryDltGuess();
 				logger.info("成功生成了" + count + "条预测数据");

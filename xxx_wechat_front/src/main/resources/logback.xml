@@ -6,7 +6,7 @@
         若部署到Tomcat下，则在Tomcat下的logs文件中 3、Appender FILEERROR对应error级别，文件名以log-error-xxx.log形式命名
         FILEWARN对应warn级别，文件名以log-warn-xxx.log形式命名 FILEINFO对应info级别，文件名以log-info-xxx.log形式命名
         FILEDEBUG对应debug级别，文件名以log-debug-xxx.log形式命名 stdout将日志信息输出到控制上，为方便开发测试使用 -->
-    <contextName>QH_ADMIN</contextName>
+    <contextName>XXX</contextName>
 
     <property name="log_path" value="/var/xxx/logs"/>
     <!--设置系统日志目录 -->
