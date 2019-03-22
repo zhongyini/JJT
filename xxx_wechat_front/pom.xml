@@ -9,7 +9,6 @@
     </parent>
     <artifactId>xxx_wechat_front</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.0.RELEASE</version>
 	<name>xxx_wechat_front</name>
 	<url>http://maven.apache.org</url>
 	<properties>

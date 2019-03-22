@@ -11,7 +11,7 @@ import com.xxx.wechat.common.utils.CheckUtils;
 import com.xxx.wechat.common.utils.JsonUtils;
 import com.xxx.wechat.common.wechat.api.entity.Menu;
 import com.xxx.wechat.common.wechat.api.enums.ResultType;
-import com.xxx.wechat.common.wechat.api.response.BaseResponse;
+import com.xxx.wechat.common.wechat.api.response.MenuResponse;
 
 public class MenuApi extends BaseApi{
 
@@ -34,8 +34,11 @@ public class MenuApi extends BaseApi{
 		String result = HttpRequest.httpPostRequest(requestUrl, menu.toJsonString());
 		
 		logInfoParam(method, result);
-		BaseResponse baseResponse = JsonUtils.parseObject(result, BaseResponse.class);
-		return ResultType.get(baseResponse.getErrcode());
+		MenuResponse menuResponse = JsonUtils.parseObject(result, MenuResponse.class);
+		if (!CheckUtils.isNullOrEmpty(menuResponse.getMenuid())) {
+			return ResultType.get("0");
+		}
+		return ResultType.get(menuResponse.getErrcode());
 	}
 
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xxx.wechat.core.dao.AdminUserDao">
+
+	<select id="login" parameterType="com.xxx.wechat.core.dao.entity.AdminUser"
+		resultType="com.xxx.wechat.core.dao.entity.AdminUser">
+		SELECT xau.ADMIN_ID as adminId,
+		xau.ROLE_ID as roleId,
+		xau.name as name,
+		xau.password_overdue_date as passwordOverdueDate,
+		xau.mail as mail,
+		xau.head_img_url as headImgUrl
+		FROM xxx_admin_user xau
+		WHERE xau.admin_id = #{adminId} AND xau.`password` = #{password}
+	</select>
+	
+	<select id="selectById" parameterType="com.xxx.wechat.core.dao.entity.AdminUser"
+		resultType="com.xxx.wechat.core.dao.entity.AdminUser">
+		SELECT xau.ADMIN_ID as adminId,
+		xau.ROLE_ID as roleId,
+		xau.name as name,
+		xau.password_overdue_date as passwordOverdueDate,
+		xau.mail as mail,
+		xau.head_img_url as headImgUrl
+		FROM xxx_admin_user xau
+		WHERE xau.admin_id = #{adminId}
+	</select>
+</mapper>

@@ -7,5 +7,8 @@ import com.xxx.wechat.core.dao.entity.AdminUser;
 
 @Mapper
 public interface AdminUserDao extends BaseDao<AdminUser>{
+	
 	AdminUser selectById(String adminId);
+	
+	AdminUser login(AdminUser adminUser);
 }

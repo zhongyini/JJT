@@ -14,11 +14,11 @@ public class MenuController extends BaseController {
 
 	@RequestMapping(value = "/one/one")
 	public @ResponseBody String oneOne() {
-		return "redirect:http://www.ykstudy.cn"; 
+		return "redirect:http://zmall.99zmall.com/hot_goods?shopId=73808&kind=00&type=0"; 
 	}
 	@RequestMapping(value = "/one/two")
 	public String oneTwo() {
-		return "redirect:http://www.ykstudy.cn"; 
+		return "redirect:http://www.elizabece.com/#/?uname=test"; 
 	}
 	@RequestMapping(value = "/one/three")
 	public String oneThree() {

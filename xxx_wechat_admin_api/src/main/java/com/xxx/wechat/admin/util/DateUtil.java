@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 
@@ -49,6 +50,20 @@ public class DateUtil {
 	}
 
 	/**
+	 * 获取两个字符串之间的天数endStr应该大于或等于startStr 日期格式应为format
+	 * 
+	 * @param str1
+	 * @param str2
+	 * @param str3
+	 * @return
+	 */
+	public static int daysBetweenStr(String startStr, String endStr, String format) {
+
+		return getdaysBetweenDates(parse(startStr, format),
+				parse(endStr, format));
+	}
+	
+	/**
 	 * 获取两个字符串之间的天数endStr应该大于或等于startStr 日期格式应为yyyyMMdd
 	 * 
 	 * @param str1
@@ -57,10 +72,46 @@ public class DateUtil {
 	 */
 	public static int daysBetweenStr(String startStr, String endStr) {
 
-		return getdaysBetweenDates(parse(startStr, YYYYMMDD),
-				parse(endStr, YYYYMMDD));
+		return daysBetweenStr(startStr, endStr, YYYYMMDD);
 	}
 
+	/**
+	 * 字符串转日期格式
+	 * 
+	 * @param str
+	 * @param format
+	 * @return
+	 * @throws ParseException
+	 */
+	public static Date string2Date(String str, String format) {
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		try {
+			return sdf.parse(str);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * 日期转字符串格式
+	 * 
+	 * @param date
+	 * @param format
+	 * @return
+	 * @throws ParseException
+	 */
+	public static String date2String(Date date, String format) {
+		SimpleDateFormat dformat = new SimpleDateFormat(format);
+		Calendar calendar = new GregorianCalendar();
+		calendar.setTime(date);
+		return dformat.format(calendar.getTime());
+	}
+	
+	public static String formatNow(String format) {
+		return date2String(new Date(), format);
+	}
+	
 	/**
 	 * 将字符串转换为指定格式的日期
 	 * 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.Page;
 import com.xxx.wechat.admin.service.IRoleService;
-import com.xxx.wechat.core.dao.entity.AdminAuthority;
+import com.xxx.wechat.core.dao.entity.AdminRoleAuthorityRel;
 import com.xxx.wechat.core.dao.entity.AdminRole;
 import com.xxx.wechat.core.dao.entity.extend.AdminRoleExt;
 import com.xxx.wechat.core.exception.AppException;
@@ -26,13 +26,13 @@ public class RoleServiceImpl implements IRoleService {
 	}
 
 	@Override
-	public int create(AdminRole role, List<AdminAuthority> permissions) throws AppException {
+	public int create(AdminRole role, List<AdminRoleAuthorityRel> permissions) throws AppException {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
-	public int update(AdminRole role, List<AdminAuthority> permissions) throws AppException {
+	public int update(AdminRole role, List<AdminRoleAuthorityRel> permissions) throws AppException {
 		// TODO Auto-generated method stub
 		return 0;
 	}

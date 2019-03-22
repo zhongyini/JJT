@@ -2,6 +2,7 @@ package com.xxx.wechat.admin.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.xxx.wechat.admin.dto.RestResult;
 import com.xxx.wechat.core.dao.entity.AdminUser;
 import com.xxx.wechat.core.exception.AppException;
 
@@ -14,7 +15,7 @@ public interface IAdminService {
 	 * @return
 	 * @throws AppException
 	 */
-	AdminUser login(AdminUser user) throws AppException;
+	RestResult login(AdminUser user) throws AppException;
 
 	/**
 	 * 保存新用户

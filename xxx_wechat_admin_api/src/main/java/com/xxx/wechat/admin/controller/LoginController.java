@@ -1,7 +1,5 @@
 package com.xxx.wechat.admin.controller;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -12,9 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xxx.wechat.admin.BaseController;
-import com.xxx.wechat.admin.RestResult;
+import com.xxx.wechat.admin.config.JwtConfig;
 import com.xxx.wechat.admin.dto.LoginReq;
 import com.xxx.wechat.admin.dto.LoginResp;
+import com.xxx.wechat.admin.dto.RestResult;
 import com.xxx.wechat.admin.enums.AdminStatus;
 import com.xxx.wechat.admin.service.IAdminService;
 import com.xxx.wechat.admin.service.IAuthorityService;
@@ -23,7 +22,6 @@ import com.xxx.wechat.config.AppConfig;
 import com.xxx.wechat.constants.Constants;
 import com.xxx.wechat.core.dao.entity.AdminUser;
 import com.xxx.wechat.core.exception.AppException;
-import com.xxx.wechat.helper.TokenHelper;
 
 @RestController
 public class LoginController extends BaseController {
@@ -35,11 +33,18 @@ public class LoginController extends BaseController {
 	private IAuthorityService authorityService;
 
 	@Autowired
-	private TokenHelper tokenHelper;
+	private JwtConfig tokenHelper;
 
 	@Autowired
 	protected AppConfig appConfig;
 
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public RestResult getLogin(String name, String password, HttpServletResponse response) {
+		// 登录验证
+		AdminUser admin = new AdminUser(name, password);
+		return adminService.login(admin);
+	}
+	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public RestResult login(@RequestBody LoginReq loginReq, HttpServletResponse response) {
 		// 登录画面用户ID输入check
@@ -66,9 +71,9 @@ public class LoginController extends BaseController {
 		// 登录验证
 		AdminUser admin = new AdminUser(loginReq.getName(), loginReq.getPassword());
 		try {
-			admin = adminService.login(admin);
+			admin = new AdminUser();//adminService.login(admin);
 			resp = new LoginResp();
-			if (AdminStatus.OVERDUE.getStatus().equals(admin.getDeleteFlag())) {
+			if (AdminStatus.OVERDUE.getStatus().equals(admin.getDeleteFlag())) {                  
 				// 将查询到的管理者存入登录响应对象中，传到过期密码更新画面
 				resp.setAdmin(admin);
 				resp.setPasswordOverdue(true);
@@ -78,16 +83,13 @@ public class LoginController extends BaseController {
 			}
 			// 登录成功，处理单机登录，判断是否踢出该账户之前登录的session
 			HttpSession session = request.getSession();
-			Date now = new Date();
-			loginReq.setLoginTime(now.getTime());
-			loginReq.setRoleId(admin.getRoleId());
-			String token = tokenHelper.createJWT(loginReq, now);
+			String token = tokenHelper.createJWT(admin);
 			response.addHeader("x-access-token", token);
 			resp.setAdmin(admin);
 			// 设置用户权限
 			// 将用户信息放入session中
-			session.setAttribute(Constants.USER, loginReq);
-			session.getServletContext().setAttribute(Constants.USER, loginReq);
+			session.setAttribute(Constants.USER, admin);
+			session.getServletContext().setAttribute(Constants.USER, admin);
 			resp.setPermissions(authorityService.searchAuthorityCodeByRoleId(admin.getRoleId()));
 		} catch (AppException e) {
 			return new RestResult(e.getMessage());

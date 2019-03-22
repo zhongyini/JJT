@@ -8,7 +8,6 @@
     	<version>1.0.0.RELEASE</version>
     </parent>
 	<artifactId>xxx_wechat_admin_api</artifactId>
-	<version>1.0.0.RELEASE</version>
 	<packaging>war</packaging>
 
 	<properties>
@@ -75,7 +74,12 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
+		<!-- 启用会导致反序列对象失败、同样类型强转失败 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

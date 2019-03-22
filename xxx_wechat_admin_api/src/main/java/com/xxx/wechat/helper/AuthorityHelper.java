@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.xxx.wechat.admin.service.IAuthorityService;
 import com.xxx.wechat.common.utils.CheckUtils;
-import com.xxx.wechat.core.dao.entity.AdminAuthority;
+import com.xxx.wechat.core.dao.entity.AdminRoleAuthorityRel;
 import com.xxx.wechat.core.exception.AppException;
 
 @Component
@@ -21,7 +21,7 @@ public class AuthorityHelper {
 	@Autowired
 	private IAuthorityService authorityService;
 
-	private Vector<AdminAuthority> authorities = new Vector<AdminAuthority>();
+	private Vector<AdminRoleAuthorityRel> authorities = new Vector<AdminRoleAuthorityRel>();
 
 	public boolean hasPermission(String roleId, String authorityCode) {
 		if (CheckUtils.isNullOrEmpty(roleId)
@@ -29,7 +29,7 @@ public class AuthorityHelper {
 			logger.warn("参数异常");
 			return false;
 		}
-		for (AdminAuthority authority : authorities) {
+		for (AdminRoleAuthorityRel authority : authorities) {
 			if (roleId.equals(authority.getRoleId().toString())
 					&&authorityCode.equals(authority.getAuthorityCode())) {
 				return true;
@@ -38,8 +38,8 @@ public class AuthorityHelper {
 		return false;
 	}
 
-	public boolean hasPermission(String key,List<AdminAuthority> authoritiess) {
-		for (AdminAuthority authority : authoritiess) {
+	public boolean hasPermission(String key,List<AdminRoleAuthorityRel> authoritiess) {
+		for (AdminRoleAuthorityRel authority : authoritiess) {
 			if (authority.getAuthorityCode().contains(key)) {
 				return true;
 			}
@@ -47,7 +47,7 @@ public class AuthorityHelper {
 		return false;
 	}
 	public void load() {
-		List<AdminAuthority> list = null;
+		List<AdminRoleAuthorityRel> list = null;
 		try {
 			list = authorityService.searchAll();
 			if (!CheckUtils.isNullOrEmpty(list)) {

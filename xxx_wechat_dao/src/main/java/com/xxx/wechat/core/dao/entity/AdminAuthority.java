@@ -3,25 +3,31 @@ package com.xxx.wechat.core.dao.entity;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Model class of 权限信息表.
+ * Model class of 权限代码信息表.
  * 
  */
-@Table(name="xxx_admin_authority")
+@Table(name = "xxx_admin_authority")
 public class AdminAuthority implements Serializable {
 
 	/** serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
-	/** 角色ID. */
-	@Column(name="role_id")
-	private String roleId;
+	/** 代码. */
+	@Id
+	@Column(name="AUTHORITY_ID")
+	private String authorityId;
 
-	/** 权限代码. */
-	@Column(name="authority_code")
-	private String authorityCode;
+	/** 级别. */
+	@Column(name="LEVEL")
+	private String level;
+	
+	/** 名称. */
+	@Column(name="name")
+	private String name;
 
 	/**
 	 * Constructor.
@@ -30,42 +36,60 @@ public class AdminAuthority implements Serializable {
 	}
 
 	/**
-	 * Set the 角色ID.
+	 * Set the 代码.
 	 * 
-	 * @param roleId
-	 *            角色ID
+	 * @param code
+	 *            代码
 	 */
-	public void setRoleId(String roleId) {
-		this.roleId = roleId;
+	public void setAuthorityId(String authorityId) {
+		this.authorityId = authorityId;
 	}
 
 	/**
-	 * Get the 角色ID.
+	 * Get the 代码.
 	 * 
-	 * @return 角色ID
+	 * @return 代码
 	 */
-	public String getRoleId() {
-		return this.roleId;
+	public String getAuthorityId() {
+		return this.authorityId;
 	}
 
 	/**
-	 * Set the 权限代码.
+	 * Get the 级别.
 	 * 
-	 * @param authorityCode
-	 *            权限代码
+	 * @return 级别
 	 */
-	public void setAuthorityCode(String authorityCode) {
-		this.authorityCode = authorityCode;
+	public String getLevel() {
+		return level;
 	}
 
 	/**
-	 * Get the 权限代码.
+	 * Set the 级别.
 	 * 
-	 * @return 权限代码
+	 * @param name
+	 *            级别
 	 */
-	public String getAuthorityCode() {
-		return this.authorityCode;
+	public void setLevel(String level) {
+		this.level = level;
 	}
 
+	/**
+	 * Set the 名称.
+	 * 
+	 * @param name
+	 *            名称
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * Get the 名称.
+	 * 
+	 * @return 名称
+	 */
+	public String getName() {
+		return this.name;
+	}
 
 }

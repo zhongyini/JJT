@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xxx.wechat.core.dao.AuthorityDao">
+	
+	<select id="selectByRoleId" parameterType="java.lang.String"
+		resultType="com.xxx.wechat.core.dao.entity.AdminAuthority">
+		SELECT xaa.AUTHORITY_ID AS authorityId, xaa.`LEVEL` AS `level`, xaa.`NAME` AS authorityName
+		FROM xxx_admin_role_authority_rel xarar
+		INNER JOIN xxx_admin_authority xaa
+		ON xarar.AUTHORITY_ID = xaa.AUTHORITY_ID
+		WHERE xarar.role_id = #{roleId}
+	</select>
+</mapper>

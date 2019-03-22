@@ -48,8 +48,8 @@ public class AdminUser implements Serializable {
 	@Column(name = "mail")
 	private String mail;
 
-	/** headImgUrl. */
-	@Column(name = "headImgUrl")
+	/** head_img_url. */
+	@Column(name = "head_img_url")
 	private String headImgUrl;
 
 	/** delete_flag. */
