@@ -11,7 +11,8 @@ import Icon from 'vue-awesome/components/Icon'
 Vue.config.productionTip = false
 Vue.component('v-icon', Icon)
 Vue.use(ElementUI, {
-  size: 'small'
+  size: 'small',
+  zIndex: 3000
 })
 new Vue({
   router,

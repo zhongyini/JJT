@@ -16,13 +16,14 @@
         <div class="login-btn">
           <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
         </div>
-        <p class="login-tips">Tips : 用户名和密码随便填。</p>
+        <!--<p class="login-tips">Tips : 请输入用户名和密码。</p>-->
       </el-form>
     </div>
   </div>
 </template>
 
 <script>
+import api from '../api/index'
 export default {
   name: 'login',
   data: function () {
@@ -45,8 +46,17 @@ export default {
     submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          localStorage.setItem('ms_username', this.ruleForm.username)
-          this.$router.push('/')
+          // 这里用try catch包裹，请求失败的时候就执行catch里的
+          try {
+            let params = {
+              name: 'admin',
+              password: '123456'
+            }
+            let res = api.post('/login', params)
+            console.log(res)
+          } catch (e) {
+            console.log(e)
+          }
         } else {
           console.log('error submit!!')
           return false
@@ -63,7 +73,9 @@ export default {
     width:100%;
     height:100%;
     background-image: url(../assets/login-bg.jpg);
-    background-size: 100%;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+
   }
   .ms-login{
     position: absolute;

@@ -217,7 +217,7 @@ public class QuartzDemo {
 			lotteryDltHistoryDetail.setAllmoney(detaild.getAllmoney());
 			lotteryDltHistoryDetail.setDeleteFlag(0);
 			lotteryDltHistoryDetail.setLevel(detaild.getLevel());
-			lotteryDltHistoryDetail.setLotteryTerm(response.getLottery().getTerm());
+			lotteryDltHistoryDetail.setTerm(response.getLottery().getTerm());
 			lotteryDltHistoryDetail.setMoney(detaild.getMoney());
 			lotteryDltHistoryDetail.setNum(Integer.valueOf(detaild.getNum()));
 			lotteryDltHistoryDetail.setPiece(detaild.getPiece());

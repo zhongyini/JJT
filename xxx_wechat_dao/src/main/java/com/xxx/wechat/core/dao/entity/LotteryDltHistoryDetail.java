@@ -25,10 +25,10 @@ public class LotteryDltHistoryDetail implements Serializable {
 	private Integer id;
 	
 	/**
-	 * 大乐透历史记录主键
+	 * 大乐透历史记录主键期号
 	 */
-	@Column(name = "lottery_term")
-	private String lotteryTerm;
+	@Column(name = "term")
+	private String term;
 
 	/**
 	 * 总金额
@@ -84,13 +84,13 @@ public class LotteryDltHistoryDetail implements Serializable {
 	}
 
 
-	public String getLotteryTerm() {
-		return lotteryTerm;
+	public String getTerm() {
+		return term;
 	}
 
 
-	public void setLotteryTerm(String lotteryTerm) {
-		this.lotteryTerm = lotteryTerm;
+	public void setTerm(String term) {
+		this.term = term;
 	}
 
 
