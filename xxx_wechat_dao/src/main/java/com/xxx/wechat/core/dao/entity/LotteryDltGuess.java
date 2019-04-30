@@ -98,19 +98,19 @@ public class LotteryDltGuess implements Serializable {
 	private Integer status;
 
 	/**
-	 * 删除标志
+	 * 删除标志=>"0":未删除,"1":已删除
 	 */
 	@Column(name = "delete_flag")
 	private Integer deleteFlag;
 
 	/**
-	 * 创建者
+	 * 修改者
 	 */
 	@Column(name = "update_user")
 	private String updateUser;
 
 	/**
-	 * 创建时间
+	 * 修改时间
 	 */
 	@Column(name = "update_time")
 	private Timestamp updateTime;
