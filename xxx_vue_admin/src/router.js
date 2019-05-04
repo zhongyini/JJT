@@ -11,8 +11,9 @@ const routes = [
   },
   {
     path: '/',
+    name: 'home',
     meta: { title: '主页' },
-    component: import('./components/Home.vue')
+    component: () => import('./components/Home.vue')
   },
   {
     path: '/about',

@@ -9,7 +9,7 @@ let res = (url, params, method) => {
     'result': {
       'data': result(url, params, method),
       'message': 'success',
-      'status': '0'
+      'status': 0
     }
   }
 }

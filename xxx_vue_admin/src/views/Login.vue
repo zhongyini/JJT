@@ -54,6 +54,9 @@ export default {
             }
             let res = api.post('/login', params)
             console.log(res)
+            if (res.result.status === 0) {
+              this.$router.push('/')
+            }
           } catch (e) {
             console.log(e)
           }

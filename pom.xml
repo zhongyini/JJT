@@ -25,6 +25,7 @@
         <module>xxx_wechat_dao</module>
         <module>xxx_wechat_front</module>
         <module>xxx_wechat_admin_api</module>
+        <module>xxx_uniapp_api</module>
     </modules>
 	<build>
 		<plugins>

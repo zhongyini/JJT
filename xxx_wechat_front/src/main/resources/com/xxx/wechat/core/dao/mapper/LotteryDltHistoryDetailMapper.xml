@@ -7,7 +7,7 @@
 	<resultMap id="resultMap"
 		type="com.xxx.wechat.core.dao.entity.LotteryDltHistoryDetail">
 		<id property="id" column="id" />
-		<result property="lotteryTerm" column="lottery_term" />
+		<result property="term" column="lottery_term" />
 		<result property="allmoney" column="allmoney" />
 		<result property="level" column="level" />
 		<result property="money" column="money" />
@@ -21,11 +21,11 @@
 	<insert id="insertLotteryDltHistoryDetailList">
 		INSERT INTO lottery_dlt_history_detail
 		(
-			lottery_term, allmoney, level, money, num, piece, send_prize, delete_flag
+			term, allmoney, level, money, num, piece, send_prize, delete_flag
 		) VALUES
 		<foreach collection ="list" item="item" index= "index" separator =",">
 			(
-				#{item.lotteryTerm}, #{item.allmoney}, #{item.level}, #{item.money}, #{item.num}, #{item.piece}, #{item.sendPrize}, #{item.deleteFlag}
+				#{item.term}, #{item.allmoney}, #{item.level}, #{item.money}, #{item.num}, #{item.piece}, #{item.sendPrize}, #{item.deleteFlag}
 			)
 		</foreach>
 	</insert>

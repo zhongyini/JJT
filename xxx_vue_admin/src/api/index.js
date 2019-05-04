@@ -1,8 +1,7 @@
 import axios from './axios'
 import mock from '../mock/mock'
-
-let instance = process.env.NODE_ENV === 'local' ? mock.api : process.env.NODE_ENV === 'production' ? axios() : axios()
-
+// console.log(process.env.NODE_ENV)
+let instance = process.env.NODE_ENV === 'production' ? axios() : process.env.NODE_ENV === 'local' ? mock.api : mock.api
 let obj = {
   get (url, params, headers) {
     let options = {}

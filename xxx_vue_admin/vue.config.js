@@ -2,9 +2,9 @@ module.exports = {
   // 基本路径
   publicPath: '/',
   // 输出文件目录
-  // outputDir: 'dist',
+  outputDir: 'dist',
   // eslint-loader是否在保存的时候检查
-  // compiler: false,
+  compiler: false,
   chainWebpack: config => {
     if (process.env.NODE_ENV === 'production') {
       config
@@ -40,8 +40,9 @@ module.exports = {
   },
   parallel: require('os').cpus().length > 1,
   pwa: {},
-  lintOnSave: true,
+  lintOnSave: true
   // webpack-dev-server 相关配置
+  /*
   devServer: {
     open: process.platform === 'darwin',
     host: '0.0.0.0',
@@ -59,4 +60,5 @@ module.exports = {
     },
     before: app => {}
   }
+  */
 }
