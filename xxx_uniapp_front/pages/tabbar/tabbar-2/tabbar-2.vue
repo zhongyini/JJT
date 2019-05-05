@@ -4,7 +4,7 @@
 		<view class="uni-common-mt">
 			<view>
 				<!-- <map id="myMap" @tap="tip()" @controltap="tipc" :latitude="latitude" :longitude="longitude" :controls="controls"></map> -->
-				<map id="myMap" :show-location="true" @controltap="tipc" @tap="tip" :circles="circles" :controls="controls" :scale='14' :latitude="latitude" :longitude="longitude"></map>
+				<map id="myMap" :longitude="longitude" :latitude="latitude" :scale='14' :markers="covers" :polyline="polyline" :circles="circles" :controls="controls" :include-points="includePoints" :show-location="true" @markertap="markertap" @callouttap="callouttap" @controltap="tipc" @regionchange="regionchange" @tap="tip" @updated="updated"></map>
 			</view>
 		</view>
 	</view>
@@ -18,8 +18,8 @@
 				latitude: 31.12400167201743,
 				longitude: 121.38997961495207,
 				covers: [{
-					latitude: 0,
-					longitude: 0,
+					latitude: 31.12,
+					longitude: 121.38,
 					// #ifdef APP-PLUS
 					iconPath: '../../../static/img/location@3x.png',
 					// #endif
@@ -27,6 +27,13 @@
 					iconPath: '../../../static/location.png',
 					// #endif
 				}],
+				polyline: [
+					{
+						points: [{longitude:31.13,latitude:121.35}, {longitude:31.2,latitude:121.34}],
+						color: '#000000',
+						width: 20
+					}
+				],
 				circles: [{
 					latitude: 31.12400167201743,
 					longitude: 121.38997961495207,
@@ -46,6 +53,7 @@
 					},
 					clickable: true
 				}],
+				includePoints: [{}]
 				// 				markers: [{
 				// 					id: 0,
 				// 					iconPath: '../../../static/logo.png',
@@ -69,18 +77,30 @@
 			}
 		},
 		onLoad() {
+			var t = this;
 			this.user = uni.getStorageSync('user');
+			if (!this.user) {
+				this.user = {
+					distance: 4,
+					id: 1,
+					name: 'yk',
+					password: '123456',
+					phone: '12313131313'
+				}
+			}
 			console.log(this.user);
 			this.circles.radius = this.user.distance * 100;
 			console.log(this.circles.radius);
 			// 初始化地图，设置中心点坐标和地图级别
-			/* uni.getLocation({
+			uni.getLocation({
 				type: 'gcj02',
 				altitude: false,
 				success: function(res) {
 					if(res) {
 						console.log('当前位置的经度：' + res.longitude);
 						console.log('当前位置的纬度：' + res.latitude);
+						t.longitude = res.longitude;
+						t.latitude = res.latitude;
 					}
 				},
 				fail: function(err) {
@@ -89,12 +109,12 @@
 				complete: function(res) {
 					console.log(res);
 				}
-			}); */
+			});
 		},
 		onReady() {
 			var t = this;
-			this.mapCtx = uni.createMapContext('myMap', this)
-			console.log(this.mapCtx);
+			// this.mapCtx = uni.createMapContext('myMap', this)
+			// console.log(this.mapCtx);
 			/* this.mapCtx.getCenterLocation({
 				success: function(res) {
 					console.log(res);
@@ -109,16 +129,30 @@
 		},
 		methods: {
 			tip() {
+				console.log("tip");
 				uni.showToast({
 					title: '超出安全范围',
 					icon: 'none'
 				});
 			},
 			tipc() {
+				console.log("tipc");
 				uni.showToast({
 					title: '在安全范围内',
 					icon: 'none'
 				});
+			},
+			updated() {
+				console.log("updated");
+			},
+			regionchange() {
+				console.log("regionchange");
+			},
+			markertap() {
+				console.log("markertap");
+			},
+			callouttap() {
+				console.log("callouttap");
 			}
 		}
 	}

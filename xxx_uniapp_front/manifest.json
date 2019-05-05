@@ -85,7 +85,7 @@
     "h5" : {
         "devServer" : {
             "host" : "localhost",
-            "port" : 8000,
+            "port" : "",
             "disableHostCheck" : true,
             "proxy" : {
                 "/stu" : {
@@ -94,6 +94,10 @@
                     "secure" : false
                 }
             }
-        }
+        },
+        "router" : {
+            "base" : "/lost/"
+        },
+        "title" : "失物招领"
     }
 }
