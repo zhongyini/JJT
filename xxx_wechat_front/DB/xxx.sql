@@ -1,19 +1,95 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : localhost
-Source Server Version : 50516
-Source Host           : localhost:3306
+Source Server         : 腾讯云
+Source Server Version : 80016
+Source Host           : 118.25.72.245:3306
 Source Database       : xxx
 
 Target Server Type    : MYSQL
-Target Server Version : 50516
+Target Server Version : 80016
 File Encoding         : 65001
 
-Date: 2018-08-15 10:36:08
+Date: 2019-06-06 13:47:50
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for lottery_dlt_guess
+-- ----------------------------
+DROP TABLE IF EXISTS `lottery_dlt_guess`;
+CREATE TABLE `lottery_dlt_guess` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `term` int(11) DEFAULT NULL COMMENT '大乐透历史纪录主键期号',
+  `num_sequence` varchar(50) DEFAULT NULL COMMENT '按照产生顺序显示',
+  `number` varchar(50) DEFAULT NULL COMMENT '从红到蓝、从小到大排序',
+  `red_one` int(11) DEFAULT NULL COMMENT '一号红色球',
+  `red_two` int(11) DEFAULT NULL COMMENT '二号红色球',
+  `red_three` int(11) DEFAULT NULL COMMENT '三号红色球',
+  `red_four` int(11) DEFAULT NULL COMMENT '四号红色球',
+  `red_five` int(11) DEFAULT NULL COMMENT '五号红色球',
+  `blue_one` int(11) DEFAULT NULL COMMENT '一号蓝色球',
+  `blue_two` int(11) DEFAULT NULL COMMENT '二号蓝色球',
+  `several_award` int(11) DEFAULT NULL COMMENT '几等奖=>"0":未中奖;"1":一等奖;"2":二等奖;"3":三等奖',
+  `status` int(11) DEFAULT NULL COMMENT '状态=>"0":未过期,"1":已过期',
+  `delete_flag` int(11) DEFAULT NULL COMMENT '删除标志=>"0":未删除,"1":已删除',
+  `update_user` varchar(20) DEFAULT NULL COMMENT '修改者',
+  `update_time` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of lottery_dlt_guess
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for lottery_dlt_history
+-- ----------------------------
+DROP TABLE IF EXISTS `lottery_dlt_history`;
+CREATE TABLE `lottery_dlt_history` (
+  `term` int(11) NOT NULL COMMENT '主键彩票号',
+  `draw_news` varchar(50) DEFAULT NULL COMMENT '另一种彩票号',
+  `num_sequence` varchar(50) DEFAULT NULL COMMENT '按照产生顺序显示',
+  `number` varchar(50) DEFAULT NULL COMMENT '从红到蓝、从小到大排序',
+  `red_one` int(11) DEFAULT NULL COMMENT '一号红色球',
+  `red_two` int(11) DEFAULT NULL COMMENT '二号红色球',
+  `red_three` int(11) DEFAULT NULL COMMENT '三号红色球',
+  `red_four` int(11) DEFAULT NULL COMMENT '四号红色球',
+  `red_five` int(11) DEFAULT NULL COMMENT '五号红色球',
+  `blue_one` int(11) DEFAULT NULL COMMENT '一号蓝色球',
+  `blue_two` int(11) DEFAULT NULL COMMENT '二号蓝色球',
+  `several_award` int(1) DEFAULT NULL COMMENT '几等奖=>"0":未中奖;"1":一等奖;"2":二等奖;"3":三等奖',
+  `delete_flag` int(1) DEFAULT '0' COMMENT '删除标志=>"0":未删除,"1":已删除',
+  `update_user` varchar(20) DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`term`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of lottery_dlt_history
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for lottery_dlt_history_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `lottery_dlt_history_detail`;
+CREATE TABLE `lottery_dlt_history_detail` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键自增',
+  `term` int(11) NOT NULL COMMENT '主键彩票号',
+  `draw_news` varchar(50) DEFAULT NULL COMMENT '另一种彩票号',
+  `level` varchar(50) DEFAULT NULL COMMENT '排序',
+  `money` int(11) DEFAULT NULL COMMENT '金额',
+  `num` int(11) DEFAULT NULL,
+  `piece` varchar(50) DEFAULT NULL COMMENT 'piece',
+  `send_prize` varchar(50) DEFAULT NULL COMMENT '赠送奖品',
+  `delete_flag` int(1) DEFAULT '0' COMMENT '删除标志=>"0":未删除,"1":已删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of lottery_dlt_history_detail
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for xxx_admin_authority
@@ -23,7 +99,7 @@ CREATE TABLE `xxx_admin_authority` (
   `role_id` varchar(20) NOT NULL,
   `AUTHORITY_CODE` varchar(50) NOT NULL,
   PRIMARY KEY (`role_id`,`AUTHORITY_CODE`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_admin_authority
@@ -44,7 +120,7 @@ CREATE TABLE `xxx_admin_authority_code` (
   `AUTHORITY_CODE` varchar(50) NOT NULL,
   `NAME` varchar(50) NOT NULL COMMENT '配置名',
   PRIMARY KEY (`AUTHORITY_CODE`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_admin_authority_code
@@ -67,7 +143,7 @@ CREATE TABLE `xxx_admin_role` (
   `modify_user` varchar(20) DEFAULT NULL,
   `modify_date` datetime DEFAULT NULL,
   PRIMARY KEY (`role_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_admin_role
@@ -92,14 +168,33 @@ CREATE TABLE `xxx_admin_user` (
   `modify_user` varchar(20) DEFAULT NULL,
   `modify_date` datetime DEFAULT NULL,
   PRIMARY KEY (`admin_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_admin_user
 -- ----------------------------
-INSERT INTO `xxx_admin_user` VALUES ('admin', '0', '测试账号', 'vdzRRR6z', '2018-06-06', null, 'http://ouq085d8z.bkt.clouddn.com/xiaohuangren1.jpg', '0', 'admin', '2018-05-28 10:24:20', 'admin', '2018-05-28 10:24:26');
-INSERT INTO `xxx_admin_user` VALUES ('menzhen', '0', '门诊', 'xxx12345', '2018-06-14', null, null, '0', 'admin', '2018-06-14 14:26:50', 'admin', '2018-06-14 14:26:55');
-INSERT INTO `xxx_admin_user` VALUES ('yuanqu', '0', '园区', 'xxx12345', '2018-06-14', null, null, '0', 'admin', '2018-06-14 14:27:33', 'admin', '2018-06-14 14:27:40');
+INSERT INTO `xxx_admin_user` VALUES ('admin', '0', '测试账号', 'vdzRRR6z', '2018-06-06', null, 'http://ouq085d8z.bkt.clouddn.com/xiaohuangren1.jpg', '0', 'admin', '2018-05-28 10:24:20', 'admin', '2019-03-01 10:24:26');
+INSERT INTO `xxx_admin_user` VALUES ('menzhen', '0', '门诊', 'xxx12345', '2018-06-14', null, null, '0', 'admin', '2018-06-14 14:26:50', 'admin', '2018-03-08 14:26:55');
+INSERT INTO `xxx_admin_user` VALUES ('yuanqu', '0', '园区', 'xxx12345', '2018-06-14', null, null, '0', 'admin', '2018-06-14 14:27:33', 'admin', '2018-03-22 14:27:40');
+
+-- ----------------------------
+-- Table structure for xxx_baidu_api_access_token
+-- ----------------------------
+DROP TABLE IF EXISTS `xxx_baidu_api_access_token`;
+CREATE TABLE `xxx_baidu_api_access_token` (
+  `accessToken` varchar(100) NOT NULL COMMENT '获取到的accessToken',
+  `refreshToken` varchar(100) DEFAULT NULL COMMENT '用于刷新的token',
+  `expiresIn` smallint(6) DEFAULT NULL COMMENT '凭证有效时间',
+  `session_key` varchar(50) DEFAULT NULL,
+  `scope` varchar(50) DEFAULT NULL,
+  `sessionSecret` varchar(50) DEFAULT NULL,
+  `create_date` timestamp NULL DEFAULT NULL COMMENT '生成时间',
+  PRIMARY KEY (`accessToken`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of xxx_baidu_api_access_token
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for xxx_configuration
@@ -112,7 +207,7 @@ CREATE TABLE `xxx_configuration` (
   `TYPE` varchar(1) DEFAULT NULL COMMENT '配置类型(0系统配置;1后台配置;2业务配置)',
   `MEMO` varchar(50) DEFAULT NULL COMMENT '注释',
   PRIMARY KEY (`ITEM`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_configuration
@@ -120,7 +215,7 @@ CREATE TABLE `xxx_configuration` (
 INSERT INTO `xxx_configuration` VALUES ('appid', 'wxc085afb8ad75c822', 'appid', '0', null);
 INSERT INTO `xxx_configuration` VALUES ('appsecret', '624a70c1c3d77e0e97ed775fbdc6a57c', 'appsecret', '0', null);
 INSERT INTO `xxx_configuration` VALUES ('get_num_limit', '100', 'get_num_limit', '1', null);
-INSERT INTO `xxx_configuration` VALUES ('hostUrl', 'http://b8462ad7.ngrok.io/wechat-front', null, '0', null);
+INSERT INTO `xxx_configuration` VALUES ('hostUrl', 'http://www.ykstudy.cn/wechat-front', '域名', '0', null);
 INSERT INTO `xxx_configuration` VALUES ('list_page_size', '20', '一页显示数', '1', null);
 INSERT INTO `xxx_configuration` VALUES ('money', '10', '红包返点数', '1', null);
 INSERT INTO `xxx_configuration` VALUES ('openid_cookie', 'xxx_test_openId', 'cookie', '0', null);
@@ -128,6 +223,25 @@ INSERT INTO `xxx_configuration` VALUES ('rec_num_limit', '100', '推荐数上限
 INSERT INTO `xxx_configuration` VALUES ('server_config_token', 'testToken', 'wechatToken', '0', null);
 INSERT INTO `xxx_configuration` VALUES ('state', '123', 'state', '0', null);
 INSERT INTO `xxx_configuration` VALUES ('wechat_tag_id', '100', '微信标签tagid', '1', null);
+
+-- ----------------------------
+-- Table structure for xxx_name_config
+-- ----------------------------
+DROP TABLE IF EXISTS `xxx_name_config`;
+CREATE TABLE `xxx_name_config` (
+  `id` int(11) NOT NULL,
+  `word` varchar(10) DEFAULT NULL,
+  `delete_flag` int(1) DEFAULT NULL,
+  `update_user` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of xxx_name_config
+-- ----------------------------
+INSERT INTO `xxx_name_config` VALUES ('1', '一', '0', 'admin', '2018-12-12 14:30:28');
+INSERT INTO `xxx_name_config` VALUES ('2', '二', '0', 'admin', '2018-12-12 16:08:20');
 
 -- ----------------------------
 -- Table structure for xxx_red_packet
@@ -140,7 +254,7 @@ CREATE TABLE `xxx_red_packet` (
   `open_id` varchar(30) DEFAULT NULL COMMENT '领取红包用户',
   `create_date` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`packet_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_red_packet
@@ -176,12 +290,11 @@ CREATE TABLE `xxx_wechat_card` (
   `can_share` char(1) DEFAULT '0',
   `can_give_friend` char(1) DEFAULT '0',
   PRIMARY KEY (`card_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_wechat_card
 -- ----------------------------
-INSERT INTO `xxx_wechat_card` VALUES ('pKv1dwonNT-qAAzhnUX92jBcxpGA', 'GIFT', null, null, null, 'http://mmbiz.qpic.cn/mmbiz_jpg/2pv5kKsEocokTaRGdeicuybW1ta1qvGRYz60MfcWQ5uPcDH0H2N3cDXiakO6w8ic5G3KicQJ40bm901hricjPsZ8hlg/0', 'CODE_TYPE_TEXT', '商户名字', '卡券名', 'Color030', '卡券使用提醒', '卡券使用说明，字数上限为1024个汉字', '100', 'DATE_TYPE_FIX_TERM', null, '1529942399', '30', '0', '5', '5', '0', '0', '0', '0');
 
 -- ----------------------------
 -- Table structure for xxx_wechat_card_code
@@ -198,7 +311,7 @@ CREATE TABLE `xxx_wechat_card_code` (
   `red_packet_status` int(11) DEFAULT '0' COMMENT '红包生成状态(0未领取;1已领取)',
   `updatetime` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`code_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_wechat_card_code
@@ -215,7 +328,7 @@ CREATE TABLE `xxx_wechat_card_consume` (
   `money` double DEFAULT '0',
   `updatetime` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`consume_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_wechat_card_consume
@@ -237,7 +350,7 @@ CREATE TABLE `xxx_wechat_payment` (
   PRIMARY KEY (`pay_id`),
   KEY `openid` (`openid`),
   CONSTRAINT `xxx_wechat_payment_ibfk_1` FOREIGN KEY (`openid`) REFERENCES `xxx_wechat_user_account` (`openid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_wechat_payment
@@ -260,7 +373,7 @@ CREATE TABLE `xxx_wechat_pay_api_log` (
   PRIMARY KEY (`pay_api_id`),
   KEY `pay_id` (`pay_id`),
   CONSTRAINT `xxx_wechat_pay_api_log_ibfk_1` FOREIGN KEY (`pay_id`) REFERENCES `xxx_wechat_payment` (`pay_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_wechat_pay_api_log
@@ -278,7 +391,7 @@ CREATE TABLE `xxx_wechat_qrcode` (
   `qrcode_type` int(11) DEFAULT NULL,
   `create_date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`qrcode_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_wechat_qrcode
@@ -294,7 +407,7 @@ CREATE TABLE `xxx_wechat_qrcode_type` (
   `create_user` varchar(30) DEFAULT NULL,
   `create_date` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`qrcode_type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_wechat_qrcode_type
@@ -310,7 +423,7 @@ CREATE TABLE `xxx_wechat_recommend` (
   `rec_openid` varchar(30) DEFAULT NULL COMMENT '被推荐者的openid',
   `updatetime` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`recommend_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_wechat_recommend
@@ -327,14 +440,14 @@ CREATE TABLE `xxx_wechat_token` (
   `expires_in` int(11) DEFAULT NULL COMMENT '凭证有效时间，单位：秒',
   `errcode` varchar(8) DEFAULT NULL COMMENT '错误码',
   `errmsg` varchar(256) DEFAULT NULL COMMENT '错误信息',
-  `create_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE CURRENT_TIMESTAMP COMMENT '生成时间',
+  `create_date` timestamp NOT NULL COMMENT '生成时间',
   PRIMARY KEY (`access_token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_wechat_token
 -- ----------------------------
-INSERT INTO `xxx_wechat_token` VALUES ('12_joKQCYiq3qA-WZL2NdFzGQUNyR3atTLLzfumuvwmnBXHe4T2qZYQU3-epTrWJa_eS5aBQH1Y1XaiUPoZS6lNXVDkp0f2VB6mQYmE9735vAG4wNaTzh8P190VJY41lYuDvp96LazbtzZe1KhKHFFiAIAWUU', 'kgt8ON7yVITDhtdwci0qefL8blC0fNUBF9inj4zc0B3k6zA8pje0jR39bZqRNyc_cM2svWswJwTRFufCamUCHw', 'IpK_1T69hDhZkLQTlwsAXwt01jbvuH7S-Ap84FsxKjpfWp1rByk5eyP-JlTFah0Z1jsFT99ZHkUhox-giJr-Sw', '7200', null, null, '2018-07-27 18:00:00');
+INSERT INTO `xxx_wechat_token` VALUES ('16_YocUADalU3TN6cB2w3Ce6F1s2xieEGfFzCBKfWgycoQX6XBfaluGb2HRhZs5DEDGDIzu6gcYJS1bUVIlEts3OfjlYdtVl61DHNeWCfPIpXpEDz5jQ3vjkKhS4OOQgAGHDo6WvqBHFTqLqaymXYTcAHAPQL', 'kgt8ON7yVITDhtdwci0qefL8blC0fNUBF9inj4zc0B1PHY9ex2N5x5Lp3BhEoWTA2m-95NTcVUtWdaXZftWS1Q', 'IpK_1T69hDhZkLQTlwsAXwt01jbvuH7S-Ap84FsxKjqGt1SXC2HYXoiB7j9YcwpnHOpIFU5EawPEoph3GOWChw', '7200', null, null, '2018-12-12 14:00:00');
 
 -- ----------------------------
 -- Table structure for xxx_wechat_user
@@ -350,7 +463,7 @@ CREATE TABLE `xxx_wechat_user` (
   `verify_code_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updatetime` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`openid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_wechat_user
@@ -367,7 +480,7 @@ CREATE TABLE `xxx_wechat_user_account` (
   `create_datetime` datetime NOT NULL COMMENT '创建时间',
   `update_datetime` datetime NOT NULL COMMENT '更新时间',
   PRIMARY KEY (`openid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_wechat_user_account
@@ -396,8 +509,25 @@ CREATE TABLE `xxx_wechat_user_info` (
   `qr_scene_str` varchar(50) DEFAULT NULL COMMENT '二维码扫码场景描述（开发者自定义）',
   `updatetime` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`openid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- ----------------------------
 -- Records of xxx_wechat_user_info
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for xxx_xhs_user
+-- ----------------------------
+DROP TABLE IF EXISTS `xxx_xhs_user`;
+CREATE TABLE `xxx_xhs_user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `name` varchar(50) DEFAULT NULL COMMENT '用户名',
+  `url` varchar(255) DEFAULT NULL COMMENT '域名url',
+  `update_user` varchar(20) DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- ----------------------------
+-- Records of xxx_xhs_user
 -- ----------------------------
