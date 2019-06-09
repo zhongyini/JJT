@@ -76,7 +76,7 @@ public class QuartzDemo {
 	
 	//http://www.lottery.gov.cn/api/lottery_kj_detail_new.jspx?_ltype=4&_term=18153
 	@Transactional
-	@Scheduled(cron = "0 0 0 * * *") // 每天晚上零点执行一次
+	@Scheduled(cron = "0 0/45 11 * * *") // 每天晚上零点执行一次
 	public void getLotteryDltHistory() throws Exception {
 		logger.info("获取大乐透数据定时任务：GET getLotteryDltHistory begin" + new Date());
 		String lotteryDltTermUrl = "http://www.lottery.gov.cn/api/get_typeBytermAndnews.jspx?_ltype=4";
@@ -217,7 +217,7 @@ public class QuartzDemo {
 			lotteryDltHistoryDetail.setAllmoney(detaild.getAllmoney());
 			lotteryDltHistoryDetail.setDeleteFlag(0);
 			lotteryDltHistoryDetail.setLevel(detaild.getLevel());
-			lotteryDltHistoryDetail.setTerm(response.getLottery().getTerm());
+			lotteryDltHistoryDetail.setTerm(Integer.valueOf(response.getLottery().getTerm()));
 			lotteryDltHistoryDetail.setMoney(detaild.getMoney());
 			lotteryDltHistoryDetail.setNum(Integer.valueOf(detaild.getNum()));
 			lotteryDltHistoryDetail.setPiece(detaild.getPiece());

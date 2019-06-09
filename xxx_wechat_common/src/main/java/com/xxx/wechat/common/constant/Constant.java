@@ -342,7 +342,7 @@ public interface Constant {
         /**
          * 九间堂新中医
          */
-        public final static String SIGN_NAME = "九间堂新中医";
+        public final static String SIGN_NAME = "被鱼刺卡了的鱼";
         
         /** token  */
 		public static String HIS_TOKEN = "his-token";

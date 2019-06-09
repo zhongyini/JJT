@@ -60,7 +60,7 @@ public class UserController extends BaseController {
 	 */
 	@LoginRequired(isLand = true)
 	@RequestMapping(value = "/login")
-	public ModelAndView login(@ModelAttribute("recommend_openid") String recommendOpenid) {
+	 public ModelAndView login(@ModelAttribute(binding=false, value="recommend_openid") String recommendOpenid) {
 		ModelAndView mav = new ModelAndView();
 		// 从cookie中获取用户openid
 		String openid = getOpenid();
@@ -74,12 +74,12 @@ public class UserController extends BaseController {
 			// 没有推荐人，进入分享画面
 			mav.setViewName("redirect:"+Constant.ControllerUrl.SHARE_VIEW);
 			return mav;
-		} else if(recommendOpenid.equals(openid)) {
+		} /*else if(recommendOpenid.equals(openid)) {
 			// 推荐者openid和被推荐者openid相同，进入分享画面
 			logger.info("openid:" + openid +"自己推荐自己，返回");
 			mav.setViewName("redirect:"+Constant.ControllerUrl.SHARE_VIEW);
 			return mav;
-		} else {
+		}*/ else {
 			// 存在推荐者信息，添加推荐关系
 			logger.info("推荐人openid:"+recommendOpenid+"被推荐人openid："+openid);
 			// 被推荐者的openid

@@ -18,12 +18,8 @@ public class AdminAuthority implements Serializable {
 
 	/** 代码. */
 	@Id
-	@Column(name="AUTHORITY_ID")
-	private String authorityId;
-
-	/** 级别. */
-	@Column(name="LEVEL")
-	private String level;
+	@Column(name="AUTHORITY_CODE")
+	private String authorityCode;
 	
 	/** 名称. */
 	@Column(name="name")
@@ -41,8 +37,8 @@ public class AdminAuthority implements Serializable {
 	 * @param code
 	 *            代码
 	 */
-	public void setAuthorityId(String authorityId) {
-		this.authorityId = authorityId;
+	public void setAuthorityCode(String authorityCode) {
+		this.authorityCode = authorityCode;
 	}
 
 	/**
@@ -50,27 +46,8 @@ public class AdminAuthority implements Serializable {
 	 * 
 	 * @return 代码
 	 */
-	public String getAuthorityId() {
-		return this.authorityId;
-	}
-
-	/**
-	 * Get the 级别.
-	 * 
-	 * @return 级别
-	 */
-	public String getLevel() {
-		return level;
-	}
-
-	/**
-	 * Set the 级别.
-	 * 
-	 * @param name
-	 *            级别
-	 */
-	public void setLevel(String level) {
-		this.level = level;
+	public String getAuthorityCode() {
+		return this.authorityCode;
 	}
 
 	/**

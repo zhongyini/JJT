@@ -598,10 +598,130 @@ public class MessageHelper {
 	public String mesg_info_1605;
 	
 	/**
-	 * message.info.1605请输入正确的keyword
+	 * message.info.1606请输入正确的keyword
 	 */
 	@Value("${message.info.1606}")
 	public String mesg_info_1606;
+	
+	/**
+	 * message.info.1700卡券信息不存在
+	 */
+	@Value("${message.info.1700}")
+	public String mesg_info_1700;
+	
+	/**
+	 * message.info.1701卡券code不能为空!
+	 */
+	@Value("${message.info.1701}")
+	public String mesg_info_1701;
+	
+	/**
+	 * message.info.1702该卡券无效!
+	 */
+	@Value("${message.info.1702}")
+	public String mesg_info_1702;
+	
+	/**
+	 * message.info.1703核销卡券失败!
+	 */
+	@Value("${message.info.1703}")
+	public String mesg_info_1703;
+	
+	/**
+	 * message.info.1704核销卡券成功!
+	 */
+	@Value("${message.info.1704}")
+	public String mesg_info_1704;
+	
+	/**
+	 * message.info.1705核销人ID不能为空
+	 */
+	@Value("${message.info.1705}")
+	public String mesg_info_1705;
+	
+	/**
+	 * message.info.1706卡券ID不能为空
+	 */
+	@Value("${message.info.1706}")
+	public String mesg_info_1706;
+	
+	/**
+	 * message.info.1707被核销人的openId不能为空
+	 */
+	@Value("${message.info.1707}")
+	public String mesg_info_1707;
+	
+	/**
+	 * message.info.1708unionId不能为空
+	 */
+	@Value("${message.info.1708}")
+	public String mesg_info_1708;
+	
+	/**
+	 * message.info.1709添加核销履历失败
+	 */
+	@Value("${message.info.1709}")
+	public String mesg_info_1709;
+	
+	/**
+	 * message.info.1710添加卡券code失败
+	 */
+	@Value("${message.info.1710}")
+	public String mesg_info_1710;
+	
+	/**
+	 * message.info.1711openID不能为空
+	 */
+	@Value("${message.info.1711}")
+	public String mesg_info_1711;
+	
+	/**
+	 * message.info.1712开通账户失败
+	 */
+	@Value("${message.info.1712}")
+	public String mesg_info_1712;
+	
+	/**
+	 * message.info.1713该账户不存在，修改失败
+	 */
+	@Value("${message.info.1713}")
+	public String mesg_info_1713;
+	
+	/**
+	 * message.info.1714请设置返点金额
+	 */
+	@Value("${message.info.1714}")
+	public String mesg_info_1714;
+	
+	/**
+	 * message.info.1715登录超时，请重新登录后再试
+	 */
+	@Value("${message.info.1715}")
+	public String mesg_info_1715;
+	
+	/**
+	 * message.info.1716修改推荐人余额失败
+	 */
+	@Value("${message.info.1716}")
+	public String mesg_info_1716;
+	
+	/**
+	 * message.info.1717该卡券已被核销
+	 */
+	@Value("${message.info.1717}")
+	public String mesg_info_1717;
+	
+	/**
+	 * message.info.1718该卡券已过期
+	 */
+	@Value("${message.info.1718}")
+	public String mesg_info_1718;
+	
+	/**
+	 * message.info.1719该卡券已被用户删除
+	 */
+	@Value("${message.info.1719}")
+	public String mesg_info_1719;
 	
 	/**
 	 * message.error.0001发生未知错误，请重新操作或联系管理员

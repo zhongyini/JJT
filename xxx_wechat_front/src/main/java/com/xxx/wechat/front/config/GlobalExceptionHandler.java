@@ -34,7 +34,7 @@ public class GlobalExceptionHandler {
 		// 错误日志处理
 		logger.error(e.getMessage());
 		// 返回的消息处理
-		return "ERROR";
+		return "ERRORRRR";
 	}
 
 }

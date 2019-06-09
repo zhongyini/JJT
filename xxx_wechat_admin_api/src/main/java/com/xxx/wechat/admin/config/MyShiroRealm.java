@@ -17,10 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.xxx.wechat.common.constant.Constant;
 import com.xxx.wechat.core.dao.AdminUserDao;
-import com.xxx.wechat.core.dao.AuthorityDao;
+import com.xxx.wechat.core.dao.AdminAuthorityDao;
 import com.xxx.wechat.core.dao.entity.AdminAuthority;
 import com.xxx.wechat.core.dao.entity.AdminRoleAuthorityRel;
 import com.xxx.wechat.core.dao.entity.AdminUser;
+import com.xxx.wechat.core.dao.entity.extend.AdminAuthorityExt;
 
 /**
  * Created by Administrator on 2017/12/11. 自定义权限匹配和账号密码匹配
@@ -31,7 +32,7 @@ public class MyShiroRealm extends AuthorizingRealm {
 	private AdminUserDao accountMapper;
 
 	@Autowired
-	private AuthorityDao authorityMapper;
+	private AdminAuthorityDao adminAuthorityDao;
 
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -42,13 +43,13 @@ public class MyShiroRealm extends AuthorizingRealm {
 		AdminUser accountBean = accountMapper.selectById(account);
 		// 根据用户名查询权限
 		SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-		List<AdminAuthority> authoritys = authorityMapper.selectByRoleId(accountBean.getRoleId());
+		List<AdminAuthorityExt> authoritys = adminAuthorityDao.selectByRoleId(accountBean.getRoleId());
 		// 没有权限
 		if (null == authoritys || authoritys.size() == Constant.Num.INT_ZERO) {
 			return null;
 		}
-		for (AdminAuthority authority : authoritys) {
-			authorizationInfo.addStringPermission(authority.getAuthorityId());
+		for (AdminAuthorityExt authority : authoritys) {
+			authorizationInfo.addStringPermission(authority.getAuthorityCode());
 		}
 		return authorizationInfo;
 	}

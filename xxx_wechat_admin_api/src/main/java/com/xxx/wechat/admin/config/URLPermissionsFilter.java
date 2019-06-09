@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,11 +23,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.xxx.wechat.admin.enums.AdminStatus;
 import com.xxx.wechat.common.constant.Constant;
 import com.xxx.wechat.common.utils.CheckUtils;
-import com.xxx.wechat.core.dao.AdminUserDao;
-import com.xxx.wechat.core.dao.AuthorityDao;
+import com.xxx.wechat.core.dao.AdminAuthorityDao;
 import com.xxx.wechat.core.dao.entity.AdminAuthority;
-import com.xxx.wechat.core.dao.entity.AdminRoleAuthorityRel;
 import com.xxx.wechat.core.dao.entity.AdminUser;
+import com.xxx.wechat.core.dao.entity.extend.AdminAuthorityExt;
 
 /**
  * 自定义url拦截
@@ -73,8 +71,8 @@ public class URLPermissionsFilter extends AuthorizationFilter {
 			if (authorityArray == null || authorityArray.length == 0) { // 无权限访问
 				return false;
 			}
-			AuthorityDao authorityMapper = SpringUtil.getBean(AuthorityDao.class);
-			List<AdminAuthority> authoritys = authorityMapper.selectByRoleId(accountInfo.getRoleId());
+			AdminAuthorityDao adminAuthorityDao = SpringUtil.getBean(AdminAuthorityDao.class);
+			List<AdminAuthorityExt> authoritys = adminAuthorityDao.selectByRoleId(accountInfo.getRoleId());
 			// 没有权限
 			if (null == authoritys || authoritys.size() == Constant.Num.INT_ZERO) {
 				return false;
@@ -82,8 +80,8 @@ public class URLPermissionsFilter extends AuthorizationFilter {
 			List<String> list = new ArrayList<>();
 			for (AdminAuthority authority : authoritys) {
 				if (null != authority) {
-					if (StringUtils.isNotBlank(authority.getAuthorityId())) {
-						list.add(authority.getAuthorityId());
+					if (StringUtils.isNotBlank(authority.getAuthorityCode())) {
+						list.add(authority.getAuthorityCode());
 					}
 				}
 	

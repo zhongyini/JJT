@@ -59,9 +59,9 @@ public class ConfigurationConfig implements Serializable {
 	 */
 	public static ConfigurationConfig getInstance() {
 		//单例模式初始化系统配置
-		if (CheckUtils.isNull(systemConfig)) {
+		//if (CheckUtils.isNull(systemConfig)) {
 			systemConfig = new ConfigurationConfig();
-		}
+		//}
 		return systemConfig;
 	}
 	

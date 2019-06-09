@@ -44,7 +44,7 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 		
 		logger.info("Create WeChat Menu Start");
 		
-		if (!CheckUtils.isNull(wechatTokenService)) {
+		/*if (!CheckUtils.isNull(wechatTokenService)) {
 			try {
 				WechatTokenConfig.getInstance().getWechatTokenOnline();
 			} catch (Exception e) {
@@ -52,7 +52,7 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 			}
 			createMenu();
 			createAddconditionalMenu();
-		}
+		}*/
 	}
 
 	/**
@@ -69,26 +69,26 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 		Menu menu = new Menu();
 		// 准备一级主菜单
 		MenuButton main1 = new MenuButton();
-		main1.setName("我");
+		main1.setName("活动");
 		// 准备子菜单
 		MenuButton sub11 = new MenuButton();
-		sub11.setName("愿");
+		sub11.setName("最新资讯");
 		sub11.setType(MenuType.VIEW.toString());
 		sub11.setUrl(hosturl+Constant.ControllerUrl.MENU_ONE_ONE);
 		MenuButton sub12 = new MenuButton();
-		sub12.setName("得");
+		sub12.setName("代言小能手");
 		sub12.setType(MenuType.VIEW.toString());
 		sub12.setUrl(hosturl+Constant.ControllerUrl.MENU_ONE_TWO);
 		MenuButton sub13 = new MenuButton();
-		sub13.setName("一");
+		sub13.setName("生日庆祝");
 		sub13.setType(MenuType.VIEW.toString());
 		sub13.setUrl(hosturl+Constant.ControllerUrl.MENU_ONE_THREE);
 		MenuButton sub14 = new MenuButton();
-		sub14.setName("人");
+		sub14.setName("有奖问答");
 		sub14.setType(MenuType.VIEW.toString());
 		sub14.setUrl(hosturl+Constant.ControllerUrl.MENU_ONE_FOUR);
 		MenuButton sub15 = new MenuButton();
-		sub15.setName("心");
+		sub15.setName("分享赚红包");
 		sub15.setType(MenuType.VIEW.toString());
 		sub15.setUrl(hosturl+Constant.ControllerUrl.MENU_ONE_FIVE);
 
@@ -103,7 +103,7 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 
 		// 准备二级主菜单
 		MenuButton main2 = new MenuButton();
-		main2.setName("爱");
+		main2.setName("功能");
 		// 准备子菜单
 		MenuButton sub21 = new MenuButton();
 		sub21.setName("我要充电");
@@ -138,27 +138,27 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 
 		// 准备三级主菜单
 		MenuButton main3 = new MenuButton();
-		main3.setName("你");
+		main3.setName("其它");
 		// 准备子菜单
 		MenuButton sub31 = new MenuButton();
-		sub31.setName("白");
+		sub31.setName("个人中心");
 		sub31.setType(MenuType.VIEW.toString());
 		sub31.setUrl(hosturl+Constant.ControllerUrl.MENU_THREE_ONE);
 		
 		MenuButton sub32 = new MenuButton();
-		sub32.setName("首");
+		sub32.setName("简历");
 		sub32.setType(MenuType.VIEW.toString());
 		sub32.setUrl(hosturl+Constant.ControllerUrl.MENU_THREE_TWO);
 		MenuButton sub33 = new MenuButton();
 		sub33.setType(MenuType.VIEW.toString());
-		sub33.setName("不");
+		sub33.setName("管理系统");
 		sub33.setUrl(hosturl+Constant.ControllerUrl.MENU_THREE_THREE);
 		MenuButton sub34 = new MenuButton();
-		sub34.setName("相");
+		sub34.setName("网上商城");
 		sub34.setType(MenuType.VIEW.toString());
 		sub34.setUrl(hosturl+Constant.ControllerUrl.MENU_THREE_FOUR);
 		MenuButton sub35 = new MenuButton();
-		sub35.setName("离");
+		sub35.setName("表白神器");
 		sub35.setType(MenuType.VIEW.toString());
 		sub35.setUrl(hosturl+Constant.ControllerUrl.MENU_THREE_FIVE);
 

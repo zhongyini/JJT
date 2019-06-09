@@ -199,26 +199,28 @@ public class WechatPaymentServiceImpl implements IWechatPaymentService {
         Integer cnts, returnCode = PaymentApiStatus.SUCCESS;
         Map<String, Object> params = Maps.newHashMap();
         PaymentResultDto paymentResultDto = new PaymentResultDto();
+        // 测试添加
+        paymentResultDto.setCode("0");
         try {
             transactionDefinition = new DefaultTransactionDefinition(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
             transactionStatus = transactionManager.getTransaction(transactionDefinition);
 
             // 支付API invoke
-            params.put("appkey", paymentHelper.paymentAppkey);
-            params.put("method", paymentHelper.paymentMethod);
-            params.put("openid", openId);
+//            params.put("appkey", paymentHelper.paymentAppkey);
+//            params.put("method", paymentHelper.paymentMethod);
+//            params.put("openid", openId);
             // 红包金额 ( 单位：分 ）（必须大于等于30小于49900）
-            params.put("money", money);
+//            params.put("money", money);
 
-            requestStart = System.currentTimeMillis();
-            ResponseResult result = sendJsonPost(paymentHelper.paymentUrl, params);
-            requestEnd = System.currentTimeMillis() - requestStart;
-            paymentResultDto = PaymentResultDto.jsonToBean(result);
+//            requestStart = System.currentTimeMillis();
+//            ResponseResult result = sendJsonPost(paymentHelper.paymentUrl, params);
+//            requestEnd = System.currentTimeMillis() - requestStart;
+//            paymentResultDto = PaymentResultDto.jsonToBean(result);
 
             // 获取支付API返回状态
-            if (StringUtils.isBlank(paymentResultDto.getCode()) || !"0".equals(paymentResultDto.getCode())) {
-                returnCode = PaymentApiStatus.FAIL;
-            }
+//            if (StringUtils.isBlank(paymentResultDto.getCode()) || !"0".equals(paymentResultDto.getCode())) {
+//                returnCode = PaymentApiStatus.FAIL;
+//            }
 
             // 更新余额
             updateBlance(resultVo, wechatUserAccount, money, paymentResultDto);

@@ -1,5 +1,7 @@
 package com.xxx.wechat.front.controller;
 
+import java.io.UnsupportedEncodingException;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class MenuController extends BaseController {
 
 	@RequestMapping(value = "/one/one")
-	public @ResponseBody String oneOne() {
+	public String oneOne() {
 		return "redirect:http://zmall.99zmall.com/hot_goods?shopId=73808&kind=00&type=0"; 
 	}
 	@RequestMapping(value = "/one/two")
@@ -23,14 +25,15 @@ public class MenuController extends BaseController {
 	@RequestMapping(value = "/one/three")
 	public String oneThree() {
 		return "redirect:http://www.ykstudy.cn"; 
+		// return "redirect:http://www.ykstudy.cn/wechat-front/birthday"; 
 	}
 	@RequestMapping(value = "/one/four")
 	public String oneFour() {
-		return "redirect:http://www.ykstudy.cn"; 
+		return "redirect:http://www.ykstudy.cn/wechat-front/answer"; 
 	}
 	@RequestMapping(value = "/one/five")
 	public String oneFive() {
-		return "redirect:http://www.ykstudy.cn"; 
+		return "redirect:http://ngrok.ykstudy.cn/wechat-front/user/login"; 
 	}
 	@RequestMapping(value = "/two/one")
 	public String twoOne() {
@@ -60,7 +63,7 @@ public class MenuController extends BaseController {
 	}
 	@RequestMapping(value = "/three/two")
 	public String threeTwo() {
-		return "redirect:http://www.ykstudy.cn"; 
+		return "redirect:http://www.ykstudy.cn/resume"; 
 	}
 	@RequestMapping(value = "/three/three")
 	public String threeThree() {
@@ -68,11 +71,11 @@ public class MenuController extends BaseController {
 	}
 	@RequestMapping(value = "/three/four")
 	public String threeFour() {
-		return "redirect:http://www.ykstudy.cn"; 
+		return "redirect:http://www.ykstudy.cn/shopping"; 
 	}
 	@RequestMapping(value = "/three/five")
 	public String threeFive() {
-		return "redirect:http://www.ykstudy.cn"; 
+		return "redirect:http://www.ykstudy.cn/ctt"; 
 	}
 	
 }

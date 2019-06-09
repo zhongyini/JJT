@@ -39,9 +39,9 @@ public class OAuthController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/api")
-	public String oauth2Api(HttpServletRequest request, @RequestParam String resultUrl) {
+	public String oauth2Api(HttpServletRequest request, @RequestParam String reqUrl) {
 		// 做成回调url，将客户端请求地址埋入回调url中
-		String backUrl = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.HOST_URL) + "/oauth/url?redirectUrl=" + resultUrl;
+		String backUrl = ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.HOST_URL) + "/oauth/url?reqUrl=" + reqUrl;
 		try {
 			backUrl = java.net.URLEncoder.encode(backUrl, "utf-8");
 		} catch (UnsupportedEncodingException e) {
@@ -77,7 +77,7 @@ public class OAuthController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping("/url")
-	public String oauth2url(HttpServletRequest request, @RequestParam String code, @RequestParam String redirectUrl,
+	public String oauth2url(HttpServletRequest request, @RequestParam String code, @RequestParam String reqUrl,
 			RedirectAttributes redirectAttributes, Model model) {
 
 		logger.info("url start");
@@ -85,7 +85,7 @@ public class OAuthController extends BaseController {
 		// 服务器内controller之间跳转
 		if (CheckUtils.isNullOrEmpty(code)) {
 			logger.error("获取微信code:" + code + "失败。");
-			redirectAttributes.addFlashAttribute("url", redirectUrl);
+			redirectAttributes.addFlashAttribute("url", reqUrl);
 			return "common/error";
 		}
 
@@ -107,7 +107,7 @@ public class OAuthController extends BaseController {
 
 			if (CheckUtils.isNullOrEmpty(accessTokenResponse.getOpenid())) {
 				logger.error("获取openid：[" + openid + "]失败");
-				redirectAttributes.addFlashAttribute("url", redirectUrl);
+				redirectAttributes.addFlashAttribute("url", reqUrl);
 				return "/common/error";
 			}
 			openid = accessTokenResponse.getOpenid();
@@ -118,13 +118,13 @@ public class OAuthController extends BaseController {
 
 		} catch (Exception e) {
 			logger.error("获取openid：[" + openid + "]信息失败，失败详细信息：" + e.getMessage());
-			redirectAttributes.addFlashAttribute("url", redirectUrl);
+			redirectAttributes.addFlashAttribute("url", reqUrl);
 			return "/common/error";
 		}
 		model.addAttribute("openid", openid);
-		model.addAttribute("url", redirectUrl);
+		model.addAttribute("url", reqUrl);
 		setResponseCookie(ConfigurationConfig.getInstance().getProperty(ConfigurationEnum.OPENID_COOKIE), tokenHelper.createJWT(openid));
-		logger.info("url redirect : " + redirectUrl);
+		logger.info("url redirect : " + reqUrl);
 
 		return "common/jump";
 	}

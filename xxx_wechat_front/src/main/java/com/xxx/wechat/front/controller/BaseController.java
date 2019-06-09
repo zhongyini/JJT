@@ -155,6 +155,8 @@ public abstract class BaseController {
 			wechatUserInfo.setHeadimgurl(userInfoResponse.getHeadimgurl());
 			wechatUserInfo.setUnionid(userInfoResponse.getUnionid());
 			wechatUserInfo.setLanguage(userInfoResponse.getLanguage());
+			wechatUserInfo.setSubscribeTime(userInfoResponse.getSubscribeTime());
+			wechatUserInfo.setSubscribe(userInfoResponse.getSubscribe());
 			
 //			BeanUtils.copyProperties(wechatUserInfo, userInfoResponse);
 			logger.info("yucj is null : "+wechatUserInfo);
@@ -174,11 +176,11 @@ public abstract class BaseController {
 			logger.error("缺少推荐信息。RecOpenid："+wechatRecommend.getRecOpenid()+"；RecEdOpenid："+wechatRecommend.getRecEdOpenid());
 			return;
 		}
-		if (wechatRecommend.getRecOpenid().equals(wechatRecommend.getRecEdOpenid())) {
-			// 推荐者openid和被推荐者openid相同
-			logger.info("openid:" + wechatRecommend.getRecOpenid() +"自己推荐自己，返回");
-			return;
-		}
+//		if (wechatRecommend.getRecOpenid().equals(wechatRecommend.getRecEdOpenid())) {
+//			// 推荐者openid和被推荐者openid相同
+//			logger.info("openid:" + wechatRecommend.getRecOpenid() +"自己推荐自己，返回");
+//			return;
+//		}
 		try {
 			// 根据被推荐者openid获取推荐信息
 			// 没有历史推荐数据可以添加推荐信息，否则不处理

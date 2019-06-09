@@ -37,7 +37,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			throws Exception {
 		// 用户是否需要处于登陆
 		boolean isLand = false;
-		String requestUrl = null;
+		String reqUrl = null;
 		String contextPath = null;
 		try {
 			// 判断该接口用户是否需要处于登陆状态
@@ -58,16 +58,16 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			logger.info("openid为空,重新获取");
 			try {
 				contextPath = request.getContextPath();
-				requestUrl = request.getRequestURL().toString();
-				logger.info("requestUrl : " + requestUrl + "; recommend_openid:" + recommend_openid);
-				requestUrl = java.net.URLEncoder.encode(requestUrl, "utf-8");
+				reqUrl = request.getRequestURL().toString();
+				logger.info("reqUrl : " + reqUrl + "; recommend_openid:" + recommend_openid);
+				reqUrl = java.net.URLEncoder.encode(reqUrl, "utf-8");
 			} catch (UnsupportedEncodingException e) {
 				logger.error(e.getMessage());
 				response.sendRedirect(Constant.ControllerUrl.COMMON_ERROR);
 				return false;
 			}
 			// 请求的路径
-			String url = contextPath + "/oauth/api?resultUrl=" + requestUrl;
+			String url = contextPath + "/oauth/api?reqUrl=" + reqUrl;
 			if(!CheckUtils.isNullOrEmpty(recommend_openid)){
 				url = url + "?recommend_openid="+recommend_openid;
 			}
@@ -78,12 +78,13 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 			// 判断用户信息是否存在
 			try {
 				WechatUser wechatUser = wechatUserService.findByOpenid(openid);
+				reqUrl = request.getRequestURL().toString();
 				if (CheckUtils.isNull(wechatUser)) {
 					contextPath = request.getContextPath();
-					requestUrl = request.getRequestURL().toString();
-					requestUrl = java.net.URLEncoder.encode(requestUrl, "utf-8");
+					reqUrl = request.getRequestURL().toString();
+					reqUrl = java.net.URLEncoder.encode(reqUrl, "utf-8");
 					logger.info("openid：" + openid + "的用户信息不存在或需重新获取信息");
-					String url = contextPath + "/oauth/api?resultUrl=" + requestUrl;
+					String url = contextPath + "/oauth/api?resultUrl=" + reqUrl;
 					if(!CheckUtils.isNullOrEmpty(recommend_openid)){
 						url = url + "?recommend_openid="+recommend_openid;
 					}

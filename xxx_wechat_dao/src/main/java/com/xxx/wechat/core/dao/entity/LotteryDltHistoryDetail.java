@@ -28,7 +28,7 @@ public class LotteryDltHistoryDetail implements Serializable {
 	 * 大乐透历史记录主键期号
 	 */
 	@Column(name = "term")
-	private String term;
+	private Integer term;
 
 	/**
 	 * 总金额
@@ -84,12 +84,12 @@ public class LotteryDltHistoryDetail implements Serializable {
 	}
 
 
-	public String getTerm() {
+	public Integer getTerm() {
 		return term;
 	}
 
 
-	public void setTerm(String term) {
+	public void setTerm(Integer term) {
 		this.term = term;
 	}
 

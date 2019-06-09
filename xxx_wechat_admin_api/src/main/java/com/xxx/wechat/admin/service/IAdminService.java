@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.xxx.wechat.admin.dto.RestResult;
 import com.xxx.wechat.core.dao.entity.AdminUser;
+import com.xxx.wechat.core.dao.entity.extend.AdminUserExt;
 import com.xxx.wechat.core.exception.AppException;
 
 public interface IAdminService {
@@ -79,4 +80,22 @@ public interface IAdminService {
 	 * @throws AppException
 	 */
 	String uploadImage(MultipartFile file, String id) throws AppException;
+	
+	/**
+	 * 获取用户所有信息
+	 * 
+	 * @param id
+	 * @return
+	 * @throws AppException
+	 */
+	AdminUser select(AdminUserExt AdminUserExt) throws AppException;
+	
+	/**
+	 * 更新用户密码
+	 * 
+	 * @param req
+	 * @return
+	 * @throws AppException
+	 */
+	int updatePassword(AdminUserExt req) throws AppException;
 }

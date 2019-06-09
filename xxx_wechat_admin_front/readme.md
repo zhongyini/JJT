@@ -4,14 +4,6 @@
 ## 首次安装 ##
 1. 安装 nodejs
 
-1. 安装 .net framework 45
-
-1. 安装 visual studio 2012以上版本
-
-1. 安装 python 2.x
-   安装成功后请在cmd中输入python --version进行确认
-1.安装git
-	安装完成后修改环境变量
 1. 全局安装 gulp
 	`npm install -g gulp`
 
