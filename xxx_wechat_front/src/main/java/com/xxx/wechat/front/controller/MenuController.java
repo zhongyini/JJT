@@ -16,24 +16,24 @@ public class MenuController extends BaseController {
 
 	@RequestMapping(value = "/one/one")
 	public String oneOne() {
-		return "redirect:http://zmall.99zmall.com/hot_goods?shopId=73808&kind=00&type=0"; 
+		return "redirect:https://www.ykstudy.cn/poster"; 
 	}
 	@RequestMapping(value = "/one/two")
 	public String oneTwo() {
-		return "redirect:http://www.elizabece.com/#/?uname=test"; 
+		return "redirect:https://www.ykstudy.cn/action";
 	}
 	@RequestMapping(value = "/one/three")
 	public String oneThree() {
-		return "redirect:http://www.ykstudy.cn"; 
+		return "redirect:https://www.ykstudy.cn/birthday"; 
 		// return "redirect:http://www.ykstudy.cn/wechat-front/birthday"; 
 	}
 	@RequestMapping(value = "/one/four")
 	public String oneFour() {
-		return "redirect:http://www.ykstudy.cn/wechat-front/answer"; 
+		return "redirect:https://www.ykstudy.cn/answer";
 	}
 	@RequestMapping(value = "/one/five")
 	public String oneFive() {
-		return "redirect:http://ngrok.ykstudy.cn/wechat-front/user/login"; 
+		return "redirect:http://www.ykstudy.cn/wechat-front/user/login"; 
 	}
 	@RequestMapping(value = "/two/one")
 	public String twoOne() {

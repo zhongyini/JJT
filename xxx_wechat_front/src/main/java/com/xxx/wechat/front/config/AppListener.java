@@ -44,7 +44,7 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 		
 		logger.info("Create WeChat Menu Start");
 		
-		/*if (!CheckUtils.isNull(wechatTokenService)) {
+		if (!CheckUtils.isNull(wechatTokenService)) {
 			try {
 				WechatTokenConfig.getInstance().getWechatTokenOnline();
 			} catch (Exception e) {
@@ -52,7 +52,7 @@ public class AppListener implements ApplicationListener<ContextRefreshedEvent>{
 			}
 			createMenu();
 			createAddconditionalMenu();
-		}*/
+		}
 	}
 
 	/**
