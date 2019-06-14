@@ -214,6 +214,14 @@ public interface Constant {
          * 事件KEY值
          */
         public static final String EVENTKEY = "EventKey";
+        /**
+         * content
+         */
+        public static final String CONTENT = "content";
+        /**
+         * msgid
+         */
+        public static final String MSGID = "msgid";
     }
 
     /**

@@ -32,6 +32,10 @@ public class BaseApi {
 		this.accessToken = accessToken;
 		this.jsApiTicket = jsApiTicket;
 	}
+	
+	public BaseApi(String accessToken, String a, String b) {
+		this.accessToken = accessToken;
+	}
 
 	/**
 	 * 通用post请求

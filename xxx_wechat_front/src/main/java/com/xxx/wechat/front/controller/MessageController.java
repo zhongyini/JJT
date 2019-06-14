@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.xxx.wechat.common.constant.Constant;
+import com.xxx.wechat.common.utils.BeanUtils;
 import com.xxx.wechat.common.utils.CheckUtils;
+import com.xxx.wechat.common.wechat.api.BaseApi;
 import com.xxx.wechat.common.wechat.api.enums.EventType;
 import com.xxx.wechat.common.wechat.api.enums.WechatReqType;
+import com.xxx.wechat.common.wechat.api.response.BaseResponse;
 import com.xxx.wechat.core.dao.entity.WechatRecommend;
 import com.xxx.wechat.front.controller.logic.MessageConfigLogic;
 import com.xxx.wechat.front.controller.logic.MessageProcessLogic;
@@ -68,7 +71,7 @@ public class MessageController extends BaseController{
 			//TODO 处理微信消息
 			switch(msgType) {
 				// 文本消息
-				case WechatReqType.TEXT:MessageProcessLogic.responseResult(response, Constant.EMPTY);break;
+				case WechatReqType.TEXT:MessageProcessLogic.responseResult(response, Constant.EMPTY);processTextRequest(reqMap);break;
 				// 事件消息
 				case WechatReqType.EVENT:MessageProcessLogic.responseResult(response, Constant.EMPTY);processEventRequest(reqMap);break;
 				// 地理位置消息
@@ -86,6 +89,26 @@ public class MessageController extends BaseController{
 				// 其它
 				default:MessageProcessLogic.responseResult(response, Constant.EMPTY);break;
 			}
+		}
+		
+	}
+	
+	/**
+	 * 处理文件消息内容
+	 * @param reqMap
+	 * @return
+	 */
+	private void processTextRequest(Map<String, Object> reqMap){
+		try {
+			//获取文本消息内容
+			String fromUserName = (String) reqMap.get(Constant.WechatParams.FROMUSERNAME);
+			String toUserName = (String) reqMap.get(Constant.WechatParams.TOUSERNAME);
+			String content = (String) reqMap.get(Constant.WechatParams.CONTENT);
+			String msgId = (String) reqMap.get(Constant.WechatParams.MSGID);
+			logger.debug("Get wechat text message:fromUserName is " + fromUserName + ". toUsername is " + toUserName + ". content is " + content + ". Msgid is " + msgId + ".");
+		} catch (Exception e) {
+			logger.error("Process text message error.");
+			logger.error(e.getMessage());
 		}
 		
 	}
