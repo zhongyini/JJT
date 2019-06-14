@@ -17,11 +17,14 @@
         <el-menu-item index="2-3">内容3</el-menu-item>
       </el-submenu>
       <el-menu-item index="3">关于</el-menu-item>
+        <lang-select class="right-menu-item hover-effect" />
     </el-menu>
   </div>
 </template>
 <script>
+import LangSelect from './LangSelect/index.vue'
 export default {
+  components: { LangSelect },
   data () {
     return {
       activeIndex: '1',

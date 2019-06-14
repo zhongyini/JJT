@@ -1,10 +1,18 @@
+const path = require('path')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+function resolve (dir) {
+  return path.join(__dirname, dir)
+}
+
 module.exports = {
   // 基本路径
   publicPath: '/',
   // 输出文件目录
   outputDir: 'dist',
-  // eslint-loader是否在保存的时候检查
-  compiler: false,
+  // eslint-loader是否在保存的时候检查,vue-cli3中compiler 换成了 runtimeCompiler
+  // compiler: true,
+  runtimeCompiler: false,
   chainWebpack: config => {
     if (process.env.NODE_ENV === 'production') {
       config
@@ -21,8 +29,34 @@ module.exports = {
           })]
         })
     }
+    config.resolve.alias.set('@', resolve('src'))
+    config.module.rules.delete('svg')
+    config.module.rule('svg-smart')
+      .test(/\.svg$/).include
+      .add(resolve('src/assets/svg'))
+      .end().use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({
+        symbolId: '[name]'
+      })
   },
-  configureWebpack: () => {},
+  configureWebpack: (config) => {
+    let optimization = {
+      minimizer: [ new UglifyJsPlugin({
+        uglifyOptions: {
+          compress: {
+            warnings: false,
+            drop_console: true,
+            consoledrop_debugger: false,
+            pure_funcs: ['console.log']
+          }
+        }
+      })]
+    }
+    Object.assign(config, {
+      optimization
+    })
+  },
   // https://vue-loader.vuejs.org/en/options.html
   // vueLoader: {},
   // 生产环境是否生成 sourceMap 文件
