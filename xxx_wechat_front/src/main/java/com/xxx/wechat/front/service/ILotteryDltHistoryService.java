@@ -12,4 +12,6 @@ public interface ILotteryDltHistoryService {
 	List<String> getTermList() throws AppException;
 	
 	int generateLotteryDltGuess() throws AppException;
+	
+	String getLastTerm() throws AppException;
 }

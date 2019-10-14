@@ -20,6 +20,8 @@ import com.xxx.wechat.core.dao.entity.extend.LotteryDltHistoryExt;
 import com.xxx.wechat.core.exception.AppException;
 import com.xxx.wechat.front.service.ILotteryDltHistoryService;
 
+import tk.mybatis.mapper.entity.Example;
+
 @Service
 public class LotteryDltHistoryServiceImpl implements ILotteryDltHistoryService {
 
@@ -214,5 +216,16 @@ public class LotteryDltHistoryServiceImpl implements ILotteryDltHistoryService {
 		lotteryDltGuess.setUpdateTime(DateUtils.getNowTimestamp());
 		lotteryDltGuess.setUpdateUser("sys");
 		return lotteryDltGuess;
+	}
+
+	@Override
+	public String getLastTerm() throws AppException {
+		Example example = new Example(LotteryDltHistory.class);
+		example.createCriteria().andEqualTo("deleteFlag", "0").andCondition("ORDER BY term DESC LIMIT 1");
+		List<LotteryDltHistory> lotteryDltHistoryList = lotteryDltHistoryDao.selectByExample(example);
+		if (CheckUtils.isNull(lotteryDltHistoryList) || lotteryDltHistoryList.size() == 0) {
+			return null;
+		}
+		return lotteryDltHistoryList.get(0).getTerm();
 	}
 }

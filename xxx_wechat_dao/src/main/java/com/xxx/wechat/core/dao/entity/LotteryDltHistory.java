@@ -23,7 +23,7 @@ public class LotteryDltHistory implements Serializable {
 	 */
 	@Id
 	@Column(name = "term")
-	private Integer term;
+	private String term;
 
 	/**
 	 * 另一种彩票号
@@ -109,11 +109,11 @@ public class LotteryDltHistory implements Serializable {
 	@Column(name = "update_time")
 	private Timestamp updateTime;
 
-	public Integer getTerm() {
+	public String getTerm() {
 		return term;
 	}
 
-	public void setTerm(Integer term) {
+	public void setTerm(String term) {
 		this.term = term;
 	}
 
