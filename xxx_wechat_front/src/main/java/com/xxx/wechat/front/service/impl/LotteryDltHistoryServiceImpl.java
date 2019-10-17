@@ -20,8 +20,6 @@ import com.xxx.wechat.core.dao.entity.extend.LotteryDltHistoryExt;
 import com.xxx.wechat.core.exception.AppException;
 import com.xxx.wechat.front.service.ILotteryDltHistoryService;
 
-import tk.mybatis.mapper.entity.Example;
-
 @Service
 public class LotteryDltHistoryServiceImpl implements ILotteryDltHistoryService {
 
@@ -136,7 +134,8 @@ public class LotteryDltHistoryServiceImpl implements ILotteryDltHistoryService {
 					blueNumberArray[k] = Integer.valueOf(blueNumberStrArray[k]);
 				}
 				Arrays.parallelSort(blueNumberArray);
-				String number = JSONObject.toJSONString(redNumberArray) + "," + JSONObject.toJSONString(blueNumberArray);
+				String number = JSONObject.toJSONString(redNumberArray) + ","
+						+ JSONObject.toJSONString(blueNumberArray);
 				dltGuess.setNumSequence(numSequence);
 				dltGuess.setNumber(number.replace("[", "").replace("]", ""));
 			}
@@ -189,7 +188,7 @@ public class LotteryDltHistoryServiceImpl implements ILotteryDltHistoryService {
 			lotteryDltGuess.setRedFive(numberArray[4]);
 			lotteryDltGuess.setBlueOne(numberArray[5]);
 			lotteryDltGuess.setBlueTwo(numberArray[6]);
-			
+
 			lotteryDltGuess.setNumSequence(JSONObject.toJSONString(numberArray).replace("[", "").replace("]", ""));
 			Integer[] redNumberArray = new Integer[5];
 			Integer[] blueNumberArray = new Integer[2];
@@ -220,12 +219,10 @@ public class LotteryDltHistoryServiceImpl implements ILotteryDltHistoryService {
 
 	@Override
 	public String getLastTerm() throws AppException {
-		Example example = new Example(LotteryDltHistory.class);
-		example.createCriteria().andEqualTo("deleteFlag", "0").andCondition("ORDER BY term DESC LIMIT 1");
-		List<LotteryDltHistory> lotteryDltHistoryList = lotteryDltHistoryDao.selectByExample(example);
-		if (CheckUtils.isNull(lotteryDltHistoryList) || lotteryDltHistoryList.size() == 0) {
+		LotteryDltHistory lotteryDltHistory = lotteryDltHistoryDao.selectLastTerm();
+		if (CheckUtils.isNull(lotteryDltHistory)) {
 			return null;
 		}
-		return lotteryDltHistoryList.get(0).getTerm();
+		return lotteryDltHistory.getTerm();
 	}
 }

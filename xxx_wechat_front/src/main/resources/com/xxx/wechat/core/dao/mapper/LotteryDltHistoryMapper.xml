@@ -89,5 +89,30 @@
 	<select id="selectFieldAndFieldCountByField" resultType="com.xxx.wechat.core.dao.entity.extend.LotteryDltHistoryExt">
 		SELECT #{fieldName} AS fieldName, ${fieldName} AS fieldValue, COUNT(${fieldName}) AS fieldCount FROM lottery_dlt_history WHERE delete_flag = 0 GROUP BY ${fieldName} ORDER BY COUNT(${fieldName});
 	</select>
-
+	
+	<select id="selectLastTerm" resultMap="resultMap">
+		SELECT
+			term,
+			draw_news,
+			num_sequence,
+			number,
+			red_one,
+			red_two,
+			red_three,
+			red_four,
+			red_five,
+			blue_one,
+			blue_two,
+			lottery_date,
+			delete_flag,
+			update_user,
+			update_time 
+		FROM
+			lottery_dlt_history 
+		WHERE
+			delete_flag = 0 
+		ORDER BY
+			term DESC 
+			LIMIT 1
+	</select>
 </mapper>

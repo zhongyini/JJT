@@ -20,4 +20,6 @@ public interface LotteryDltHistoryDao extends BaseDao<LotteryDltHistory> {
 	
 	List<LotteryDltHistoryExt> selectFieldAndFieldCountByField(@Param("fieldName") String fieldName);
 	
+	LotteryDltHistory selectLastTerm();
+	
 }
